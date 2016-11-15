@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2016 Heartland Commerce, Inc. All rights reserved.
+ */
+
 package com.beanstalkdata.android.sample.utils;
 
 import android.text.TextUtils;

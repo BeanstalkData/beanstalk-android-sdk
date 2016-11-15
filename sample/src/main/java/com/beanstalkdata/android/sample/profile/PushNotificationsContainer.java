@@ -1,5 +1,8 @@
-package com.beanstalkdata.android.sample.profile;
+/*
+ * Copyright (C) 2016 Heartland Commerce, Inc. All rights reserved.
+ */
 
+package com.beanstalkdata.android.sample.profile;
 
 import android.support.v4.util.ArrayMap;
 

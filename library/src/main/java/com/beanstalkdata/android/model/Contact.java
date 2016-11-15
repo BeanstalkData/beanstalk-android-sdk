@@ -1,5 +1,8 @@
-package com.beanstalkdata.android.model;
+/*
+ * Copyright (C) 2016 Heartland Commerce, Inc. All rights reserved.
+ */
 
+package com.beanstalkdata.android.model;
 
 import com.google.gson.annotations.SerializedName;
 
