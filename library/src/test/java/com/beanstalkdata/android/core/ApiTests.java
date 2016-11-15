@@ -1,6 +1,6 @@
 package com.beanstalkdata.android.core;
 
-import com.beanstalkdata.android.BuildConfig;
+import com.beanstalkdata.android.TestConfig;
 import com.beanstalkdata.android.model.Contact;
 import com.beanstalkdata.android.model.Coupon;
 import com.beanstalkdata.android.model.type.ImageType;
@@ -350,7 +350,7 @@ public class ApiTests {
 
     @Test
     public void findNonExistentUserByEmail() throws Exception {
-        Call<Contact[]> stringCall = service.getContactByEmail(BuildConfig.APP_KEY, EMAIL1);
+        Call<Contact[]> stringCall = service.getContactByEmail(TestConfig.APP_KEY, EMAIL1);
         Response<Contact[]> execute = stringCall.execute();
 
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
@@ -363,7 +363,7 @@ public class ApiTests {
 
     @Test
     public void findUserByEmail() throws Exception {
-        Call<Contact[]> stringCall = service.getContactByEmail(BuildConfig.APP_KEY, EMAIL2);
+        Call<Contact[]> stringCall = service.getContactByEmail(TestConfig.APP_KEY, EMAIL2);
         Response<Contact[]> execute = stringCall.execute();
 
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
@@ -377,7 +377,7 @@ public class ApiTests {
 
     @Test
     public void findUserByPhone() throws Exception {
-        Call<Contact[]> stringCall = service.getContactByPhone(BuildConfig.APP_KEY, PHONE2);
+        Call<Contact[]> stringCall = service.getContactByPhone(TestConfig.APP_KEY, PHONE2);
         Response<Contact[]> execute = stringCall.execute();
 
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
@@ -393,7 +393,7 @@ public class ApiTests {
     public void authorizeUserError() throws Exception {
         AuthenticateUserRequest request = new AuthenticateUserRequest(EMAIL1, PASSWORD1);
         Call<ResponseBody> call = service.authenticateUser(
-                request.getEmail(), request.getPassword(), BuildConfig.APP_KEY, request.getTime());
+                request.getEmail(), request.getPassword(), TestConfig.APP_KEY, request.getTime());
         Response<ResponseBody> execute = call.execute();
 
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
@@ -406,7 +406,7 @@ public class ApiTests {
     public void authorizeUser() throws Exception {
         AuthenticateUserRequest request = new AuthenticateUserRequest(EMAIL2, PASSWORD2);
         Call<ResponseBody> call = service.authenticateUser(
-                request.getEmail(), request.getPassword(), BuildConfig.APP_KEY, request.getTime());
+                request.getEmail(), request.getPassword(), TestConfig.APP_KEY, request.getTime());
         Response<ResponseBody> execute = call.execute();
 
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
@@ -475,7 +475,7 @@ public class ApiTests {
         ContactRequest contactRequest = new ContactRequest(DOB3, EMAIL3, FIRST_NAME3, LAST_NAME3, PHONE3, ZIP3, REWARD3);
         contactRequest.setPassword(PASSWORD3);
 
-        Call<ResponseBody> call = service.createContact(BuildConfig.APP_KEY, contactRequest.asParams());
+        Call<ResponseBody> call = service.createContact(TestConfig.APP_KEY, contactRequest.asParams());
         Response<ResponseBody> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -487,7 +487,7 @@ public class ApiTests {
         assertEquals("Add", jsonArray.optString(1));
 
         String contactId = jsonArray.optString(0);
-        Call<String> user = service.createUser(contactRequest.getEmail(), contactRequest.getPassword(), BuildConfig.APP_KEY, contactId);
+        Call<String> user = service.createUser(contactRequest.getEmail(), contactRequest.getPassword(), TestConfig.APP_KEY, contactId);
         Response<String> user_execute = user.execute();
         assertEquals(user_execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -498,7 +498,7 @@ public class ApiTests {
 
     @Test
     public void getContact() throws Exception {
-        Call<Contact[]> call = service.getContact(BuildConfig.APP_KEY, ID3);
+        Call<Contact[]> call = service.getContact(TestConfig.APP_KEY, ID3);
         Response<Contact[]> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -514,7 +514,7 @@ public class ApiTests {
 
     @Test
     public void getContactRaw() throws Exception {
-        Call<ResponseBody> call = service.getContactRaw(BuildConfig.APP_KEY, ID3);
+        Call<ResponseBody> call = service.getContactRaw(TestConfig.APP_KEY, ID3);
         Response<ResponseBody> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -527,7 +527,7 @@ public class ApiTests {
         Map<String, String> data = new LinkedHashMap<>();
         data.put("contactId", ID3);
         data.put("contactZipCode", ZIP3);
-        Call<String[]> call = service.updateContact(BuildConfig.APP_KEY, data);
+        Call<String[]> call = service.updateContact(TestConfig.APP_KEY, data);
         Response<String[]> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -542,7 +542,7 @@ public class ApiTests {
         request.put("contact", ID3);
         request.put("token", TOKEN3);
         request.put("password", PASSWORD3);
-        request.put("key", BuildConfig.APP_KEY);
+        request.put("key", TestConfig.APP_KEY);
 
         Call<String> call = service.updatePassword(request);
         Response<String> execute = call.execute();
@@ -553,7 +553,7 @@ public class ApiTests {
 
     @Test
     public void resetPassword() throws Exception {
-        Call<String> stringCall = service.resetPassword(BuildConfig.APP_KEY, EMAIL3);
+        Call<String> stringCall = service.resetPassword(TestConfig.APP_KEY, EMAIL3);
         Response<String> execute = stringCall.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -564,7 +564,7 @@ public class ApiTests {
 
     @Test
     public void getProgress() throws Exception {
-        Call<RewardsCountResponse> call = service.getProgress(BuildConfig.APP_KEY, ID3);
+        Call<RewardsCountResponse> call = service.getProgress(TestConfig.APP_KEY, ID3);
         Response<RewardsCountResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -575,7 +575,7 @@ public class ApiTests {
     @Test
     public void registerCard() throws Exception {
         Call<RegisterGiftCardResponse> call = service.registerGiftCard(
-                BuildConfig.APP_KEY, ID3, TOKEN3, GIFT_CARD_NUMBER3, GIFT_CARD_PIN3);
+                TestConfig.APP_KEY, ID3, TOKEN3, GIFT_CARD_NUMBER3, GIFT_CARD_PIN3);
         Response<RegisterGiftCardResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -586,7 +586,7 @@ public class ApiTests {
 
     @Test
     public void inquireAboutCard() throws Exception {
-        Call<CardBalanceResponse> call = service.inquireAboutCard(BuildConfig.APP_KEY, ID3, TOKEN3, GIFT_CARD_NUMBER3);
+        Call<CardBalanceResponse> call = service.inquireAboutCard(TestConfig.APP_KEY, ID3, TOKEN3, GIFT_CARD_NUMBER3);
         Response<CardBalanceResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -597,7 +597,7 @@ public class ApiTests {
 
     @Test
     public void inquireAboutCardRaw() throws Exception {
-        Call<ResponseBody> call = service.inquireAboutCardRaw(BuildConfig.APP_KEY, ID3, TOKEN3, GIFT_CARD_NUMBER3);
+        Call<ResponseBody> call = service.inquireAboutCardRaw(TestConfig.APP_KEY, ID3, TOKEN3, GIFT_CARD_NUMBER3);
         Response<ResponseBody> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -613,7 +613,7 @@ public class ApiTests {
         String contactId = "16249430";
         String cardNumber = "123456789012";
         String cardPin = "1234";
-        Call<String> call = service.paperCardRegistration(BuildConfig.APP_KEY, "addNewCard", cardNumber, cardPin, contactId);
+        Call<String> call = service.paperCardRegistration(TestConfig.APP_KEY, "addNewCard", cardNumber, cardPin, contactId);
         Response<String> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -625,7 +625,7 @@ public class ApiTests {
     @Test
     public void getGiftCardList() throws Exception {
         // TODO: Need real Gift Card.
-        Call<GiftCardListResponse> call = service.getGiftCardList(BuildConfig.APP_KEY, ID3, TOKEN3);
+        Call<GiftCardListResponse> call = service.getGiftCardList(TestConfig.APP_KEY, ID3, TOKEN3);
         Response<GiftCardListResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -636,7 +636,7 @@ public class ApiTests {
     @Test
     public void getGiftCardListRaw() throws Exception {
         // TODO: Need real Gift Card.
-        Call<ResponseBody> call = service.getGiftCardListRaw(BuildConfig.APP_KEY, ID3, TOKEN3);
+        Call<ResponseBody> call = service.getGiftCardListRaw(TestConfig.APP_KEY, ID3, TOKEN3);
         Response<ResponseBody> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -648,7 +648,7 @@ public class ApiTests {
     @Test
     public void getStores() throws Exception {
         // TODO: No docs about this API
-        Call<StoresResponse> call = service.checkLocation(BuildConfig.APP_KEY, LAT3, LNG3);
+        Call<StoresResponse> call = service.checkLocation(TestConfig.APP_KEY, LAT3, LNG3);
         Response<StoresResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -661,7 +661,7 @@ public class ApiTests {
     @Test
     public void checkNovadineUser() throws Exception {
         // TODO: Clarify what Novadine and their users are. Find Novadine user for more tests?
-        Call<Contact[]> call = service.getContactByEmail(BuildConfig.APP_KEY, "novadine_test@2.com");
+        Call<Contact[]> call = service.getContactByEmail(TestConfig.APP_KEY, "novadine_test@2.com");
         Response<Contact[]> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -675,7 +675,7 @@ public class ApiTests {
     @Test
     public void startPayment() throws Exception {
         // TODO: Need more test data and more clarified business logic for this API.
-        Call<PaymentTokenResponse> call = service.startPayment(BuildConfig.APP_KEY, ID3, LOYALTY_ID3, TOKEN3, PAYMENT_ID3, COUPONS3);
+        Call<PaymentTokenResponse> call = service.startPayment(TestConfig.APP_KEY, ID3, LOYALTY_ID3, TOKEN3, PAYMENT_ID3, COUPONS3);
         Response<PaymentTokenResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -685,7 +685,7 @@ public class ApiTests {
 
     @Test
     public void setPreferredCard() throws Exception {
-        Call<String> call = service.setPreferredCard(BuildConfig.APP_KEY, ID3, TOKEN3, GIFT_CARD_NUMBER3);
+        Call<String> call = service.setPreferredCard(TestConfig.APP_KEY, ID3, TOKEN3, GIFT_CARD_NUMBER3);
         Response<String> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -695,7 +695,7 @@ public class ApiTests {
 
     @Test
     public void getLoyaltyInformation() throws Exception {
-        Call<String> call = service.getLoyaltyInformation(BuildConfig.APP_KEY, FKEY3);
+        Call<String> call = service.getLoyaltyInformation(TestConfig.APP_KEY, FKEY3);
         Response<String> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -711,7 +711,7 @@ public class ApiTests {
         <br /> No rewards available.
         <br />If you have not used your rewards in a while, they may have expired. ");
          */
-        Call<CouponResponse> call = service.getUserOffers(BuildConfig.APP_KEY, ID3);
+        Call<CouponResponse> call = service.getUserOffers(TestConfig.APP_KEY, ID3);
         Response<CouponResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -723,7 +723,7 @@ public class ApiTests {
     @Test
     public void setTransactionEvent() throws Exception {
         // TODO: Need more details. It isn't clear what is username parameter and if it is incorrect the API returns an error.
-        Call<TrackTransactionResponse> call = service.trackTransaction(BuildConfig.APP_KEY, ID3, USERNAME3, DETAILS3);
+        Call<TrackTransactionResponse> call = service.trackTransaction(TestConfig.APP_KEY, ID3, USERNAME3, DETAILS3);
         Response<TrackTransactionResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -733,7 +733,7 @@ public class ApiTests {
 
     @Test
     public void enrollPushNotification() throws Exception {
-        Call<PushSuccessResponse> call = service.enrollPushNotification(BuildConfig.APP_KEY, ID3, DEVICE_TOKEN3, PlatformType.ANDROID);
+        Call<PushSuccessResponse> call = service.enrollPushNotification(TestConfig.APP_KEY, ID3, DEVICE_TOKEN3, PlatformType.ANDROID);
         Response<PushSuccessResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -743,7 +743,7 @@ public class ApiTests {
 
     @Test
     public void modifyPushNotification() throws Exception {
-        Call<PushSuccessResponse> call = service.modifyPushNotification(BuildConfig.APP_KEY, ID3, DEVICE_TOKEN3, PlatformType.ANDROID);
+        Call<PushSuccessResponse> call = service.modifyPushNotification(TestConfig.APP_KEY, ID3, DEVICE_TOKEN3, PlatformType.ANDROID);
         Response<PushSuccessResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -753,7 +753,7 @@ public class ApiTests {
 
     @Test
     public void deletePushNotification() throws Exception {
-        Call<PushSuccessResponse> call = service.deletePushNotification(BuildConfig.APP_KEY, ID3);
+        Call<PushSuccessResponse> call = service.deletePushNotification(TestConfig.APP_KEY, ID3);
         Response<PushSuccessResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -763,7 +763,7 @@ public class ApiTests {
 
     @Test
     public void getPushMessages() throws Exception {
-        Call<PushMessagesResponse> call = service.getContactMessages(BuildConfig.APP_KEY, ID3, MAX_MESSAGES3);
+        Call<PushMessagesResponse> call = service.getContactMessages(TestConfig.APP_KEY, ID3, MAX_MESSAGES3);
         Response<PushMessagesResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -774,7 +774,7 @@ public class ApiTests {
     @Test
     public void getPushMessagesByOsAndType() throws Exception {
         Call<PushMessagesResponse> call = service.getMessagesByOsAndType(
-                BuildConfig.APP_KEY, MessageContentType.HTML, PlatformType.ANDROID);
+                TestConfig.APP_KEY, MessageContentType.HTML, PlatformType.ANDROID);
         Response<PushMessagesResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -785,7 +785,7 @@ public class ApiTests {
     @Test
     public void getPushMessagesByImageType() throws Exception {
         Call<PushMessagesResponse> call = service.getMessagesByImageType(
-                BuildConfig.APP_KEY, MessageContentType.HTML, ImageType.LARGE);
+                TestConfig.APP_KEY, MessageContentType.HTML, ImageType.LARGE);
         Response<PushMessagesResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -795,7 +795,7 @@ public class ApiTests {
 
     @Test
     public void updateMessageStatus() throws Exception {
-        Call<PushSuccessResponse> call = service.updateMessageStatus(BuildConfig.APP_KEY, MESSAGE_ID3, MessageType.READ);
+        Call<PushSuccessResponse> call = service.updateMessageStatus(TestConfig.APP_KEY, MESSAGE_ID3, MessageType.READ);
         Response<PushSuccessResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -805,7 +805,7 @@ public class ApiTests {
 
     @Test
     public void getMessageById() throws Exception {
-        Call<PushMessageByIdResponse> call = service.getMessageById(BuildConfig.APP_KEY, MESSAGE_ID3);
+        Call<PushMessageByIdResponse> call = service.getMessageById(TestConfig.APP_KEY, MESSAGE_ID3);
         Response<PushMessageByIdResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
@@ -817,7 +817,7 @@ public class ApiTests {
     @Test
     public void getCoordinatesByZip() throws Exception {
         String zip = "32818";
-        Call<LocationResponse> call = service.getLocationByZipCode(BuildConfig.GOOGLE_MAPS_KEY, zip);
+        Call<LocationResponse> call = service.getLocationByZipCode(TestConfig.GOOGLE_MAPS_KEY, zip);
         Response<LocationResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 

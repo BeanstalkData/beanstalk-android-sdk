@@ -10,11 +10,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
 
-        def apiProperties = getProperties("library/api.properties")
-        buildConfigField 'String', 'BASE_URL', "\"${apiProperties['baseUrl']}\""
-        buildConfigField 'String', 'COMPANY', "\"${apiProperties['company']}\""
-        buildConfigField 'String', 'APP_KEY', "\"${apiProperties['appKey']}\""
-        buildConfigField 'String', 'GOOGLE_MAPS_KEY', "\"${apiProperties['googleMapsKey']}\""
+        buildConfigField 'String', 'LIBRARY_MODULE_DIR', "\"${projectDir.absolutePath.replace("\\", "\\\\")}\""
     }
     buildTypes {
         release {
