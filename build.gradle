@@ -11,7 +11,11 @@ ext {
     ]
     getProperties = { String propertiesPath ->
         def properties = new Properties()
-        properties.load(new FileInputStream(file(propertiesPath)))
+        try {
+            properties.load(new FileInputStream(file(propertiesPath)))
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return properties
     }
 }
