@@ -24,7 +24,7 @@ allprojects {
 
 ### Step 2
 
-Add the dependency
+Add the dependency to relevant project module:
 
 ```groovy
 dependencies {
