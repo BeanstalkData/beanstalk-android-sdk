@@ -7,6 +7,33 @@
 - Android Studio 2.2+
 - Android SDK 16+
 
+## How To Add Dependency (from JitPack)
+
+### Step 1
+
+Add JitPack repository in you root build.gradle at the end of repositories section:
+
+```groovy
+allprojects {
+    repositories {
+        ...
+		maven { url "https://jitpack.io" }
+	}
+}
+```
+
+### Step 2
+
+Add the dependency
+
+```groovy
+dependencies {
+    compile 'com.github.BeanstalkData:beanstalk-android-sdk:1.0.0'
+}
+```
+
+**That's it!** The first time you request a project JitPack checks out the code, builds it and serves the build artifacts.
+
 ## Usage
 
 Check out Sample module.
