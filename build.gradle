@@ -1,0 +1,37 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+ext {
+    libraries = [
+            supportVersion: "25.0.0",
+            retrofit      : "2.1.0",
+            okhttp        : "3.3.1",
+            picasso       : "2.5.2",
+            junit         : "4.12",
+            mockito       : "2.0.86-beta"
+    ]
+    getProperties = { String propertiesPath ->
+        def properties = new Properties()
+        properties.load(new FileInputStream(file(propertiesPath)))
+        return properties
+    }
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

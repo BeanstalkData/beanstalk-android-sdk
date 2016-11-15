@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/twenty_dp"
+    android:paddingEnd="@dimen/twenty_dp"
+    android:paddingLeft="@dimen/twenty_four_dp"
+    android:paddingRight="@dimen/twenty_four_dp"
+    android:paddingStart="@dimen/twenty_four_dp"
+    android:paddingTop="@dimen/twenty_dp">
+
+    <EditText
+        android:id="@+id/gift_card_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/gift_card_number"
+        android:inputType="number" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/eight_dp" />
+
+    <EditText
+        android:id="@+id/gift_card_pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/gift_card_pin_optional"
+        android:inputType="numberPassword" />
+
+</LinearLayout>

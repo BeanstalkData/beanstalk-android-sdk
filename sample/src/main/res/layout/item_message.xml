@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/message_sent_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/message_category"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/message_id"
+        android:gravity="center"
+        android:padding="@dimen/four_dp"
+        android:textSize="@dimen/text_size_headline"
+        tools:text="01/01/1900" />
+
+    <TextView
+        android:id="@+id/message_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/message_sent_date"
+        android:layout_toStartOf="@id/message_sent_date"
+        android:textSize="@dimen/text_size_title"
+        tools:text="1234567890" />
+
+    <TextView
+        android:id="@+id/message_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/message_id"
+        android:layout_toLeftOf="@id/message_sent_date"
+        android:layout_toStartOf="@id/message_sent_date"
+        android:textSize="@dimen/text_size_body"
+        tools:text="Coupon" />
+
+    <TextView
+        android:id="@+id/message_status_and_updated_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/message_category"
+        android:gravity="end"
+        android:textSize="@dimen/text_size_caption"
+        tools:text="READ (02/01/1900)" />
+
+</RelativeLayout>

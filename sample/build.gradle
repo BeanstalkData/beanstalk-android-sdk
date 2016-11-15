@@ -1,0 +1,71 @@
+apply plugin: 'com.android.application'
+
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+    defaultConfig {
+        applicationId "com.beanstalkdata.android.sample"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        def apiProperties = getProperties("library/api.properties")
+        buildConfigField 'String', 'BASE_URL', "\"${apiProperties['baseUrl']}\""
+        buildConfigField 'String', 'COMPANY', "\"${apiProperties['company']}\""
+        buildConfigField 'String', 'APP_KEY', "\"${apiProperties['appKey']}\""
+        buildConfigField 'String', 'GOOGLE_MAPS_KEY', "\"${apiProperties['googleMapsKey']}\""
+    }
+    signingConfigs {
+        debug {
+            def keystoreProperties = project.getProperties("keystore/debug.properties")
+            storeFile rootProject.file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+        release {
+            def keystoreProperties = project.getProperties("keystore/release.properties")
+            storeFile rootProject.file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+    buildTypes {
+        debug {
+            manifestPlaceholders = [
+                    allowBackup      : false,
+                    fullBackupContent: false
+            ]
+            signingConfig signingConfigs.debug
+        }
+        release {
+            manifestPlaceholders = [
+                    allowBackup      : true,
+                    fullBackupContent: true
+            ]
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    dexOptions {
+        dexInProcess true
+        javaMaxHeapSize "2g"
+    }
+}
+
+dependencies {
+    compile project(":library")
+    compile "com.android.support:appcompat-v7:${libraries.supportVersion}"
+    compile "com.android.support:support-v4:${libraries.supportVersion}"
+    compile "com.android.support:recyclerview-v7:${libraries.supportVersion}"
+    compile "com.squareup.picasso:picasso:${libraries.picasso}"
+    testCompile "junit:junit:${libraries.junit}"
+}

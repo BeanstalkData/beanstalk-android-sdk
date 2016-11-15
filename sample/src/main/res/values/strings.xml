@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">Beanstalk Sample</string>
+
+    <string name="profile">Profile</string>
+    <string name="menu">Menu</string>
+    <string name="update">Update</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="log_out">Log Out</string>
+    <string name="rewards">Rewards</string>
+    <string name="progress">Progress</string>
+    <string name="gift_cards">Gift Cards</string>
+    <string name="check_stores">Check Stores</string>
+    <string name="register_new_gift_card">Register New Gift Card</string>
+    <string name="update_message_status">Update Message Status</string>
+    <string name="gift_card_number">Gift Card Number</string>
+    <string name="gift_card_pin_optional">Gift Card Pin (Optional)</string>
+    <string name="register">Register</string>
+    <string name="cancel">Cancel</string>
+    <string name="update_contact">Update Contact</string>
+    <string name="messages">Messages</string>
+    <string name="notifications">Notifications</string>
+
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="zip_code">Zip Code</string>
+    <string name="birthday">Birthday</string>
+    <string name="gender">Gender</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="email_opt_in">Email Opt In</string>
+
+    <string name="message_status_format" formatted="false">%s (%s)</string>
+
+    <string name="rewards_count">You have earned %d rewards.</string>
+    <string name="stores_exist_at_zip_code_location">Stores exist at zip code location</string>
+
+    <string name="nearest_future_feature">This feature will be implemented in the nearest future</string>
+
+    <string name="error_email_required">Email must be set and be in the correct format</string>
+    <string name="error_password_required">Password must be set and be equal to the Confirm Password</string>
+    <string name="error_first_name_required">First name must be set</string>
+    <string name="error_last_name_required">Last name must be set</string>
+    <string name="error_phone_number_required">Correct phone number must be set</string>
+    <string name="error_zip_code_required">Correct zip code must be set</string>
+    <string name="error_birthday_required">Correct birthday must be set</string>
+    <string name="error_gender_required">Gender must be set</string>
+    <string name="error_zip_code_not_empty">Zip code must not be empty</string>
+    <string name="error_gift_card_number_not_empty">Gift card number must not be empty</string>
+</resources>

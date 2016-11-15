@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/reward_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/reward_expired_date"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/reward_name"
+        tools:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/reward_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/reward_image"
+        android:layout_toStartOf="@+id/reward_image"
+        android:textSize="@dimen/text_size_title"
+        tools:text="Sample reward name" />
+
+    <TextView
+        android:id="@+id/reward_expired_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/reward_name"
+        android:layout_toLeftOf="@+id/reward_image"
+        android:layout_toStartOf="@+id/reward_image"
+        android:textSize="@dimen/text_size_body"
+        tools:text="Sample expired date" />
+
+</RelativeLayout>

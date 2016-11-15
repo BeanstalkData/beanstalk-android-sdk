@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:padding="@dimen/sixteen_dp"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/first_name"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <TextView
+            android:id="@+id/field_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/last_name"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <TextView
+            android:id="@+id/field_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/email"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <TextView
+            android:id="@+id/field_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/gender"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <TextView
+            android:id="@+id/field_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/birthday"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <TextView
+            android:id="@+id/field_birthday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_number"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <TextView
+            android:id="@+id/field_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <Button
+            android:id="@+id/rewards"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/rewards"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/progress"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/gift_cards"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/gift_cards"
+            android:textColor="@android:color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/input_zip_code"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/zip_code" />
+
+            <Button
+                android:id="@+id/check_stores"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/check_stores"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <Button
+            android:id="@+id/messages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/messages"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sixteen_dp" />
+
+        <Button
+            android:id="@+id/update_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/update_contact"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/log_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/log_out"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</ScrollView>
