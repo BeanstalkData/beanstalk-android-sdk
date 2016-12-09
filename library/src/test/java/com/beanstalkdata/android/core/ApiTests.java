@@ -13,12 +13,14 @@ import com.beanstalkdata.android.response.CardBalanceResponse;
 import com.beanstalkdata.android.response.CouponResponse;
 import com.beanstalkdata.android.response.GiftCardListResponse;
 import com.beanstalkdata.android.response.LocationResponse;
+import com.beanstalkdata.android.response.LocationsResponse;
 import com.beanstalkdata.android.response.PaymentTokenResponse;
 import com.beanstalkdata.android.response.PushMessageByIdResponse;
 import com.beanstalkdata.android.response.PushMessagesResponse;
 import com.beanstalkdata.android.response.PushSuccessResponse;
 import com.beanstalkdata.android.response.RegisterGiftCardResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
+import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
 import com.google.gson.Gson;
@@ -110,6 +112,7 @@ public class ApiTests {
     private static final String DEVICE_TOKEN3 = "Some android device token";
     private static final String MESSAGE_ID3 = "12345678";
     private static final int MAX_MESSAGES3 = 2;
+    private static final String STORE_ID3 = "1";
 
     private static final String EMAIL4 = "novadine_test@2.com";
 
@@ -170,7 +173,7 @@ public class ApiTests {
                 case "/bsdStores/locate/?key=JOAA-RXHF-KFVU-JWKJ-GVIB&lat=28.6403769&long=-81.467637":
                     return new MockResponse()
                             .setResponseCode(200)
-                            .setBody("{}");
+                            .setBody(getStoreMock());
                 case "/bsdLoyalty/indentifyCustomer.php?field=CustomerID&key=JOAA-RXHF-KFVU-JWKJ-GVIB&value=123073":
                     return new MockResponse()
                             .setResponseCode(200)
@@ -179,6 +182,14 @@ public class ApiTests {
                     return new MockResponse()
                             .setResponseCode(200)
                             .setBody("{\"Coupon\":[{\"CouponNo\":\"Free Side Item\"}]}");
+                case "/bsdLoyalty/GetLocation.php?key=JOAA-RXHF-KFVU-JWKJ-GVIB&locationId=" + STORE_ID3:
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .setBody(getStoreInfoMock());
+                case "/bsdLoyalty/getLocations.php?key=JOAA-RXHF-KFVU-JWKJ-GVIB":
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .setBody(getLocationsMock());
                 default:
                     return new MockResponse().setResponseCode(404);
             }
@@ -296,6 +307,83 @@ public class ApiTests {
                 default:
                     return new MockResponse().setResponseCode(404);
             }
+        }
+
+        private String getStoreMock() {
+            return "{\"status\":true,\n" +
+                    "\"stores\":[{\"_id\":{\"$id\":\"1298129837189273\"},\n" +
+                    "\"CustomerId\":\"123\",\n" +
+                    "\"Date\":{\"sec\":1421863891,\"usec\":937000},\n" +
+                    "\"StoreId\":\"1234\",\n" +
+                    "\"StoreName\":\"MT VERNON & HWY 178\",\n" +
+                    "\"Country\":\"USA\",\n" +
+                    "\"Address1\":\"2659 Mt. Vernon Ave.\",\n" +
+                    "\"Address2\":\"\",\n" +
+                    "\"City\":\"Bakersfield\",\n" +
+                    "\"State\":\"CA\",\n" +
+                    "\"Zip\":\"93306\",\n" +
+                    "\"Phone\":\"661-555-1234\",\n" +
+                    "\"Fax\":\"661-555-1324\",\n" +
+                    "\"Concept\":\"Panda Express\",\n" +
+                    "\"Venue\":\"Street DT\",\n" +
+                    "\"SubVenue\":\"Free Standing\",\n" +
+                    "\"Region\":\"CCA\",\n" +
+                    "\"RegionName\":\"CENTRAL CALIFORNIA\",\n" +
+                    "\"Longitude\":\"-118.93041\",\n" +
+                    "\"Latitude\":\"35.390652\",\n" +
+                    "\"loc\":{\"type\":\"Point\",\"coordinates\":[-118.93041,35.390652],\"category\":\"Store\"},\n" +
+                    "\"geoEnabled\":\"1\"}\n" +
+                    "]}\n";
+        }
+
+        private String getStoreInfoMock() {
+            return "{\"storeInfo\":\n" +
+                    "{\"Id\":1,\n" +
+                    "\"Ownership\":\"Corporate\",\n" +
+                    "\"OwnershipID\":\"1\",\n" +
+                    "\"Primary_Id\":\"1234\",\n" +
+                    "\"StoreName\":\"A Store Name\",\n" +
+                    "\"FranchiseName\":null,\n" +
+                    "\"ClosingDate\":\"\",\n" +
+                    "\"Region\":\"44\",\n" +
+                    "\"RegionID\":\"44\",\n" +
+                    "\"OpeningDate\":\"7\\/20\\/2005 3:00:00 AM\",\n" +
+                    "\"Email\":\"blah@somecompany.com\",\n" +
+                    "\"FaxNumber\":\"508-555-8505\",\n" +
+                    "\"CustomerId\":1,\n" +
+                    "\"PhoneNumber\":\"508-555-0500\",\n" +
+                    "\"DisplayName\":\"Some display name\",\n" +
+                    "\"PostalCode\":\"01234\",\n" +
+                    "\"City\":\"Millbury\",\n" +
+                    "\"State\":\"MA\",\n" +
+                    "\"Address1\":\"70 Anywhere\",\n" +
+                    "\"DMAID\":\"11\",\n" +
+                    "\"Address2\":\"\",\n" +
+                    "\"DMA\":\"Boston, MA-NH\",\n" +
+                    "\"AreaID\":\"0\",\n" +
+                    "\"Area\":\"Group (Wickham)\",\n" +
+                    "\"DistrictID\":\"10\",\n" +
+                    "\"District\":\"District (Arroyo)\",\n" +
+                    "\"MarketID\":\"100\",\n" +
+                    "\"Market\":\"Boston-Prov\"}\n" +
+                    "}";
+        }
+
+        private String getLocationsMock() {
+            return "{\"Location\":\n" +
+                    "[{\"@attributes\":{\"ID\":\"1\"},\n" +
+                    "\"LocationNumber\":\"1\",\n" +
+                    "\"LocationName\":\"\",\n" +
+                    "\"StreetAddress\":\"\",\n" +
+                    "\"City\":\"\",\n" +
+                    "\"State\":\"\",\n" +
+                    "\"Zipcode\":\"\",\n" +
+                    "\"Country\":\"\",\n" +
+                    "\"X\":\"\",\n" +
+                    "\"Y\":\"\",\n" +
+                    "\"PhoneNumber\":\"\",\n" +
+                    "\"Participation\":\"\"}]\n" +
+                    "}";
         }
     };
 
@@ -644,17 +732,37 @@ public class ApiTests {
         assertNotNull(body);
     }
 
-    @Ignore
     @Test
     public void getStores() throws Exception {
-        // TODO: No docs about this API
         Call<StoresResponse> call = service.checkLocation(BuildConfig.APP_KEY, LAT3, LNG3);
         Response<StoresResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
         StoresResponse body = execute.body();
         assertNotNull(body);
-//        assertFalse(body.isFailed());
+        assertFalse(body.isFailed());
+    }
+
+    @Test
+    public void getStoreInfo() throws Exception {
+        Call<StoreInfoResponse> call = service.getStoreInfo(BuildConfig.APP_KEY, STORE_ID3);
+        Response<StoreInfoResponse> execute = call.execute();
+        assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
+
+        StoreInfoResponse body = execute.body();
+        assertNotNull(body);
+        assertFalse(body.isFailed());
+    }
+
+    @Test
+    public void getLocations() throws Exception {
+        Call<LocationsResponse> call = service.getLocations(BuildConfig.APP_KEY);
+        Response<LocationsResponse> execute = call.execute();
+        assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
+
+        LocationsResponse body = execute.body();
+        assertNotNull(body);
+        assertFalse(body.isFailed());
     }
 
     @Ignore

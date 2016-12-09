@@ -13,6 +13,8 @@ import com.beanstalkdata.android.response.CardBalanceResponse;
 import com.beanstalkdata.android.response.CouponResponse;
 import com.beanstalkdata.android.response.GiftCardListResponse;
 import com.beanstalkdata.android.response.LocationResponse;
+import com.beanstalkdata.android.response.StoreInfoResponse;
+import com.beanstalkdata.android.response.LocationsResponse;
 import com.beanstalkdata.android.response.PaymentTokenResponse;
 import com.beanstalkdata.android.response.PushMessageByIdResponse;
 import com.beanstalkdata.android.response.PushMessagesResponse;
@@ -166,6 +168,12 @@ interface BeanstalkDataApi {
     @POST("bsdTransactions/add/")
     @FormUrlEncoded
     Call<TrackTransactionResponse> trackTransaction(@Query("key") String apiKey, @Query("contact") String contactId, @Query("username") String beanstalkUsername, @Field("details") String details);
+
+    @GET("bsdLoyalty/getLocations.php")
+    Call<LocationsResponse> getLocations(@Query("key") String apiKey);
+
+    @GET("bsdLoyalty/GetLocation.php")
+    Call<StoreInfoResponse> getStoreInfo(@Query("key") String apiKey, @Query("locationId") String locationId);
 
     @GET("https://maps.googleapis.com/maps/api/geocode/json")
     Call<LocationResponse> getLocationByZipCode(@Query("key") String googleMapsApiKey, @Query("address") String zip);

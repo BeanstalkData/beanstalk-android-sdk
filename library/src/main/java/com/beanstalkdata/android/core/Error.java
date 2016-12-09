@@ -33,5 +33,7 @@ interface Error {
             "We will be expanding the program to all markets this summer, so please check back often for updates! You can still place your order by clicking on the Order button below.";
     String SESSION_VALID = "Session valid";
     String SESSION_INVALID = "Session invalid";
+    String STORE_INFO_FAILED = "Unable to find this store";
+    String STORES_LOCATIONS_FAILED = "Unable to find any stores";
 
 }

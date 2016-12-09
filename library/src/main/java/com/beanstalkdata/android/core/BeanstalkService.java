@@ -26,12 +26,14 @@ import com.beanstalkdata.android.response.CardBalanceResponse;
 import com.beanstalkdata.android.response.CouponResponse;
 import com.beanstalkdata.android.response.GiftCardListResponse;
 import com.beanstalkdata.android.response.LocationResponse;
+import com.beanstalkdata.android.response.LocationsResponse;
 import com.beanstalkdata.android.response.PaymentTokenResponse;
 import com.beanstalkdata.android.response.PushMessageByIdResponse;
 import com.beanstalkdata.android.response.PushMessagesResponse;
 import com.beanstalkdata.android.response.PushSuccessResponse;
 import com.beanstalkdata.android.response.RegisterGiftCardResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
+import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
 import com.google.gson.Gson;
@@ -795,6 +797,69 @@ public class BeanstalkService {
             public void onFailure(Call<StoresResponse> call, Throwable t) {
                 if (listener != null) {
                     listener.onFinished(Error.SIGN_UP_LOCATION_FAILED);
+                }
+            }
+        });
+    }
+
+    /**
+     * Get store info by store Id.
+     *
+     * @param storeId  store Id.
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getStoreInfo(String storeId, final OnReturnListener listener) {
+        Call<StoreInfoResponse> storeInfoResponseCall = service.getStoreInfo(beanstalkApiKey, storeId);
+        storeInfoResponseCall.enqueue(new Callback<StoreInfoResponse>() {
+            @Override
+            public void onResponse(Call<StoreInfoResponse> call, Response<StoreInfoResponse> response) {
+                StoreInfoResponse body = response.body();
+                if (body != null && !body.isFailed()) {
+                    if (listener != null) {
+                        listener.onFinished(null);
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(Error.STORE_INFO_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoreInfoResponse> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(Error.STORE_INFO_FAILED);
+                }
+            }
+        });
+    }
+
+    /**
+     * Get all stores locations.
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getAllStores(final OnReturnListener listener) {
+        Call<LocationsResponse> locationsResponseCall = service.getLocations(beanstalkApiKey);
+        locationsResponseCall.enqueue(new Callback<LocationsResponse>() {
+            @Override
+            public void onResponse(Call<LocationsResponse> call, Response<LocationsResponse> response) {
+                LocationsResponse body = response.body();
+                if (body != null && !body.isFailed()) {
+                    if (listener != null) {
+                        listener.onFinished(null);
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(Error.STORE_INFO_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LocationsResponse> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(Error.STORES_LOCATIONS_FAILED);
                 }
             }
         });
