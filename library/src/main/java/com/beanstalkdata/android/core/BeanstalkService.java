@@ -753,7 +753,7 @@ public class BeanstalkService {
                 LocationResponse body = response.body();
                 if (body != null && !body.isFailed()) {
                     if (listener != null) {
-                        listener.onFinished(body, Error.SIGN_UP_ZIP_FAILED);
+                        listener.onFinished(body, null);
                     }
                 } else {
                     if (listener != null) {
