@@ -5,7 +5,6 @@
 package com.beanstalkdata.android.core;
 
 import android.content.Context;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -778,7 +777,7 @@ public class BeanstalkService {
      * @param location Location coordinates.
      * @param listener Callback that will run after network request is completed.
      */
-    public void checkLocation(Location location, final OnReturnDataListener<StoresResponse> listener) {
+    public void checkLocation(LocationResponse.Location location, final OnReturnDataListener<StoresResponse> listener) {
         Call<StoresResponse> storesResponseCall = service.checkLocation(beanstalkApiKey, location.getLatitude(), location.getLongitude());
         storesResponseCall.enqueue(new Callback<StoresResponse>() {
             @Override
