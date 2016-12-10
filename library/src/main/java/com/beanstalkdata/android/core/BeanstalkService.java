@@ -776,7 +776,7 @@ public class BeanstalkService {
      * @param location Location coordinates.
      * @param listener Callback that will run after network request is completed.
      */
-    public void checkLocation(Location location, final OnReturnListener listener) {
+    public void checkLocation(Location location, final OnReturnDataListener<StoresResponse> listener) {
         Call<StoresResponse> storesResponseCall = service.checkLocation(beanstalkApiKey, location.getLatitude(), location.getLongitude());
         storesResponseCall.enqueue(new Callback<StoresResponse>() {
             @Override
@@ -784,11 +784,11 @@ public class BeanstalkService {
                 StoresResponse body = response.body();
                 if (body != null && !body.isFailed()) {
                     if (listener != null) {
-                        listener.onFinished(null);
+                        listener.onFinished(body, null);
                     }
                 } else {
                     if (listener != null) {
-                        listener.onFinished(Error.SIGN_UP_LOCATION_FAILED);
+                        listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
                     }
                 }
             }
@@ -796,7 +796,7 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<StoresResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.SIGN_UP_LOCATION_FAILED);
+                    listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
                 }
             }
         });
@@ -808,7 +808,7 @@ public class BeanstalkService {
      * @param storeId  store Id.
      * @param listener Callback that will run after network request is completed.
      */
-    public void getStoreInfo(String storeId, final OnReturnListener listener) {
+    public void getStoreInfo(String storeId, final OnReturnDataListener<StoreInfoResponse> listener) {
         Call<StoreInfoResponse> storeInfoResponseCall = service.getStoreInfo(beanstalkApiKey, storeId);
         storeInfoResponseCall.enqueue(new Callback<StoreInfoResponse>() {
             @Override
@@ -816,11 +816,11 @@ public class BeanstalkService {
                 StoreInfoResponse body = response.body();
                 if (body != null && !body.isFailed()) {
                     if (listener != null) {
-                        listener.onFinished(null);
+                        listener.onFinished(body, null);
                     }
                 } else {
                     if (listener != null) {
-                        listener.onFinished(Error.STORE_INFO_FAILED);
+                        listener.onFinished(null, Error.STORE_INFO_FAILED);
                     }
                 }
             }
@@ -828,7 +828,7 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<StoreInfoResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.STORE_INFO_FAILED);
+                    listener.onFinished(null, Error.STORE_INFO_FAILED);
                 }
             }
         });
@@ -839,7 +839,7 @@ public class BeanstalkService {
      *
      * @param listener Callback that will run after network request is completed.
      */
-    public void getAllStores(final OnReturnListener listener) {
+    public void getAllStores(final OnReturnDataListener<LocationsResponse> listener) {
         Call<LocationsResponse> locationsResponseCall = service.getLocations(beanstalkApiKey);
         locationsResponseCall.enqueue(new Callback<LocationsResponse>() {
             @Override
@@ -847,11 +847,11 @@ public class BeanstalkService {
                 LocationsResponse body = response.body();
                 if (body != null && !body.isFailed()) {
                     if (listener != null) {
-                        listener.onFinished(null);
+                        listener.onFinished(body, null);
                     }
                 } else {
                     if (listener != null) {
-                        listener.onFinished(Error.STORE_INFO_FAILED);
+                        listener.onFinished(null, Error.STORE_INFO_FAILED);
                     }
                 }
             }
@@ -859,7 +859,7 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<LocationsResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.STORES_LOCATIONS_FAILED);
+                    listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
                 }
             }
         });
