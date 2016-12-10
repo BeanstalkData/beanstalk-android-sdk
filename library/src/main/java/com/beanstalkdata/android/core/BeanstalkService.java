@@ -746,17 +746,19 @@ public class BeanstalkService {
      * @param zip      Zip code.
      * @param listener Callback that will run after network request is completed.
      */
-    public void checkStores(String zip, final OnReturnListener listener) {
+    public void checkStores(String zip, final OnReturnDataListener<LocationResponse> listener) {
         Call<LocationResponse> locationByZipCode = service.getLocationByZipCode(googleMapsApiKey, zip);
         locationByZipCode.enqueue(new Callback<LocationResponse>() {
             @Override
             public void onResponse(Call<LocationResponse> call, Response<LocationResponse> response) {
                 LocationResponse body = response.body();
                 if (body != null && !body.isFailed()) {
-                    checkLocation(body.getLocation(), listener);
+                    if (listener != null) {
+                        listener.onFinished(body, Error.SIGN_UP_ZIP_FAILED);
+                    }
                 } else {
                     if (listener != null) {
-                        listener.onFinished(Error.SIGN_UP_ZIP_FAILED);
+                        listener.onFinished(null, Error.SIGN_UP_ZIP_FAILED);
                     }
                 }
             }
@@ -764,7 +766,7 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<LocationResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.SIGN_UP_ZIP_FAILED);
+                    listener.onFinished(null, Error.SIGN_UP_ZIP_FAILED);
                 }
             }
         });
