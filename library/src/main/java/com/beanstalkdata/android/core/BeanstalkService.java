@@ -114,6 +114,15 @@ public class BeanstalkService {
     }
 
     /**
+     * Get Beanstalk user session.
+     *
+     * @return Current user session.
+     */
+    public BeanstalkUserSession getBeanstalkUserSession() {
+        return beanstalkUserSession;
+    }
+
+    /**
      * Log out authenticated user.
      *
      * @param listener Callback that will run after network request is completed.

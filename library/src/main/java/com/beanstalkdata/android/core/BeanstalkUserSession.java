@@ -9,7 +9,10 @@ import android.content.SharedPreferences;
 
 import com.beanstalkdata.android.model.GiftCard;
 
-class BeanstalkUserSession {
+/**
+ * Beanstalk user session info holder.
+ */
+public class BeanstalkUserSession {
     private static final String CORE_PREFS_NAME = "_pt_session";
     private static final String DEFAULT_CARD_PREFS_NAME = "_pt_default_card";
 
@@ -36,19 +39,35 @@ class BeanstalkUserSession {
         defaultCardSharedPreferences.edit().clear().apply();
     }
 
-    String getToken() {
+    /**
+     * Get Beanstalk user session token.
+     * @return Beanstalk user session token.
+     */
+    public String getToken() {
         return coreSharedPreferences.getString(TOKEN, null);
     }
 
-    String getContactId() {
+    /**
+     * Get Beanstalk user contact id.
+     * @return Beanstalk user contact id.
+     */
+    public String getContactId() {
         return coreSharedPreferences.getString(CONTACT_ID, null);
     }
 
-    boolean isLoggedIn() {
+    /**
+     * Check if user is logged in.
+     * @return Beanstalk user is logged in or not.
+     */
+    public boolean isLoggedIn() {
         return (getContactId() != null) && (getToken() != null);
     }
 
-    String getFKey() {
+    /**
+     * Get Beanstalk user F key.
+     * @return Beanstalk user F key.
+     */
+    public String getFKey() {
         return coreSharedPreferences.getString(F_KEY, null);
     }
 
@@ -60,7 +79,11 @@ class BeanstalkUserSession {
         coreSharedPreferences.edit().putString(CONTACT_JSON, json).apply();
     }
 
-    GiftCard getDefaultCard() {
+    /**
+     * Get Beanstalk user default gift card.
+     * @return Beanstalk user default gift card.
+     */
+    public GiftCard getDefaultCard() {
         return GiftCard.fromPrefs(defaultCardSharedPreferences);
     }
 
