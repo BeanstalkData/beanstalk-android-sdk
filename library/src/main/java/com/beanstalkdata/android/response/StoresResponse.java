@@ -180,7 +180,7 @@ public class StoresResponse {
             return geoEnabled.equals("1");
         }
 
-        public Store makeMockStore(String name, String address1, String address2, String phone, boolean status, float lat, float lon) {
+        public static Store makeMockStore(String name, String address1, String address2, String phone, boolean status, float lat, float lon) {
             Store store = new Store();
             store.storeName = name;
             store.address1 = address1;
