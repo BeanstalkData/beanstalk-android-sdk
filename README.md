@@ -28,7 +28,7 @@ Add the dependency to relevant project module:
 
 ```groovy
 dependencies {
-    compile 'com.github.BeanstalkData:beanstalk-android-sdk:1.2.5'
+    compile 'com.github.BeanstalkData:beanstalk-android-sdk:1.2.6'
 }
 ```
 

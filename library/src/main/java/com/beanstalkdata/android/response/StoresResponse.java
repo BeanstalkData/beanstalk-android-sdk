@@ -175,6 +175,22 @@ public class StoresResponse {
         public String getGeoEnabled() {
             return geoEnabled;
         }
+
+        public boolean isOpen() {
+            return geoEnabled.equals("1");
+        }
+
+        public Store makeMockStore(String name, String address1, String address2, String phone, boolean status, float lat, float lon) {
+            Store store = new Store();
+            store.storeName = name;
+            store.address1 = address1;
+            store.address2 = address2;
+            store.phone = phone;
+            store.geoEnabled = status ? "1" : "";
+            store.lat = String.valueOf(lat);
+            store.lon = String.valueOf(lon);
+            return store;
+        }
     }
 
     public static class Id {
