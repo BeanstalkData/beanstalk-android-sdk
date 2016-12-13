@@ -32,10 +32,24 @@ public class LocationResponse {
         }
     }
 
+    public String getAddress() {
+        if (isFailed()) {
+            return null;
+        }
+        return results[0].getAddress();
+    }
+
     public static class Result {
 
         @SerializedName("geometry")
         private Geometry geometry;
+
+        @SerializedName("formatted_address")
+        private String address;
+
+        public String getAddress() {
+            return address;
+        }
     }
 
     public static class Geometry {

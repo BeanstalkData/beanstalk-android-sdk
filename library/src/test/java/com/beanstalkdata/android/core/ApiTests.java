@@ -932,6 +932,7 @@ public class ApiTests {
         LocationResponse body = execute.body();
         assertNotNull(body);
         assertFalse(body.isFailed());
+        assertEquals(body.getAddress(), "Orlando, FL 32818, USA");
         assertEquals(28.6403769, body.getLocation().getLatitude(), 0.1);
         assertEquals(-81.467637, body.getLocation().getLongitude(), 0.1);
     }
