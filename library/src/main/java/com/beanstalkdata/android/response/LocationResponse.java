@@ -66,6 +66,13 @@ public class LocationResponse {
         @SerializedName("lng")
         private double lng;
 
+        public Location() {}
+
+        public Location(double lat, double lng) {
+            this.lat = lat;
+            this.lng = lng;
+        }
+
         public double getLatitude() {
             return lat;
         }
