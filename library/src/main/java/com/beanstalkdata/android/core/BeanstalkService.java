@@ -677,7 +677,7 @@ public class BeanstalkService {
                         }
                     } else {
                         if (listener != null) {
-                            request.applyUpdate();
+//                            request.applyUpdate();
                             listener.onFinished(null);
                         }
                     }
