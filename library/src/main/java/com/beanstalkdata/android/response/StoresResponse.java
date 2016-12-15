@@ -55,6 +55,9 @@ public class StoresResponse {
         @SerializedName("Zip")
         private String zip;
 
+        @SerializedName("DMA")
+        private String dma;
+
         @SerializedName("Phone")
         private String phone;
 
@@ -130,6 +133,10 @@ public class StoresResponse {
 
         public String getZip() {
             return zip;
+        }
+
+        public String getDma() {
+            return dma;
         }
 
         public String getPhone() {
