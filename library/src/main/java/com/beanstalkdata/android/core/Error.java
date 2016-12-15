@@ -9,6 +9,7 @@ interface Error {
     String REGISTER_CARD_FAILED = "Unable to register card.";
     String SIGN_IN_FAILED = "Unable to sign up user, please try again later.";
     String REGISTRATION_FAILED = "Unable to complete registration";
+    String CONTACT_UPDATE_FAILED = "Unable to update contact";
     String AUTHORIZATION_FAILED = "Unable to login";
     String LOGOUT_FAILED = "Logout Error";
     String UPDATE_PASSWORD_FAILED = "Unable to update password";

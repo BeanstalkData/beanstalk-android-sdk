@@ -671,9 +671,9 @@ public class BeanstalkService {
                 public void onResponse(Call<String[]> call, Response<String[]> response) {
                     String[] body = response.body();
                     log("onResponse() - " + Arrays.toString(body));
-                    if (body == null || body.length != 1) {
+                    if (body == null) {
                         if (listener != null) {
-                            listener.onFinished(Error.REGISTRATION_FAILED);
+                            listener.onFinished(Error.CONTACT_UPDATE_FAILED);
                         }
                     } else {
                         if (listener != null) {
@@ -687,7 +687,7 @@ public class BeanstalkService {
                 public void onFailure(Call<String[]> call, Throwable t) {
                     log("onFailure()" + t.toString());
                     if (listener != null) {
-                        listener.onFinished(Error.REGISTRATION_FAILED);
+                        listener.onFinished(Error.CONTACT_UPDATE_FAILED);
                     }
                 }
             });
