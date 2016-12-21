@@ -175,6 +175,7 @@ interface BeanstalkDataApi {
     @GET("bsdLoyalty/GetLocation.php")
     Call<StoreInfoResponse> getStoreInfo(@Query("key") String apiKey, @Query("locationId") String locationId);
 
+    @Deprecated
     @GET("https://maps.googleapis.com/maps/api/geocode/json")
     Call<LocationResponse> getLocationByZipCode(@Query("key") String googleMapsApiKey, @Query("address") String zip);
 

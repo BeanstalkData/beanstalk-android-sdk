@@ -91,6 +91,9 @@ public class StoresResponse {
         @SerializedName("geoEnabled")
         private String geoEnabled;
 
+        @SerializedName("PaymentLoyaltyParticipation")
+        private boolean paymentLoyaltyParticipation;
+
         public Id getId() {
             return id;
         }
@@ -181,6 +184,10 @@ public class StoresResponse {
 
         public String getGeoEnabled() {
             return geoEnabled;
+        }
+
+        public boolean isPaymentLoyaltyParticipation() {
+            return paymentLoyaltyParticipation;
         }
 
         public boolean isOpen() {

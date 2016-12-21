@@ -754,6 +754,7 @@ public class BeanstalkService {
      * @param zip      Zip code.
      * @param listener Callback that will run after network request is completed.
      */
+    @Deprecated
     public void checkStores(String zip, final OnReturnDataListener<LocationResponse> listener) {
         Call<LocationResponse> locationByZipCode = service.getLocationByZipCode(googleMapsApiKey, zip);
         locationByZipCode.enqueue(new Callback<LocationResponse>() {
