@@ -48,6 +48,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -1322,7 +1323,11 @@ public class BeanstalkService {
     }
 
     private void createLoyaltyAccount(final ContactRequest request, final OnReturnDataListener<LoyaltyUser> listener) {
-        service.createLoyaltyAccount(beanstalkApiKey, request.asParams()).enqueue(new Callback<LoyaltyUser>() {
+        Map<String, String> loyaltyRequestParams = new LinkedHashMap<>();
+        loyaltyRequestParams.putAll(request.asParams());
+        loyaltyRequestParams.put("Password", request.getPassword());
+
+        service.createLoyaltyAccount(beanstalkApiKey, loyaltyRequestParams).enqueue(new Callback<LoyaltyUser>() {
 
             @Override
             public void onResponse(Call<LoyaltyUser> call, Response<LoyaltyUser> response) {
