@@ -15,6 +15,7 @@ import com.beanstalkdata.android.model.CardBalance;
 import com.beanstalkdata.android.model.Contact;
 import com.beanstalkdata.android.model.Coupon;
 import com.beanstalkdata.android.model.GiftCard;
+import com.beanstalkdata.android.model.LoyaltyUser;
 import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
@@ -700,8 +701,44 @@ public class BeanstalkService {
      * @param request  Request information for adding contact.
      * @param listener Callback that will run after network request is completed.
      */
-    public void addContactWithEmail(ContactRequest request, final OnReturnListener listener) {
-        checkUserByEmail(request, listener);
+    public void addContactWithEmail(final ContactRequest request, final OnReturnListener listener) {
+        checkUserByEmail(request, new OnReturnListener() {
+
+            @Override
+            public void onFinished(String error) {
+                if (error != null) {
+                    if (listener != null) {
+                        listener.onFinished(error);
+                    }
+                } else {
+                    createContact(request, listener, true);
+                }
+            }
+
+        });
+    }
+
+    /**
+     * Add loyalty contact.
+     *
+     * @param request  Request information for adding contact.
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void addLoyaltyContact(final ContactRequest request, final OnReturnDataListener<LoyaltyUser> listener) {
+        checkUserByEmail(request, new OnReturnListener() {
+
+            @Override
+            public void onFinished(String error) {
+                if (error != null) {
+                    if (listener != null) {
+                        listener.onFinished(null, error);
+                    }
+                } else {
+                    createLoyaltyAccount(request, listener);
+                }
+            }
+
+        });
     }
 
     /**
@@ -1182,14 +1219,18 @@ public class BeanstalkService {
                         String prospect = contact.getProspect();
                         log("checkUserByPhone() - prospect found " + prospect);
                         if ("eclub".equals(prospect)) {
-                            createContact(request, listener, true);
+                            if (listener != null) {
+                                listener.onFinished(null);
+                            }
                         } else {
                             if (listener != null) {
                                 listener.onFinished(Error.CONTACT_EXISTED_PHONE);
                             }
                         }
                     } else {
-                        createContact(request, listener, true);
+                        if (listener != null) {
+                            listener.onFinished(null);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -1200,7 +1241,9 @@ public class BeanstalkService {
 
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
-                createContact(request, listener, true);
+                if (listener != null) {
+                    listener.onFinished(null);
+                }
             }
         });
     }
@@ -1275,6 +1318,30 @@ public class BeanstalkService {
                     listener.onFinished(Error.SIGN_IN_FAILED);
                 }
             }
+        });
+    }
+
+    private void createLoyaltyAccount(final ContactRequest request, final OnReturnDataListener<LoyaltyUser> listener) {
+        service.createLoyaltyAccount(beanstalkApiKey, request.asParams()).enqueue(new Callback<LoyaltyUser>() {
+
+            @Override
+            public void onResponse(Call<LoyaltyUser> call, Response<LoyaltyUser> response) {
+                if (listener != null) {
+                    if (response.isSuccessful()) {
+                        listener.onFinished(response.body(), null);
+                    } else {
+                        listener.onFinished(null, Error.SIGN_IN_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoyaltyUser> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.SIGN_IN_FAILED);
+                }
+            }
+
         });
     }
 

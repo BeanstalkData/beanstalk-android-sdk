@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.beanstalkdata.android.callback.OnReturnDataListener;
 import com.beanstalkdata.android.callback.OnReturnListener;
 import com.beanstalkdata.android.model.Contact;
+import com.beanstalkdata.android.response.LocationResponse;
 import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseFragment;
 import com.beanstalkdata.android.sample.login.ContactInfoFragment;
@@ -113,9 +114,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 String zipCode = zipCodeInput.getText().toString();
                 if (InputUtils.notEmpty(zipCode)) {
                     activityContract.showProgress();
-                    getService().checkStores(zipCode, new OnReturnListener() {
+                    getService().checkStores(zipCode, new OnReturnDataListener<LocationResponse>() {
                         @Override
-                        public void onFinished(String error) {
+                        public void onFinished(LocationResponse data, String error) {
                             if (activityContract != null) {
                                 activityContract.hideProgress();
                             }

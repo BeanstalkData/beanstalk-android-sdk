@@ -5,6 +5,7 @@
 package com.beanstalkdata.android.core;
 
 import com.beanstalkdata.android.model.Contact;
+import com.beanstalkdata.android.model.LoyaltyUser;
 import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
@@ -54,6 +55,10 @@ interface BeanstalkDataApi {
     @POST("/addUser/")
     @FormUrlEncoded
     Call<String> createUser(@Field("email") String email, @Field("password") String password, @Field("key") String key, @Field("contact") String contact);
+
+    @POST("/addPaymentLoyaltyAccount/")
+    @FormUrlEncoded
+    Call<LoyaltyUser> createLoyaltyAccount(@Query("key") String apiKey, @FieldMap Map<String, String> request);
 
     @POST("/authenticateUser/")
     @FormUrlEncoded
