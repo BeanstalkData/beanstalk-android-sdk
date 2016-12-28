@@ -136,19 +136,16 @@ interface BeanstalkDataApi {
     @GET("bsdStores/locate/")
     Call<StoresResponse> checkLocation(@Query("key") String apiKey, @Query("lat") double lat, @Query("long") double lng);
 
-    @POST("pushNotificationEnroll")
-    @FormUrlEncoded
-    Call<PushSuccessResponse> enrollPushNotification(@Field("key") String apiKey, @Field("contactId") String contactId,
-                                                     @Field("deviceToken") String deviceToken, @PlatformType @Field("platform") String platform);
+    @GET("pushNotificationEnroll")
+    Call<PushSuccessResponse> enrollPushNotification(@Query("key") String apiKey, @Query("contact_id") String contactId,
+                                                     @Query("deviceToken") String deviceToken, @PlatformType @Query("platform") String platform);
 
-    @POST("pushNotificationModify")
-    @FormUrlEncoded
-    Call<PushSuccessResponse> modifyPushNotification(@Field("key") String apiKey, @Field("contactId") String contactId,
-                                                     @Field("deviceToken") String deviceToken, @PlatformType @Field("platform") String platform);
+    @GET("pushNotificationModify")
+    Call<PushSuccessResponse> modifyPushNotification(@Query("key") String apiKey, @Query("contact_id") String contactId,
+                                                     @Query("deviceToken") String deviceToken, @PlatformType @Query("platform") String platform);
 
-    @POST("pushNotificationDelete")
-    @FormUrlEncoded
-    Call<PushSuccessResponse> deletePushNotification(@Field("key") String apiKey, @Field("contactId") String contactId);
+    @GET("pushNotificationDelete")
+    Call<PushSuccessResponse> deletePushNotification(@Query("key") String apiKey, @Query("contact_id") String contactId);
 
     @POST("pushNotification/getMessages")
     @FormUrlEncoded

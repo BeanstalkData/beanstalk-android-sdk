@@ -53,6 +53,9 @@ public class Contact {
     @SerializedName("Novadine_User")
     private boolean novadineUser;
 
+    @SerializedName("DeviceTokenExt")
+    private String deviceToken;
+
     public String getFKey() {
         return fKey;
     }
@@ -107,6 +110,14 @@ public class Contact {
 
     public String getPreferredReward() {
         return preferredReward;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 
     public void setFirstName(String firstName) {
@@ -178,6 +189,7 @@ public class Contact {
             return false;
         if (fKey != null ? !fKey.equals(contact.fKey) : contact.fKey != null) return false;
         if (cellNumber != null ? !cellNumber.equals(contact.cellNumber) : contact.cellNumber != null) return false;
+        if (!deviceToken.equals(contact.deviceToken)) return false;
         return preferredReward != null ? preferredReward.equals(contact.preferredReward) : contact.preferredReward == null;
 
     }
@@ -198,6 +210,7 @@ public class Contact {
         result = 31 * result + emailOptin;
         result = 31 * result + (preferredReward != null ? preferredReward.hashCode() : 0);
         result = 31 * result + (novadineUser ? 1 : 0);
+        result = 31 * result + (deviceToken != null ? deviceToken.hashCode() : 0);
         return result;
     }
 }

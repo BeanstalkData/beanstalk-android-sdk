@@ -190,6 +190,18 @@ public class ApiTests {
                     return new MockResponse()
                             .setResponseCode(200)
                             .setBody(getLocationsMock());
+                case "/pushNotificationEnroll?key=JOAA-RXHF-KFVU-JWKJ-GVIB&contact_id=16666008&deviceToken=Some%20android%20device%20token&platform=Android":
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .setBody("{\"success\":true}");
+                case "/pushNotificationModify?key=JOAA-RXHF-KFVU-JWKJ-GVIB&contact_id=16666008&deviceToken=Some%20android%20device%20token&platform=Android":
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .setBody("{\"success\":true}");
+                case "/pushNotificationDelete?key=JOAA-RXHF-KFVU-JWKJ-GVIB&contact_id=16666008":
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .setBody("{\"success\":true}");
                 default:
                     return new MockResponse().setResponseCode(404);
             }
@@ -261,18 +273,6 @@ public class ApiTests {
                     return new MockResponse()
                             .setResponseCode(200)
                             .setBody("{\"status\":true,\"success\":{}}");
-                case "/pushNotificationEnroll":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{\"success\":true}");
-                case "/pushNotificationModify":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{\"success\":true}");
-                case "/pushNotificationDelete":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{\"success\":true}");
                 case "/pushNotification/getMessages":
                     return new MockResponse()
                             .setResponseCode(200)
