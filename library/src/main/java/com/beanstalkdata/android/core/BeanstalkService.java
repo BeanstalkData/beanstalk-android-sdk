@@ -1323,11 +1323,12 @@ public class BeanstalkService {
     }
 
     private void createLoyaltyAccount(final ContactRequest request, final OnReturnDataListener<LoyaltyUser> listener) {
-        Map<String, String> loyaltyRequestParams = new LinkedHashMap<>();
-        loyaltyRequestParams.putAll(request.asParams());
-        loyaltyRequestParams.put("Password", request.getPassword());
+        Map<String, String> loyaltyContactRequestParams = new LinkedHashMap<>();
+        loyaltyContactRequestParams.putAll(request.asParams());
+        loyaltyContactRequestParams.put(ContactRequest.Parameters.LOYALTY_PASSWORD, request.getPassword());
+        loyaltyContactRequestParams.put(ContactRequest.Parameters.LOYALTY_PHONE, loyaltyContactRequestParams.remove(ContactRequest.Parameters.PHONE));
 
-        service.createLoyaltyAccount(beanstalkApiKey, loyaltyRequestParams).enqueue(new Callback<LoyaltyUser>() {
+        service.createLoyaltyAccount(beanstalkApiKey, loyaltyContactRequestParams).enqueue(new Callback<LoyaltyUser>() {
 
             @Override
             public void onResponse(Call<LoyaltyUser> call, Response<LoyaltyUser> response) {

@@ -12,25 +12,13 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.*;
+
 /**
  * Data model for Contact request.
  */
 public class ContactRequest {
 
-    private static final String CONTACT_ID = "ContactID";
-    private static final String FIRST_NAME = "FirstName";
-    private static final String LAST_NAME = "LastName";
-    private static final String ZIP_CODE = "ZipCode";
-    private static final String EMAIL = "Email";
-    private static final String PHONE = "Cell_Number";
-    private static final String BIRTHDAY = "Birthday";
-    private static final String PROSPECT = "Prospect";
-    private static final String PREFERRED_REWARD = "custom_PreferredReward";
-    private static final String GENDER = "Gender";
-    private static final String EMAIL_OPT_IN = "Email_Optin";
-    private static final String TXT_OPT_IN = "Txt_Optin";
-    private static final String SOURCE = "Source";
-    private static final String NOVADINE ="custom_Novadine_User";
     private final Map<String, String> params = new LinkedHashMap<>();
     private Contact original;
     private String password;
@@ -227,4 +215,25 @@ public class ContactRequest {
         }
         params.clear();
     }
+
+    public interface Parameters {
+        String CONTACT_ID = "ContactID";
+        String FIRST_NAME = "FirstName";
+        String LAST_NAME = "LastName";
+        String ZIP_CODE = "ZipCode";
+        String EMAIL = "Email";
+        String PHONE = "Cell_Number";
+        String BIRTHDAY = "Birthday";
+        String PROSPECT = "Prospect";
+        String PREFERRED_REWARD = "custom_PreferredReward";
+        String GENDER = "Gender";
+        String EMAIL_OPT_IN = "Email_Optin";
+        String TXT_OPT_IN = "Txt_Optin";
+        String SOURCE = "Source";
+        String NOVADINE ="custom_Novadine_User";
+
+        String LOYALTY_PASSWORD = "Password";
+        String LOYALTY_PHONE = "CellNumber";
+    }
+
 }
