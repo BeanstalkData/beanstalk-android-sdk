@@ -12,7 +12,20 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.beanstalkdata.android.request.ContactRequest.Parameters.*;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.BIRTHDAY;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.CONTACT_ID;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.EMAIL;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.EMAIL_OPT_IN;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.FIRST_NAME;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.GENDER;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.LAST_NAME;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.NOVADINE;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.PHONE;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.PREFERRED_REWARD;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.PROSPECT;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.SOURCE;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.TXT_OPT_IN;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.ZIP_CODE;
 
 /**
  * Data model for Contact request.
@@ -33,8 +46,7 @@ public class ContactRequest {
         this.params.put(CONTACT_ID, original.getContactId());
     }
 
-    public ContactRequest(String birthday, String email, String firstName, String lastName, String phone,
-                          String zip, String preferredReward){
+    public ContactRequest(String birthday, String email, String firstName, String lastName, String phone, String zip, String preferredReward) {
         this.params.put(PROSPECT, "loyalty");
         this.params.put(SOURCE, "androidapp");
 
@@ -44,9 +56,8 @@ public class ContactRequest {
         this.params.put(LAST_NAME, lastName);
         this.params.put(PHONE, phone);
         this.params.put(ZIP_CODE, zip);
-       // this.params.put(GENDER, isMan ? "Male" : "Female");
+        // this.params.put(GENDER, isMan ? "Male" : "Female");
         this.params.put(PREFERRED_REWARD, preferredReward);
-
     }
 
     public void setFirstName(String value) {
@@ -103,16 +114,6 @@ public class ContactRequest {
         params.put(TXT_OPT_IN, String.valueOf(txtOptIn));
     }
 
-    public void setPhone(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return;
-        }
-        if (original != null && value.equalsIgnoreCase(original.getPhone())) {
-            return;
-        }
-        params.put(PHONE, value);
-    }
-
     public void setBirthDate(String value) {
         if (TextUtils.isEmpty(value)) {
             return;
@@ -133,20 +134,6 @@ public class ContactRequest {
         params.put(GENDER, gender);
     }
 
-    public void setPassword(String value) {
-        password = value;
-    }
-
-    public void setEmail(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return;
-        }
-        if (original != null && value.equalsIgnoreCase(original.getEmail())) {
-            return;
-        }
-        params.put(EMAIL, value);
-    }
-
     public void setPreferredReward(String value) {
         if (TextUtils.isEmpty(value)) {
             return;
@@ -161,12 +148,52 @@ public class ContactRequest {
         return password;
     }
 
+    public void setPassword(String value) {
+        password = value;
+    }
+
     public String getEmail() {
         return params.get(EMAIL);
     }
 
+    public void setEmail(String value) {
+        if (TextUtils.isEmpty(value)) {
+            return;
+        }
+        if (original != null && value.equalsIgnoreCase(original.getEmail())) {
+            return;
+        }
+        params.put(EMAIL, value);
+    }
+
     public String getPhone() {
         return params.get(PHONE);
+    }
+
+    public void setPhone(String value) {
+        if (TextUtils.isEmpty(value)) {
+            return;
+        }
+        if (original != null && value.equalsIgnoreCase(original.getPhone())) {
+            return;
+        }
+        params.put(PHONE, value);
+    }
+
+    public void setParam(String key, String value) {
+        if (TextUtils.isEmpty(value)) {
+            clearParam(key);
+            return;
+        }
+        params.put(key, value);
+    }
+
+    public String getParam(String key) {
+        return params.get(key);
+    }
+
+    public String clearParam(String key) {
+        return params.remove(key);
     }
 
     public Map<String, String> asParams() {
@@ -174,8 +201,7 @@ public class ContactRequest {
     }
 
     public void applyUpdate() {
-        for (String key :
-                params.keySet()) {
+        for (String key : params.keySet()) {
             String value = params.get(key);
             if (key.equalsIgnoreCase(FIRST_NAME)) {
                 original.setFirstName(value);
@@ -229,9 +255,10 @@ public class ContactRequest {
         String GENDER = "Gender";
         String EMAIL_OPT_IN = "Email_Optin";
         String TXT_OPT_IN = "Txt_Optin";
+        String PUSH_NOTIFICATION_OPT_IN = "PushNotification_Optin";
+        String INBOX_MESSAGE_OPT_IN = "InboxMessage_Optin";
         String SOURCE = "Source";
-        String NOVADINE ="custom_Novadine_User";
-
+        String NOVADINE = "custom_Novadine_User";
         String LOYALTY_PASSWORD = "Password";
         String LOYALTY_PHONE = "CellNumber";
     }

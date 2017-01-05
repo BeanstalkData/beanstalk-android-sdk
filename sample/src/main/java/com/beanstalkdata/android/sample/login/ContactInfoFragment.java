@@ -202,8 +202,6 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
     private void submit(View view) {
         int mode = getMode();
         if ((mode == Mode.SIGN_UP) || (mode == Mode.UPDATE)) {
-            view.setEnabled(false);
-
             String email = InputUtils.getInputValue(emailInput);
             String password = InputUtils.getInputValue(passwordInput);
             String passwordConfirm = InputUtils.getInputValue(passwordConfirmInput);

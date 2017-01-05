@@ -726,20 +726,7 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void addLoyaltyContact(final ContactRequest request, final OnReturnDataListener<LoyaltyUser> listener) {
-        checkUserByEmail(request, new OnReturnListener() {
-
-            @Override
-            public void onFinished(String error) {
-                if (error != null) {
-                    if (listener != null) {
-                        listener.onFinished(null, error);
-                    }
-                } else {
-                    createLoyaltyAccount(request, listener);
-                }
-            }
-
-        });
+        createLoyaltyAccount(request, listener);
     }
 
     /**
@@ -1323,12 +1310,10 @@ public class BeanstalkService {
     }
 
     private void createLoyaltyAccount(final ContactRequest request, final OnReturnDataListener<LoyaltyUser> listener) {
-        Map<String, String> loyaltyContactRequestParams = new LinkedHashMap<>();
-        loyaltyContactRequestParams.putAll(request.asParams());
-        loyaltyContactRequestParams.put(ContactRequest.Parameters.LOYALTY_PASSWORD, request.getPassword());
-        loyaltyContactRequestParams.put(ContactRequest.Parameters.LOYALTY_PHONE, loyaltyContactRequestParams.remove(ContactRequest.Parameters.PHONE));
+        request.setParam(ContactRequest.Parameters.LOYALTY_PASSWORD, request.getPassword());
+        request.setParam(ContactRequest.Parameters.LOYALTY_PHONE, request.clearParam(ContactRequest.Parameters.PHONE));
 
-        service.createLoyaltyAccount(beanstalkApiKey, loyaltyContactRequestParams).enqueue(new Callback<LoyaltyUser>() {
+        service.createLoyaltyAccount(beanstalkApiKey, request.asParams()).enqueue(new Callback<LoyaltyUser>() {
 
             @Override
             public void onResponse(Call<LoyaltyUser> call, Response<LoyaltyUser> response) {
