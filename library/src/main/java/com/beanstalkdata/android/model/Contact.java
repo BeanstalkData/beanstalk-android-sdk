@@ -56,6 +56,12 @@ public class Contact {
     @SerializedName("DeviceTokenExt")
     private String deviceToken;
 
+    @SerializedName("PushNotification_Optin")
+    private int pushNotificationOptin;
+
+    @SerializedName("InboxMessage_Optin")
+    private int inboxMessageOptin;
+
     public String getFKey() {
         return fKey;
     }
@@ -64,32 +70,64 @@ public class Contact {
         return contactFirstName;
     }
 
+    public void setFirstName(String firstName) {
+        this.contactFirstName = firstName;
+    }
+
     public String getLastName() {
         return contactLastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.contactLastName = lastName;
     }
 
     public String getEmail() {
         return contactEmail;
     }
 
+    public void setEmail(String email) {
+        this.contactEmail = email;
+    }
+
     public String getZipCode() {
         return contactZipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.contactZipCode = zipCode;
     }
 
     public String getPhone() {
         return cellNumber;
     }
 
+    public void setPhone(String phone) {
+        this.cellNumber = phone;
+    }
+
     public String getBirthDay() {
         return contactBirthday;
+    }
+
+    public void setBirthDay(String birthDay) {
+        this.contactBirthday = birthDay;
     }
 
     public boolean getEmailOptIn() {
         return emailOptin != 0;
     }
 
+    public void setEmailOptIn(boolean emailOptIn) {
+        this.emailOptin = emailOptIn ? 1 : 0;
+    }
+
     public boolean getTxtOptIn() {
         return txtOptin != 0;
+    }
+
+    public void setTxtOptIn(boolean txtOptIn) {
+        this.txtOptin = txtOptIn ? 1 : 0;
     }
 
     public boolean isMale() {
@@ -98,6 +136,10 @@ public class Contact {
 
     public String getGender() {
         return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getContactId() {
@@ -112,6 +154,10 @@ public class Contact {
         return preferredReward;
     }
 
+    public void setPreferredReward(String preferredReward) {
+        this.preferredReward = preferredReward;
+    }
+
     public String getDeviceToken() {
         return deviceToken;
     }
@@ -120,44 +166,20 @@ public class Contact {
         this.deviceToken = deviceToken;
     }
 
-    public void setFirstName(String firstName) {
-        this.contactFirstName = firstName;
+    public int getPushNotificationOptin() {
+        return pushNotificationOptin;
     }
 
-    public void setLastName(String lastName) {
-        this.contactLastName = lastName;
+    public void setPushNotificationOptin(int pushNotificationOptin) {
+        this.pushNotificationOptin = pushNotificationOptin;
     }
 
-    public void setEmail(String email) {
-        this.contactEmail = email;
+    public int getInboxMessageOptin() {
+        return inboxMessageOptin;
     }
 
-    public void setZipCode(String zipCode) {
-        this.contactZipCode = zipCode;
-    }
-
-    public void setBirthDay(String birthDay) {
-        this.contactBirthday = birthDay;
-    }
-
-    public void setPhone(String phone) {
-        this.cellNumber = phone;
-    }
-
-    public void setPreferredReward(String preferredReward) {
-        this.preferredReward = preferredReward;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void setEmailOptIn(boolean emailOptIn) {
-        this.emailOptin = emailOptIn ? 1 : 0;
-    }
-
-    public void setTxtOptIn(boolean txtOptIn) {
-        this.txtOptin = txtOptIn ? 1 : 0;
+    public void setInboxMessageOptin(int inboxMessageOptin) {
+        this.inboxMessageOptin = inboxMessageOptin;
     }
 
     public boolean isNovadineUser() {
@@ -173,8 +195,11 @@ public class Contact {
 
         if (txtOptin != contact.txtOptin) return false;
         if (emailOptin != contact.emailOptin) return false;
+        if (pushNotificationOptin != contact.pushNotificationOptin) return false;
+        if (inboxMessageOptin != contact.inboxMessageOptin) return false;
         if (novadineUser != contact.novadineUser) return false;
-        if (contactId != null ? !contactId.equals(contact.contactId) : contact.contactId != null) return false;
+        if (contactId != null ? !contactId.equals(contact.contactId) : contact.contactId != null)
+            return false;
         if (contactFirstName != null ? !contactFirstName.equals(contact.contactFirstName) : contact.contactFirstName != null)
             return false;
         if (contactLastName != null ? !contactLastName.equals(contact.contactLastName) : contact.contactLastName != null)
@@ -183,12 +208,14 @@ public class Contact {
             return false;
         if (contactEmail != null ? !contactEmail.equals(contact.contactEmail) : contact.contactEmail != null)
             return false;
-        if (prospect != null ? !prospect.equals(contact.prospect) : contact.prospect != null) return false;
+        if (prospect != null ? !prospect.equals(contact.prospect) : contact.prospect != null)
+            return false;
         if (gender != null ? !gender.equals(contact.gender) : contact.gender != null) return false;
         if (contactBirthday != null ? !contactBirthday.equals(contact.contactBirthday) : contact.contactBirthday != null)
             return false;
         if (fKey != null ? !fKey.equals(contact.fKey) : contact.fKey != null) return false;
-        if (cellNumber != null ? !cellNumber.equals(contact.cellNumber) : contact.cellNumber != null) return false;
+        if (cellNumber != null ? !cellNumber.equals(contact.cellNumber) : contact.cellNumber != null)
+            return false;
         if (!deviceToken.equals(contact.deviceToken)) return false;
         return preferredReward != null ? preferredReward.equals(contact.preferredReward) : contact.preferredReward == null;
 
