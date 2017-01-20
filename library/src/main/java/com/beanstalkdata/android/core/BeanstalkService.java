@@ -48,7 +48,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -122,6 +121,68 @@ public class BeanstalkService {
      */
     public BeanstalkUserSession getBeanstalkUserSession() {
         return beanstalkUserSession;
+    }
+
+    /**
+     * Get contacts by email.
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getContactsByEmail(String email, final OnReturnDataListener<Contact[]> listener) {
+        Call<Contact[]> call = service.getContactByEmail(beanstalkApiKey, email);
+
+        call.enqueue(new Callback<Contact[]>() {
+
+            @Override
+            public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
+                if (listener != null) {
+                    if (response != null && response.isSuccessful()) {
+                        listener.onFinished(response.body(), null);
+                    } else {
+                        listener.onFinished(null, Error.CONTACTS_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Contact[]> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.CONTACTS_FAILED);
+                }
+            }
+
+        });
+    }
+
+    /**
+     * Get contacts by phone.
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getContactsByPhone(String phone, final OnReturnDataListener<Contact[]> listener) {
+        Call<Contact[]> call = service.getContactByPhone(beanstalkApiKey, phone);
+
+        call.enqueue(new Callback<Contact[]>() {
+
+            @Override
+            public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
+                if (listener != null) {
+                    if (response != null && response.isSuccessful()) {
+                        listener.onFinished(response.body(), null);
+                    } else {
+                        listener.onFinished(null, Error.CONTACTS_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Contact[]> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.CONTACTS_FAILED);
+                }
+            }
+
+        });
     }
 
     /**
