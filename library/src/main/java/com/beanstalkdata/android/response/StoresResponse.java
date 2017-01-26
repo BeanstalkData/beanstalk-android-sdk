@@ -28,6 +28,9 @@ public class StoresResponse {
         @SerializedName("CustomerId")
         private String customerId;
 
+        @SerializedName("DriveThru")
+        private String driveThru;
+
         @SerializedName("Date")
         private UnixDate date;
 
@@ -188,6 +191,14 @@ public class StoresResponse {
 
         public boolean isPaymentLoyaltyParticipation() {
             return paymentLoyaltyParticipation;
+        }
+
+        public String getDriveThru() {
+            return driveThru;
+        }
+
+        public boolean hasDriveThru() {
+            return driveThru.equalsIgnoreCase("yes");
         }
 
         public boolean isOpen() {
