@@ -233,18 +233,14 @@ public class BeanstalkService {
      */
     public void getUserOffers(final OnReturnDataListener<Coupon[]> listener) {
         String contactId = beanstalkUserSession.getContactId();
-        log("getUserOffers: " + contactId);
-
         Call<CouponResponse> call = service.getUserOffers(beanstalkApiKey, contactId);
-
         call.enqueue(new Callback<CouponResponse>() {
             @Override
             public void onResponse(Call<CouponResponse> call, Response<CouponResponse> response) {
                 if (response.isSuccessful()) {
                     CouponResponse data = response.body();
                     if (listener != null) {
-                        listener.onFinished(data != null ?
-                                data.getCoupons() : new Coupon[0], null);
+                        listener.onFinished(data != null ? data.getCoupons() : new Coupon[0], null);
                     }
                     return;
                 }
@@ -302,7 +298,6 @@ public class BeanstalkService {
             }
         });
     }
-
 
     /**
      * Get contact for authenticated user.

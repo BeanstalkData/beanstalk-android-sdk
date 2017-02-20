@@ -4,130 +4,153 @@
 
 package com.beanstalkdata.android.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Data model for Coupon.
  */
-public class Coupon implements Parcelable {
+public class Coupon {
+
+    @SerializedName("AImage")
+    private String aImage;
+
+    @SerializedName("CouponHandlingAttributes")
+    private String couponHandlingAttributes;
 
     @SerializedName("CouponNo")
-    private String number;
-
-    @SerializedName("CouponText")
-    private String text;
+    private String couponNo;
 
     @SerializedName("CouponReceiptText")
-    private String receiptText;
+    private String couponReceiptText;
 
-    //@SerializedName("CreationDate")
-    //private String creationDate;
+    @SerializedName("CouponText")
+    private String couponText;
 
-    @SerializedName("ExpirationDate")
-    private String expirationDate;
+    @SerializedName("CreationDate")
+    private String creationDate;
+
+    @SerializedName("DiscountAmt")
+    private String discountAmt;
 
     @SerializedName("DiscountCode")
     private String discountCode;
 
-    @SerializedName("EffectiveDate")
-    private String effectiveDate;
+    @SerializedName("DiscountPct")
+    private String discountPct;
 
-    //@SerializedName("CouponHandlingAttributes")
-    //private String handlingAttributes;
+    @SerializedName("ExpirationDate")
+    private String expirationDate;
 
     @SerializedName("Image")
     private String image;
 
-    //@SerializedName("AImage")
-    //private String aImage;
+    @SerializedName("MaxDiscountAmt")
+    private String maxDiscountAmt;
 
-    public Coupon() {
+    @SerializedName("OfferType")
+    private String offerType;
+
+    public String getaImage() {
+        return aImage;
     }
 
-    protected Coupon(Parcel in) {
-        number = in.readString();
-        text = in.readString();
-        receiptText = in.readString();
-        expirationDate = in.readString();
-        image = in.readString();
-        discountCode = in.readString();
+    public void setaImage(String aImage) {
+        this.aImage = aImage;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(number);
-        dest.writeString(text);
-        dest.writeString(receiptText);
-        dest.writeString(expirationDate);
-        dest.writeString(image);
-        dest.writeString(discountCode);
+    public String getCouponHandlingAttributes() {
+        return couponHandlingAttributes;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setCouponHandlingAttributes(String couponHandlingAttributes) {
+        this.couponHandlingAttributes = couponHandlingAttributes;
     }
 
-    public static final Creator<Coupon> CREATOR = new Creator<Coupon>() {
-        @Override
-        public Coupon createFromParcel(Parcel in) {
-            return new Coupon(in);
-        }
-
-        @Override
-        public Coupon[] newArray(int size) {
-            return new Coupon[size];
-        }
-    };
-
-    @Override
-    public String toString() {
-        return getText();
+    public String getCouponNo() {
+        return couponNo;
     }
 
-    public String getText() {
-        return text;
+    public void setCouponNo(String couponNo) {
+        this.couponNo = couponNo;
     }
 
-    @Deprecated
-    public void setText(String text) {
-        this.text = text;
+    public String getCouponReceiptText() {
+        return couponReceiptText;
     }
 
-    public Date getExpired() {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                    .parse(expirationDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public void setCouponReceiptText(String couponReceiptText) {
+        this.couponReceiptText = couponReceiptText;
     }
 
-    public String getNumber() {
-        return number;
+    public String getCouponText() {
+        return couponText;
     }
 
-    public String getImgUrl() {
-        return "http:" + image;
+    public void setCouponText(String couponText) {
+        this.couponText = couponText;
     }
 
-    public String getReceiptText() {
-        return receiptText;
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getDiscountAmt() {
+        return discountAmt;
+    }
+
+    public void setDiscountAmt(String discountAmt) {
+        this.discountAmt = discountAmt;
+    }
+
+    public String getDiscountCode() {
+        return discountCode;
+    }
+
+    public void setDiscountCode(String discountCode) {
+        this.discountCode = discountCode;
+    }
+
+    public String getDiscountPct() {
+        return discountPct;
+    }
+
+    public void setDiscountPct(String discountPct) {
+        this.discountPct = discountPct;
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
     }
 
     public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
     }
 
+    public String getImage() {
+        return image;
+    }
+
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getMaxDiscountAmt() {
+        return maxDiscountAmt;
+    }
+
+    public void setMaxDiscountAmt(String maxDiscountAmt) {
+        this.maxDiscountAmt = maxDiscountAmt;
+    }
+
+    public String getOfferType() {
+        return offerType;
+    }
+
+    public void setOfferType(String offerType) {
+        this.offerType = offerType;
     }
 }
