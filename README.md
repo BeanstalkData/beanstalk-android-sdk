@@ -11,7 +11,7 @@
 
 ### Step 1
 
-Add JitPack repository in you root build.gradle at the end of repositories section:
+Add JitPack repository in your root build.gradle at the end of repositories section:
 
 ```groovy
 allprojects {

@@ -2,6 +2,9 @@ package com.beanstalkdata.android.model;
 
 import com.google.gson.annotations.Expose;
 
+/**
+ * Data model for loyalty program user.
+ */
 public class LoyaltyUser {
 
     @Expose

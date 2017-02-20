@@ -7,7 +7,7 @@ package com.beanstalkdata.android.response;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Data model for Location Info response.
+ * Data model for Store Info response.
  */
 public class StoreInfoResponse {
 

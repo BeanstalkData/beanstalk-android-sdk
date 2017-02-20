@@ -126,6 +126,7 @@ public class BeanstalkService {
     /**
      * Get contacts by email.
      *
+     * @param email user's email.
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactsByEmail(String email, final OnReturnDataListener<Contact[]> listener) {
@@ -157,6 +158,7 @@ public class BeanstalkService {
     /**
      * Get contacts by phone.
      *
+     * @param phone user's phone.
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactsByPhone(String phone, final OnReturnDataListener<Contact[]> listener) {
