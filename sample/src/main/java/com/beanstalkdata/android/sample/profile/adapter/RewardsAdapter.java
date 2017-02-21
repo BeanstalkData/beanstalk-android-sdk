@@ -15,7 +15,6 @@ import com.beanstalkdata.android.sample.base.BaseViewHolder;
 import com.beanstalkdata.android.sample.base.listener.OnItemClickListener;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -34,8 +33,7 @@ public class RewardsAdapter extends BaseRecyclerViewAdapter<Coupon, RewardsAdapt
 
     static class RewardViewHolder extends BaseViewHolder<Coupon> {
 
-        private static final SimpleDateFormat IN_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
-        private static final SimpleDateFormat OUT_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+        private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
         private TextView name;
         private TextView expiredDate;
@@ -59,13 +57,9 @@ public class RewardsAdapter extends BaseRecyclerViewAdapter<Coupon, RewardsAdapt
             }
 
             name.setText(item.getCouponText());
-            try {
-                Date expiredDate = IN_DATE_FORMAT.parse(item.getExpirationDate());
-                if (expiredDate != null) {
-                    this.expiredDate.setText(OUT_DATE_FORMAT.format(expiredDate));
-                }
-            } catch(ParseException e) {
-                this.expiredDate.setText("");
+            Date expiredDate = item.getExpirationDate();
+            if (expiredDate != null) {
+                this.expiredDate.setText(DATE_FORMAT.format(expiredDate));
             }
             Picasso.with(itemView.getContext()).load(item.getImage()).into(image);
         }

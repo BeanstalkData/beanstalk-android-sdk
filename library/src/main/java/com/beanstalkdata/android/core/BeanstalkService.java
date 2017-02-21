@@ -38,6 +38,10 @@ import com.beanstalkdata.android.response.StoresResponse;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,9 +50,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -1131,7 +1139,7 @@ public class BeanstalkService {
     }
 
     private Gson getGson() {
-        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+        return new GsonBuilder().registerTypeAdapter(Date.class, new MultiDateFormatDeserializer()).create();
     }
 
     private void checkLocation(LocationResponse.Location location, final OnReturnListener listener) {
@@ -1426,6 +1434,25 @@ public class BeanstalkService {
             if (listener != null) {
                 listener.onFinished(null, error);
             }
+        }
+
+    }
+
+    private static class MultiDateFormatDeserializer implements JsonDeserializer<Date> {
+
+        private static final String[] DATE_FORMATS = new String[] {
+                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+                "yyyy-MM-dd'T'HH:mm:ss",
+        };
+
+        @Override
+        public Date deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            for (String format : DATE_FORMATS) {
+                try {
+                    return new SimpleDateFormat(format, Locale.US).parse(element.getAsString());
+                } catch (ParseException e) {}
+            }
+            throw new JsonParseException(String.format(Locale.US, "Failed to parse '%s' date", element.getAsString()));
         }
 
     }

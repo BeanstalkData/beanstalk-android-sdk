@@ -6,6 +6,8 @@ package com.beanstalkdata.android.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 /**
  * Data model for Coupon.
  */
@@ -27,7 +29,7 @@ public class Coupon {
     private String couponText;
 
     @SerializedName("CreationDate")
-    private String creationDate;
+    private Date creationDate;
 
     @SerializedName("DiscountAmt")
     private String discountAmt;
@@ -39,7 +41,7 @@ public class Coupon {
     private String discountPct;
 
     @SerializedName("ExpirationDate")
-    private String expirationDate;
+    private Date expirationDate;
 
     @SerializedName("Image")
     private String image;
@@ -51,6 +53,9 @@ public class Coupon {
     private String offerType;
 
     public String getaImage() {
+        if (!aImage.contains("http:")) {
+            return "http:" + aImage;
+        }
         return aImage;
     }
 
@@ -90,11 +95,11 @@ public class Coupon {
         this.couponText = couponText;
     }
 
-    public String getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -122,15 +127,18 @@ public class Coupon {
         this.discountPct = discountPct;
     }
 
-    public String getExpirationDate() {
+    public Date getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(String expirationDate) {
+    public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
     }
 
     public String getImage() {
+        if(!image.contains("http:")) {
+            return "http:" + image;
+        }
         return image;
     }
 
