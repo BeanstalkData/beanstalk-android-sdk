@@ -125,7 +125,10 @@ public class ContactRequest {
     }
 
     public void setGender(boolean isMale) {
-        String gender = isMale ? "Male" : "Female";
+        setGender(isMale ? "Male" : "Female");
+    }
+
+    public void setGender(String gender) {
         if (original != null) {
             if (gender.equalsIgnoreCase(original.getGender())) {
                 return;
