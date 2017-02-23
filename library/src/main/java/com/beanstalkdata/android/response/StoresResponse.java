@@ -216,6 +216,99 @@ public class StoresResponse {
             store.lon = String.valueOf(lon);
             return store;
         }
+
+        public void setCustomerId(String customerId) {
+            this.customerId = customerId;
+        }
+
+        public void setDriveThru(String driveThru) {
+            this.driveThru = driveThru;
+        }
+
+        public void setDate(UnixDate date) {
+            this.date = date;
+        }
+
+        public void setStoreId(String storeId) {
+            this.storeId = storeId;
+        }
+
+        public void setStoreName(String storeName) {
+            this.storeName = storeName;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
+        }
+
+        public void setAddress1(String address1) {
+            this.address1 = address1;
+        }
+
+        public void setAddress2(String address2) {
+            this.address2 = address2;
+        }
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+
+        public void setZip(String zip) {
+            this.zip = zip;
+        }
+
+        public void setDma(String dma) {
+            this.dma = dma;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public void setFax(String fax) {
+            this.fax = fax;
+        }
+
+        public void setConcept(String concept) {
+            this.concept = concept;
+        }
+
+        public void setVenue(String venue) {
+            this.venue = venue;
+        }
+
+        public void setSubVenue(String subVenue) {
+            this.subVenue = subVenue;
+        }
+
+        public void setRegion(String region) {
+            this.region = region;
+        }
+
+        public void setRegionName(String regionName) {
+            this.regionName = regionName;
+        }
+
+        public void setLon(String lon) {
+            this.lon = lon;
+        }
+
+        public void setLat(String lat) {
+            this.lat = lat;
+        }
+
+        public void setGeoEnabled(String geoEnabled) {
+            this.geoEnabled = geoEnabled;
+        }
+
+        public void setPaymentLoyaltyParticipation(boolean paymentLoyaltyParticipation) {
+            this.paymentLoyaltyParticipation = paymentLoyaltyParticipation;
+        }
+
     }
 
     public static class Id {
