@@ -905,6 +905,37 @@ public class BeanstalkService {
     }
 
     /**
+     * Get all available stores locations.
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getAllStoresLocations(final OnReturnDataListener<StoresResponse> listener) {
+        Call<StoresResponse> storesResponseCall = service.getAllStoresLocations(beanstalkApiKey);
+        storesResponseCall.enqueue(new Callback<StoresResponse>() {
+            @Override
+            public void onResponse(Call<StoresResponse> call, Response<StoresResponse> response) {
+                StoresResponse body = response.body();
+                if (body != null && !body.isFailed()) {
+                    if (listener != null) {
+                        listener.onFinished(body, null);
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoresResponse> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
+                }
+            }
+        });
+    }
+
+    /**
      * Get store info by store Id.
      *
      * @param storeId  store Id.
