@@ -658,20 +658,14 @@ public class BeanstalkService {
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
                 boolean success = response.isSuccessful();
                 log("checkUserByEmail() - response status " + success);
-                boolean isNovadineUser = false;
-                if (success) {
-                    Contact[] contacts = response.body();
-                    if (contacts != null && contacts.length > 0 && contacts[0] != null) {
-                        Contact contact = contacts[0];
-                        isNovadineUser = contact.isNovadineUser();
-                    }
-                }
-                authUser(request, isNovadineUser, listener);
+                authUser(request, listener);
             }
 
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
-                authUser(request, false, listener);
+                if (listener != null) {
+                    listener.onFinished(false, null);
+                }
             }
         });
     }
@@ -793,16 +787,6 @@ public class BeanstalkService {
      */
     public void addLoyaltyContact(final ContactRequest request, final OnReturnDataListener<LoyaltyUser> listener) {
         createLoyaltyAccount(request, listener);
-    }
-
-    /**
-     * Add Novadine contact.
-     *
-     * @param request  Request information for adding contact.
-     * @param listener Callback that will run after network request is completed.
-     */
-    public void addNovadineContact(ContactRequest request, final OnReturnListener listener) {
-        createContact(request, listener, false);
     }
 
     /**
@@ -1161,14 +1145,6 @@ public class BeanstalkService {
         }
     }
 
-    void addNewContact(ContactRequest request, boolean novadine, OnReturnListener onReturnListener) {
-        if (novadine) {
-            addNovadineContact(request, onReturnListener);
-        } else {
-            addContactWithEmail(request, onReturnListener);
-        }
-    }
-
     private Gson getGson() {
         return new GsonBuilder().registerTypeAdapter(Date.class, new MultiDateFormatDeserializer()).create();
     }
@@ -1241,7 +1217,7 @@ public class BeanstalkService {
         });
     }
 
-    private void authUser(AuthenticateUserRequest request, final boolean isNovadineUser, final OnReturnDataListener<Boolean> listener) {
+    private void authUser(AuthenticateUserRequest request, final OnReturnDataListener<Boolean> listener) {
         Call<ResponseBody> authenticateUser = service.authenticateUser(request.getEmail(), request.getPassword(), beanstalkApiKey, request.getTime());
         authenticateUser.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -1265,10 +1241,6 @@ public class BeanstalkService {
                         String contactId = authResponseArgs[0];
                         String token = authResponseArgs[1];
                         if (listener != null) {
-                            // TODO: it isn't clear what to do for novadine users.
-                            if (isNovadineUser) {
-                                log("authenticateUser: Novadine user logged in.");
-                            }
                             beanstalkUserSession.save(contactId, token);
                             listener.onFinished(true, null);
                         }

@@ -50,9 +50,6 @@ public class Contact {
     @SerializedName("PreferredReward")
     private String preferredReward;
 
-    @SerializedName("Novadine_User")
-    private boolean novadineUser;
-
     @SerializedName("DeviceTokenExt")
     private String deviceToken;
 
@@ -182,10 +179,6 @@ public class Contact {
         this.inboxMessageOptin = inboxMessageOptin;
     }
 
-    public boolean isNovadineUser() {
-        return novadineUser;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -197,7 +190,6 @@ public class Contact {
         if (emailOptin != contact.emailOptin) return false;
         if (pushNotificationOptin != contact.pushNotificationOptin) return false;
         if (inboxMessageOptin != contact.inboxMessageOptin) return false;
-        if (novadineUser != contact.novadineUser) return false;
         if (contactId != null ? !contactId.equals(contact.contactId) : contact.contactId != null)
             return false;
         if (contactFirstName != null ? !contactFirstName.equals(contact.contactFirstName) : contact.contactFirstName != null)
@@ -236,7 +228,6 @@ public class Contact {
         result = 31 * result + txtOptin;
         result = 31 * result + emailOptin;
         result = 31 * result + (preferredReward != null ? preferredReward.hashCode() : 0);
-        result = 31 * result + (novadineUser ? 1 : 0);
         result = 31 * result + (deviceToken != null ? deviceToken.hashCode() : 0);
         return result;
     }

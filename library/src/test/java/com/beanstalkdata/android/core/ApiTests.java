@@ -114,8 +114,6 @@ public class ApiTests {
     private static final int MAX_MESSAGES3 = 2;
     private static final String STORE_ID3 = "1";
 
-    private static final String EMAIL4 = "novadine_test@2.com";
-
     private static MockWebServer server;
     private static BeanstalkDataApi service;
 
@@ -162,10 +160,6 @@ public class ApiTests {
                     return new MockResponse()
                             .setResponseCode(200)
                             .setBody(new Gson().toJson(new Contact[]{contact3}));
-                case "/contacts?type=email&key=JOAA-RXHF-KFVU-JWKJ-GVIB&q=" + EMAIL4:
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody(String.format("[{\"Novadine_User\":true,\"contactEmail\":\"%s\"}]", EMAIL4));
                 case "/bsdPayment/list?key=JOAA-RXHF-KFVU-JWKJ-GVIB&contactId=" + ID3 + "&token=" + TOKEN3:
                     return new MockResponse()
                             .setResponseCode(200)
@@ -763,21 +757,6 @@ public class ApiTests {
         LocationsResponse body = execute.body();
         assertNotNull(body);
         assertFalse(body.isFailed());
-    }
-
-    @Ignore
-    @Test
-    public void checkNovadineUser() throws Exception {
-        // TODO: Clarify what Novadine and their users are. Find Novadine user for more tests?
-        Call<Contact[]> call = service.getContactByEmail(BuildConfig.APP_KEY, "novadine_test@2.com");
-        Response<Contact[]> execute = call.execute();
-        assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
-
-        Contact[] body = execute.body();
-        assertNotNull(body);
-        assertTrue(body.length > 0);
-        assertNotNull(body[0]);
-        assertTrue(body[0].isNovadineUser());
     }
 
     @Test

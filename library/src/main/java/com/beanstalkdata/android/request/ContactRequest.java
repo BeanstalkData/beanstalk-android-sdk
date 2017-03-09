@@ -19,7 +19,6 @@ import static com.beanstalkdata.android.request.ContactRequest.Parameters.EMAIL_
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.FIRST_NAME;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.GENDER;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.LAST_NAME;
-import static com.beanstalkdata.android.request.ContactRequest.Parameters.NOVADINE;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.PHONE;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.PREFERRED_REWARD;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.PROSPECT;
@@ -98,10 +97,6 @@ public class ContactRequest {
             }
         }
         params.put(EMAIL_OPT_IN, String.valueOf(emailOptIn));
-    }
-
-    public void setNovadine(boolean novadine) {
-        params.put(NOVADINE, String.valueOf(novadine ? 1 : 0));
     }
 
     public void setTxtOptIn(boolean txtOptIn) {
@@ -261,7 +256,6 @@ public class ContactRequest {
         String PUSH_NOTIFICATION_OPT_IN = "PushNotification_Optin";
         String INBOX_MESSAGE_OPT_IN = "InboxMessage_Optin";
         String SOURCE = "Source";
-        String NOVADINE = "custom_Novadine_User";
         String LOYALTY_PASSWORD = "Password";
         String LOYALTY_PHONE = "CellNumber";
     }

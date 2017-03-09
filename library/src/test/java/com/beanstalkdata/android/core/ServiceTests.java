@@ -286,22 +286,6 @@ public class ServiceTests {
     }
 
     @Test
-    public void addNovadineContact() throws InterruptedException {
-        final CountDownLatch signal = new CountDownLatch(1);
-        final ContactRequest contactRequest = new ContactRequest("01.01.1980", "test@example.com", "Tester", "Test", "0987654321", "61000", "Best reward");
-        final BeanstalkService coreSpyService = spy(beanstalkService);
-        doReturn(null).when(coreSpyService).parseCreateContactResponse(anyString());
-        coreSpyService.addNovadineContact(contactRequest, new OnReturnListener() {
-            @Override
-            public void onFinished(String error) {
-                System.out.println("Successfully call of OnReturnListener from BeanstalkService by addNovadineContact");
-                signal.countDown();
-            }
-        });
-        signal.await(TEST_TIMEOUT, TimeUnit.SECONDS);
-    }
-
-    @Test
     public void paperCardRegistration() throws InterruptedException {
         final CountDownLatch signal = new CountDownLatch(1);
         beanstalkService.paperCardRegistration("12345678", "1234", new OnReturnListener() {
@@ -340,35 +324,4 @@ public class ServiceTests {
         signal.await(TEST_TIMEOUT, TimeUnit.SECONDS);
     }
 
-    @Test
-    public void addNewContactNovadine() throws InterruptedException {
-        final CountDownLatch signal = new CountDownLatch(1);
-        final ContactRequest contactRequest = new ContactRequest("01.01.1980", "test@example.com", "Tester", "Test", "0987654321", "61000", "Best reward");
-        final BeanstalkService coreSpyService = spy(beanstalkService);
-        doReturn(null).when(coreSpyService).parseCreateContactResponse(anyString());
-        coreSpyService.addNewContact(contactRequest, true, new OnReturnListener() {
-            @Override
-            public void onFinished(String error) {
-                System.out.println("Successfully call of OnReturnListener from BeanstalkService by addNewContactNotNovadine with novadine true");
-                signal.countDown();
-            }
-        });
-        signal.await(TEST_TIMEOUT, TimeUnit.SECONDS);
-    }
-
-    @Test
-    public void addNewContactNotNovadine() throws InterruptedException {
-        final CountDownLatch signal = new CountDownLatch(1);
-        final ContactRequest contactRequest = new ContactRequest("01.01.1980", "test@example.com", "Tester", "Test", "0987654321", "61000", "Best reward");
-        final BeanstalkService coreSpyService = spy(beanstalkService);
-        doReturn(null).when(coreSpyService).parseCreateContactResponse(anyString());
-        coreSpyService.addNewContact(contactRequest, false, new OnReturnListener() {
-            @Override
-            public void onFinished(String error) {
-                System.out.println("Successfully call of OnReturnListener from BeanstalkService by addNewContactNotNovadine with novadine false");
-                signal.countDown();
-            }
-        });
-        signal.await(TEST_TIMEOUT, TimeUnit.SECONDS);
-    }
 }
