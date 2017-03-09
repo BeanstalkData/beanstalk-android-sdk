@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "85196874864",
+    "firebase_url": "https://gcm-test-61aa2.firebaseio.com",
+    "project_id": "gcm-test-61aa2",
+    "storage_bucket": "gcm-test-61aa2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85196874864:android:142c207d2987f992",
+        "android_client_info": {
+          "package_name": "com.beanstalkdata.android.sample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85196874864-4ofhqc6ss4mfd8rpk5g906tlnttp45gk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjRGpqkXiPD_1-zmyZUbNcxu-CcmCAqZ0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

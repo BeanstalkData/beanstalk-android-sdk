@@ -25,9 +25,11 @@ import com.beanstalkdata.android.callback.OnReturnListener;
 import com.beanstalkdata.android.model.Contact;
 import com.beanstalkdata.android.request.AuthenticateUserRequest;
 import com.beanstalkdata.android.request.ContactRequest;
+import com.beanstalkdata.android.response.PushSuccessResponse;
 import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseFragment;
 import com.beanstalkdata.android.sample.dialog.DatePickerDialogFragment;
+import com.beanstalkdata.android.sample.gcm.RegistrationIntentService;
 import com.beanstalkdata.android.sample.profile.ProfileActivity;
 import com.beanstalkdata.android.sample.utils.InputUtils;
 import com.beanstalkdata.android.sample.utils.ToastUtils;
@@ -54,6 +56,7 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
     private Button birthdayPicker;
     private RadioGroup genderChooser;
     private CheckBox optInEmailInput;
+    private CheckBox optInPushInput;
     private Button submit;
 
     private Calendar calendar;
@@ -88,6 +91,7 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
         birthdayPicker = (Button) view.findViewById(R.id.picker_birthday);
         genderChooser = (RadioGroup) view.findViewById(R.id.gender_chooser);
         optInEmailInput = (CheckBox) view.findViewById(R.id.email_opt_in);
+        optInPushInput = (CheckBox) view.findViewById(R.id.push_opt_in);
         submit = (Button) view.findViewById(R.id.submit);
         birthdayPicker.setOnClickListener(this);
         submit.setOnClickListener(this);
@@ -119,6 +123,7 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
                         birthdayPicker.setText(contact.getBirthDay());
                         genderChooser.check(getGenderCheckedId(contact));
                         optInEmailInput.setChecked(contact.getEmailOptIn());
+                        optInPushInput.setChecked(contact.getPushNotificationOptin() == 1);
                     }
 
                 }
@@ -212,6 +217,7 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
             String birthDay = InputUtils.getInputValue(birthdayPicker);
             int chosenGender = genderChooser.getCheckedRadioButtonId();
             boolean emailOptIn = optInEmailInput.isChecked();
+            boolean pushOptIn = optInPushInput.isChecked();
 
             if (!InputUtils.validEmail(email)) {
                 emailInput.setError(getString(R.string.error_email_required));
@@ -273,6 +279,13 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
             contactRequest.setBirthDate(birthDay);
             contactRequest.setGender(chosenGender == R.id.gender_male);
             contactRequest.setEmailOptIn(emailOptIn);
+            if (pushOptIn) {
+                contactRequest.setParam(ContactRequest.Parameters.PUSH_NOTIFICATION_OPT_IN, "1");
+                contactRequest.setParam(ContactRequest.Parameters.INBOX_MESSAGE_OPT_IN, "1");
+            } else {
+                contactRequest.setParam(ContactRequest.Parameters.PUSH_NOTIFICATION_OPT_IN, "0");
+                contactRequest.setParam(ContactRequest.Parameters.INBOX_MESSAGE_OPT_IN, "0");
+            }
 
             activityContract.showProgress();
             switch (mode) {
@@ -327,7 +340,7 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
         });
     }
 
-    private void updateContact(ContactRequest contactRequest) {
+    private void updateContact(final ContactRequest contactRequest) {
         getService().updateContact(contactRequest, new OnReturnListener() {
             @Override
             public void onFinished(String error) {
@@ -335,6 +348,16 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
                     activityContract.hideProgress();
                 }
                 if (error == null) {
+                    if (isPushNotificationsOptedIn(contactRequest)) {
+                        RegistrationIntentService.start(getActivity());
+                    } else {
+                        getService().deletePushNotification(new OnReturnDataListener<PushSuccessResponse>() {
+                            @Override
+                            public void onFinished(PushSuccessResponse data, String error) {
+                                // TODO: handle error
+                            }
+                        });
+                    }
                     if (activityContract != null) {
                         activityContract.popBack();
                     }
@@ -346,6 +369,11 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
                 }
             }
         });
+    }
+
+    private boolean isPushNotificationsOptedIn(ContactRequest contactRequest) {
+        return contactRequest.getParam(ContactRequest.Parameters.PUSH_NOTIFICATION_OPT_IN).equals("1")
+                && contactRequest.getParam(ContactRequest.Parameters.INBOX_MESSAGE_OPT_IN).equals("1");
     }
 
     private void initCalendar() {

@@ -71,5 +71,8 @@ dependencies {
     compile "com.android.support:support-v4:${libraries.supportVersion}"
     compile "com.android.support:recyclerview-v7:${libraries.supportVersion}"
     compile "com.squareup.picasso:picasso:${libraries.picasso}"
+    compile "com.google.android.gms:play-services-gcm:${libraries.googlePlayServices}"
     testCompile "junit:junit:${libraries.junit}"
 }
+
+apply plugin: 'com.google.gms.google-services'

@@ -1,16 +1,19 @@
 buildscript {
     ext {
         gradlePlugins = [
-                androidGradle: "2.2.3",
-                mavenGradle  : "1.5"
+                androidGradle : "2.3.0",
+                googleServices: "3.0.0",
+                mavenGradle   : "1.5"
         ]
         libraries = [
-                supportVersion: "25.1.1",
-                retrofit      : "2.1.0",
-                okhttp        : "3.3.1",
-                picasso       : "2.5.2",
-                junit         : "4.12",
-                mockito       : "2.0.86-beta"
+                supportVersion    : "25.2.0",
+                googlePlayServices: "10.2.0",
+                firebaseMessaging : "9.6.1",
+                retrofit          : "2.1.0",
+                okhttp            : "3.3.1",
+                picasso           : "2.5.2",
+                junit             : "4.12",
+                mockito           : "2.0.86-beta"
         ]
         getProperties = { String propertiesPath ->
             def properties = new Properties()
@@ -28,6 +31,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:${gradlePlugins.androidGradle}"
         classpath "com.github.dcendents:android-maven-gradle-plugin:${gradlePlugins.mavenGradle}"
+        classpath "com.google.gms:google-services:${gradlePlugins.googleServices}"
     }
 }
 

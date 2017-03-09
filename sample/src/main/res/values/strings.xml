@@ -34,6 +34,7 @@
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
     <string name="email_opt_in">Email Opt In</string>
+    <string name="push_opt_in">Push notifications Opt In</string>
 
     <string name="message_status_format" formatted="false">%s (%s)</string>
 
