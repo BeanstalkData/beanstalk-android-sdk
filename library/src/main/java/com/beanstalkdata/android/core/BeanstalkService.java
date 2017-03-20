@@ -1305,7 +1305,7 @@ public class BeanstalkService {
         });
     }
 
-    private void createContact(final ContactRequest request, final OnReturnListener listener, final boolean createUser) {
+    public void createContact(final ContactRequest request, final OnReturnListener listener, final boolean createUser) {
         Call<ResponseBody> contact = service.createContact(beanstalkApiKey, request.asParams());
 
         contact.enqueue(new Callback<ResponseBody>() {
