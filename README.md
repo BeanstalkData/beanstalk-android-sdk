@@ -16,9 +16,8 @@ Add JitPack repository in your root build.gradle at the end of repositories sect
 ```groovy
 allprojects {
     repositories {
-        ...
-		maven { url "https://jitpack.io" }
-	}
+        maven { url "https://jitpack.io" }
+    }
 }
 ```
 
@@ -28,7 +27,7 @@ Add the dependency to relevant project module:
 
 ```groovy
 dependencies {
-    compile 'com.github.BeanstalkData:beanstalk-android-sdk:1.3.22'
+    compile 'com.github.BeanstalkData:beanstalk-android-sdk:1.3.30'
 }
 ```
 

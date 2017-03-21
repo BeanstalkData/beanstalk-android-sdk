@@ -82,18 +82,27 @@ public class BeanstalkService {
     private final String beanstalkApiKey;
     private final String googleMapsApiKey;
 
-    private String rewardName;
     private boolean isLoggingEnabled;
 
     /**
-     * Base constructor to use when creating service instance.
+     * Constructor to use when creating service instance with default Beanstalk user session.
      *
-     * @param context          Context that will be used for accessing Resources and handling User Session.
+     * @param context          Context that will be used for Default Beanstalk User Session.
      * @param beanstalkApiKey  API key for Beanstalk Data.
      * @param googleMapsApiKey API key for Google Maps.
      */
     public BeanstalkService(@NonNull Context context, @NonNull String beanstalkApiKey, @NonNull String googleMapsApiKey) {
-        this.beanstalkUserSession = new BeanstalkUserSession(context);
+        this(new DefaultBeanstalkUserSession(context), beanstalkApiKey, googleMapsApiKey);
+    }
+
+    /**
+     * Base constructor to use when creating service instance.
+     *
+     * @param beanstalkApiKey  API key for Beanstalk Data.
+     * @param googleMapsApiKey API key for Google Maps.
+     */
+    public BeanstalkService(@NonNull BeanstalkUserSession beanstalkUserSession, @NonNull String beanstalkApiKey, @NonNull String googleMapsApiKey) {
+        this.beanstalkUserSession = beanstalkUserSession;
         this.beanstalkApiKey = beanstalkApiKey;
         this.googleMapsApiKey = googleMapsApiKey;
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -134,7 +143,7 @@ public class BeanstalkService {
     /**
      * Get contacts by email.
      *
-     * @param email user's email.
+     * @param email    user's email.
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactsByEmail(String email, final OnReturnDataListener<Contact[]> listener) {
@@ -166,7 +175,7 @@ public class BeanstalkService {
     /**
      * Get contacts by phone.
      *
-     * @param phone user's phone.
+     * @param phone    user's phone.
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactsByPhone(String phone, final OnReturnDataListener<Contact[]> listener) {
@@ -1443,7 +1452,7 @@ public class BeanstalkService {
 
     private static class MultiDateFormatDeserializer implements JsonDeserializer<Date> {
 
-        private static final String[] DATE_FORMATS = new String[] {
+        private static final String[] DATE_FORMATS = new String[]{
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
                 "yyyy-MM-dd'T'HH:mm:ss",
         };
@@ -1453,7 +1462,9 @@ public class BeanstalkService {
             for (String format : DATE_FORMATS) {
                 try {
                     return new SimpleDateFormat(format, Locale.US).parse(element.getAsString());
-                } catch (ParseException e) {}
+                } catch (ParseException e) {
+
+                }
             }
             throw new JsonParseException(String.format(Locale.US, "Failed to parse '%s' date", element.getAsString()));
         }
