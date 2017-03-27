@@ -30,7 +30,14 @@ public class DefaultBeanstalkUserSession implements BeanstalkUserSession {
 
     @Override
     public void save(String contactId, String token) {
-        coreSharedPreferences.edit().putString(CONTACT_ID, contactId).putString(TOKEN, token).apply();
+        SharedPreferences.Editor editor = coreSharedPreferences.edit();
+        if (contactId != null) {
+            editor.putString(CONTACT_ID, contactId);
+        }
+        if (token != null) {
+            editor.putString(TOKEN, token);
+        }
+        editor.apply();
     }
 
     @Override

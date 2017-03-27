@@ -1335,18 +1335,16 @@ public class BeanstalkService {
                     return;
                 }
 
-                if (parseCreateContactResponse(body) == null) {
+                String contactId = parseCreateContactResponse(body);
+                if (contactId == null) {
                     if (listener != null) {
                         listener.onFinished(Error.SIGN_IN_FAILED);
                     }
                 } else {
-                    String contactId = parseCreateContactResponse(body);
                     log("contact id : " + contactId);
+                    beanstalkUserSession.save(contactId, null);
                     if (createUser) {
-                        Call<String> user = service.createUser(request.getEmail(),
-                                request.getPassword(),
-                                beanstalkApiKey,
-                                contactId);
+                        Call<String> user = service.createUser(request.getEmail(), request.getPassword(), beanstalkApiKey, contactId);
                         user.enqueue(new Callback<String>() {
                             @Override
                             public void onResponse(Call<String> call, Response<String> response) {
