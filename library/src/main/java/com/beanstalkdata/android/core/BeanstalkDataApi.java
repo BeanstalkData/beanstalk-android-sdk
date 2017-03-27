@@ -36,7 +36,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-interface BeanstalkDataApi {
+public interface BeanstalkDataApi {
 
     @GET("/contacts?type=email")
     Call<Contact[]> getContactByEmail(@Query("key") String apiKey, @Query("q") String email);
