@@ -799,6 +799,125 @@ public class BeanstalkService {
     }
 
     /**
+     * Create contact and persist Contact ID in Beanstalk User Session.
+     *
+     * @param request          Request information for creating contact.
+     * @param listener         Callback that will run after network request is completed.
+     * @param shouldCreateUser Should create user after creating contact.
+     */
+    public void createContact(final ContactRequest request, final OnReturnListener listener, final boolean shouldCreateUser) {
+        createContact(request, new OnReturnDataListener<String>() {
+
+            @Override
+            public void onFinished(String contactId, String error) {
+                listener.onFinished(error);
+            }
+
+        }, shouldCreateUser);
+    }
+
+    /**
+     * Create contact, persist Contact ID in Beanstalk User Session and return it using callback.
+     *
+     * @param request          Request information for creating contact.
+     * @param listener         Callback that will run after network request is completed.
+     * @param shouldCreateUser Should create user after creating contact.
+     */
+    public void createContact(final ContactRequest request, final OnReturnDataListener<String> listener, final boolean shouldCreateUser) {
+        createContact(request, new OnReturnDataListener<Contact>() {
+
+            @Override
+            public void onFinished(Contact contact, String error) {
+                if (error == null) {
+                    listener.onFinished(contact.getContactId(), null);
+                } else {
+                    listener.onFinished(null, error);
+                }
+            }
+
+        }, shouldCreateUser, false);
+    }
+
+    /**
+     * Create contact, persist Contact ID in Beanstalk User Session and return Contact using callback.
+     * <p>
+     * <b>Note:</b><br/>
+     * Current server API returns only <b>contactId</b> on create request. So in order to return contact model (if requested) - <b>getContact()</b> request is performed. There might be situations (bad network conditions, etc.) when contact is created but <b>getContact()</b> request failed, so only <b>contactId</b> will be available.
+     * </p>
+     *
+     * @param request            Request information for creating contact.
+     * @param listener           Callback that will run after network request is completed.
+     * @param shouldCreateUser   Should create user after creating contact or not.
+     * @param shouldFetchContact Should fetch and return contact after creating contact.
+     */
+    public void createContact(final ContactRequest request, final OnReturnDataListener<Contact> listener, final boolean shouldCreateUser, final boolean shouldFetchContact) {
+        Call<ResponseBody> contact = service.createContact(beanstalkApiKey, request.asParams());
+
+        contact.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                String body = "error";
+                try {
+                    body = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                log("createContact() " + body);
+                if ("error".equalsIgnoreCase(body)) {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.SIGN_IN_FAILED);
+                    }
+                    return;
+                }
+
+                String contactId = parseCreateContactResponse(body);
+                if (contactId == null) {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.SIGN_IN_FAILED);
+                    }
+                } else {
+                    log("contact id : " + contactId);
+                    beanstalkUserSession.save(contactId, null);
+                    if (shouldCreateUser) {
+                        Call<String> user = service.createUser(request.getEmail(), request.getPassword(), beanstalkApiKey, contactId);
+                        user.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                String body = response.body();
+                                log("addContactWithEmail() - create user " + body);
+                                if ("Success".equalsIgnoreCase(body)) {
+                                    fetchContact(listener, shouldFetchContact);
+                                } else {
+                                    if (listener != null) {
+                                        listener.onFinished(null, Error.SIGN_IN_FAILED);
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                if (listener != null) {
+                                    listener.onFinished(null, Error.SIGN_IN_FAILED);
+                                }
+                            }
+                        });
+                    } else {
+                        fetchContact(listener, shouldFetchContact);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.SIGN_IN_FAILED);
+                }
+            }
+        });
+    }
+
+    /**
      * Credit card registration.
      *
      * @param cardNumber Card number.
@@ -1314,77 +1433,6 @@ public class BeanstalkService {
         });
     }
 
-    public void createContact(final ContactRequest request, final OnReturnListener listener, final boolean createUser) {
-        Call<ResponseBody> contact = service.createContact(beanstalkApiKey, request.asParams());
-
-        contact.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                String body = "error";
-                try {
-                    body = response.body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                log("addContactWithEmail() - create contact " + body);
-                if ("error".equalsIgnoreCase(body)) {
-                    if (listener != null) {
-                        listener.onFinished(Error.SIGN_IN_FAILED);
-                    }
-                    return;
-                }
-
-                String contactId = parseCreateContactResponse(body);
-                if (contactId == null) {
-                    if (listener != null) {
-                        listener.onFinished(Error.SIGN_IN_FAILED);
-                    }
-                } else {
-                    log("contact id : " + contactId);
-                    beanstalkUserSession.save(contactId, null);
-                    if (createUser) {
-                        Call<String> user = service.createUser(request.getEmail(), request.getPassword(), beanstalkApiKey, contactId);
-                        user.enqueue(new Callback<String>() {
-                            @Override
-                            public void onResponse(Call<String> call, Response<String> response) {
-                                String body = response.body();
-                                log("addContactWithEmail() - create user " + body);
-                                if ("Success".equalsIgnoreCase(body)) {
-                                    if (listener != null) {
-                                        listener.onFinished(null);
-                                    }
-                                } else {
-                                    if (listener != null) {
-                                        listener.onFinished(Error.SIGN_IN_FAILED);
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<String> call, Throwable t) {
-                                if (listener != null) {
-                                    listener.onFinished(Error.SIGN_IN_FAILED);
-                                }
-                            }
-                        });
-                    } else {
-                        if (listener != null) {
-                            listener.onFinished(null);
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                if (listener != null) {
-                    listener.onFinished(Error.SIGN_IN_FAILED);
-                }
-            }
-        });
-    }
-
     private void createLoyaltyAccount(final ContactRequest request, final OnReturnDataListener<LoyaltyUser> listener) {
         request.setParam(ContactRequest.Parameters.LOYALTY_PASSWORD, request.getPassword());
         request.setParam(ContactRequest.Parameters.LOYALTY_PHONE, request.clearParam(ContactRequest.Parameters.PHONE));
@@ -1410,6 +1458,29 @@ public class BeanstalkService {
             }
 
         });
+    }
+
+    private void fetchContact(final OnReturnDataListener<Contact> listener, final boolean shouldFetchContact) {
+        if (shouldFetchContact) {
+            getContact(new OnReturnDataListener<Contact>() {
+                @Override
+                public void onFinished(Contact contact, String error) {
+                    if (listener != null) {
+                        listener.onFinished((error == null) ? contact : emptyContact(), null);
+                    }
+                }
+            });
+        } else {
+            if (listener != null) {
+                listener.onFinished(emptyContact(), null);
+            }
+        }
+    }
+
+    private Contact emptyContact() {
+        Contact contact = new Contact();
+        contact.setContactId(beanstalkUserSession.getContactId());
+        return contact;
     }
 
     private void log(String msg) {

@@ -59,10 +59,6 @@ public class Contact {
     @SerializedName("InboxMessage_Optin")
     private int inboxMessageOptin;
 
-    public String getFKey() {
-        return fKey;
-    }
-
     public String getFirstName() {
         return contactFirstName;
     }
@@ -111,6 +107,14 @@ public class Contact {
         this.contactBirthday = birthDay;
     }
 
+    public String getFKey() {
+        return fKey;
+    }
+
+    public void setFKey(String fKey) {
+        this.fKey = fKey;
+    }
+
     public boolean getEmailOptIn() {
         return emailOptin != 0;
     }
@@ -143,8 +147,16 @@ public class Contact {
         return contactId;
     }
 
+    public void setContactId(String contactId) {
+        this.contactId = contactId;
+    }
+
     public String getProspect() {
         return prospect;
+    }
+
+    public void setProspect(String prospect) {
+        this.prospect = prospect;
     }
 
     public String getPreferredReward() {
