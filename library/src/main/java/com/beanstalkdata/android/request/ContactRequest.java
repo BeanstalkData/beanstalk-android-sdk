@@ -17,6 +17,7 @@ import static com.beanstalkdata.android.request.ContactRequest.Parameters.CONTAC
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.EMAIL;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.EMAIL_OPT_IN;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.FIRST_NAME;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.F_KEY;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.GENDER;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.LAST_NAME;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.PHONE;
@@ -164,6 +165,20 @@ public class ContactRequest {
         params.put(EMAIL, value);
     }
 
+    public String getFKey() {
+        return params.get(F_KEY);
+    }
+
+    public void setFKey(String value) {
+        if (TextUtils.isEmpty(value)) {
+            return;
+        }
+        if (original != null && value.equalsIgnoreCase(original.getFKey())) {
+            return;
+        }
+        params.put(F_KEY, value);
+    }
+
     public String getPhone() {
         return params.get(PHONE);
     }
@@ -210,6 +225,9 @@ public class ContactRequest {
             if (key.equalsIgnoreCase(EMAIL)) {
                 original.setEmail(value);
             }
+            if (key.equalsIgnoreCase(F_KEY)) {
+                original.setFKey(value);
+            }
             if (key.equalsIgnoreCase(ZIP_CODE)) {
                 original.setZipCode(value);
             }
@@ -246,6 +264,7 @@ public class ContactRequest {
         String LAST_NAME = "LastName";
         String ZIP_CODE = "ZipCode";
         String EMAIL = "Email";
+        String F_KEY = "FKey";
         String PHONE = "Cell_Number";
         String BIRTHDAY = "Birthday";
         String PROSPECT = "Prospect";
