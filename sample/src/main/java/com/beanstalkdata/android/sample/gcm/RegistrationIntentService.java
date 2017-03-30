@@ -19,15 +19,12 @@ public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = RegistrationIntentService.class.getSimpleName();
 
-    private static BeanstalkService service;
-
     public RegistrationIntentService() {
         super(TAG);
     }
 
     public static void start(Activity activity) {
         if (activity != null) {
-            service = ((SampleApp) activity.getApplication()).getService();
             activity.startService(new Intent(activity, RegistrationIntentService.class));
         }
     }
@@ -49,11 +46,22 @@ public class RegistrationIntentService extends IntentService {
 
     private void enrollPushNotification(String token) {
         if (token != null) {
-            service.enrollPushNotification(token, new OnReturnDataListener<PushSuccessResponse>() {
-                @Override
-                public void onFinished(PushSuccessResponse data, String error) {}
-            });
+            BeanstalkService service = getService();
+            if (service != null) {
+                service.enrollPushNotification(token, new OnReturnDataListener<PushSuccessResponse>() {
+
+                    @Override
+                    public void onFinished(PushSuccessResponse data, String error) {
+
+                    }
+
+                });
+            }
         }
+    }
+
+    private BeanstalkService getService() {
+        return ((SampleApp) getApplication()).getService();
     }
 
 }

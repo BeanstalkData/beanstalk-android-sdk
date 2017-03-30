@@ -1118,7 +1118,7 @@ public class BeanstalkService {
      */
     public void enrollPushNotification(String deviceToken, OnReturnDataListener<PushSuccessResponse> listener) {
         service.enrollPushNotification(beanstalkApiKey, beanstalkUserSession.getContactId(), deviceToken, PlatformType.ANDROID)
-                .enqueue(new SimpleCallback<>(Error.ENROLL_PUSH_NOTIFICATION_FAILED, listener));
+                .enqueue(new PushSuccessResponseCallback(Error.ENROLL_PUSH_NOTIFICATION_FAILED, listener));
     }
 
     /**
@@ -1129,7 +1129,7 @@ public class BeanstalkService {
      */
     public void modifyPushNotification(String deviceToken, OnReturnDataListener<PushSuccessResponse> listener) {
         service.modifyPushNotification(beanstalkApiKey, beanstalkUserSession.getContactId(), deviceToken, PlatformType.ANDROID)
-                .enqueue(new SimpleCallback<>(Error.MODIFY_PUSH_NOTIFICATION_FAILED, listener));
+                .enqueue(new PushSuccessResponseCallback(Error.MODIFY_PUSH_NOTIFICATION_FAILED, listener));
     }
 
     /**
@@ -1139,7 +1139,7 @@ public class BeanstalkService {
      */
     public void deletePushNotification(OnReturnDataListener<PushSuccessResponse> listener) {
         service.deletePushNotification(beanstalkApiKey, beanstalkUserSession.getContactId())
-                .enqueue(new SimpleCallback<>(Error.DELETE_PUSH_NOTIFICATION_FAILED, listener));
+                .enqueue(new PushSuccessResponseCallback(Error.DELETE_PUSH_NOTIFICATION_FAILED, listener));
     }
 
     /**
@@ -1489,6 +1489,24 @@ public class BeanstalkService {
         }
     }
 
+    private static class PushSuccessResponseCallback extends SimpleCallback<PushSuccessResponse> {
+
+        private PushSuccessResponseCallback(String error, OnReturnDataListener<PushSuccessResponse> listener) {
+            super(error, listener);
+        }
+
+        @Override
+        protected PushSuccessResponse getResponseBody(Response<PushSuccessResponse> response) {
+            PushSuccessResponse pushSuccessResponse = response.body();
+            if (response.isSuccessful() && pushSuccessResponse == null) {
+                pushSuccessResponse = new PushSuccessResponse();
+                pushSuccessResponse.setSuccess(true);
+            }
+            return pushSuccessResponse;
+        }
+
+    }
+
     private static class SimpleCallback<T> implements Callback<T> {
 
         private final String error;
@@ -1501,9 +1519,14 @@ public class BeanstalkService {
 
         @Override
         public void onResponse(Call<T> call, Response<T> response) {
-            if ((response != null) && (response.body() != null) && response.isSuccessful()) {
-                if (listener != null) {
-                    listener.onFinished(response.body(), null);
+            if (response != null) {
+                T responseBody = getResponseBody(response);
+                if (responseBody != null) {
+                    if (listener != null) {
+                        listener.onFinished(responseBody, null);
+                    }
+                } else {
+                    onFailure(call, null);
                 }
             } else {
                 onFailure(call, null);
@@ -1515,6 +1538,11 @@ public class BeanstalkService {
             if (listener != null) {
                 listener.onFinished(null, error);
             }
+        }
+
+        protected T getResponseBody(Response<T> response) {
+            T responseBody = response.body();
+            return response.isSuccessful() && (responseBody != null) ? responseBody : null;
         }
 
     }
