@@ -4,191 +4,153 @@
 
 package com.beanstalkdata.android.model;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.HashMap;
 
 /**
  * Data model for Contact.
  */
 public class Contact {
 
-    @SerializedName("contactId")
-    private String contactId;
-
-    @SerializedName("contactFirstName")
-    private String contactFirstName;
-
-    @SerializedName("contactLastName")
-    private String contactLastName;
-
-    @SerializedName("contactZipCode")
-    private String contactZipCode;
-
-    @SerializedName("contactEmail")
-    private String contactEmail;
-
-    @SerializedName("Prospect")
-    private String prospect;
-
-    @SerializedName("gender")
-    private String gender;
-
-    @SerializedName("contactBirthday")
-    private String contactBirthday;
-
-    @SerializedName("FKey")
-    private String fKey;
-
-    @SerializedName("Cell_Number")
-    private String cellNumber;
-
-    @SerializedName("Txt_Optin")
-    private int txtOptin;
-
-    @SerializedName("Email_Optin")
-    private int emailOptin;
-
-    @SerializedName("PreferredReward")
-    private String preferredReward;
-
-    @SerializedName("DeviceTokenExt")
-    private String deviceToken;
-
-    @SerializedName("PushNotification_Optin")
-    private int pushNotificationOptin;
-
-    @SerializedName("InboxMessage_Optin")
-    private int inboxMessageOptin;
+    private HashMap<String, String> params = new HashMap<>();
 
     public String getFirstName() {
-        return contactFirstName;
+        return params.get(Parameters.FIRST_NAME);
     }
 
     public void setFirstName(String firstName) {
-        this.contactFirstName = firstName;
+        params.put(Parameters.FIRST_NAME, firstName);
     }
 
     public String getLastName() {
-        return contactLastName;
+        return params.get(Parameters.LAST_NAME);
     }
 
     public void setLastName(String lastName) {
-        this.contactLastName = lastName;
+        params.put(Parameters.LAST_NAME, lastName);
     }
 
     public String getEmail() {
-        return contactEmail;
+        return params.get(Parameters.EMAIL);
     }
 
     public void setEmail(String email) {
-        this.contactEmail = email;
+        params.put(Parameters.EMAIL, email);
     }
 
     public String getZipCode() {
-        return contactZipCode;
+        return params.get(Parameters.ZIP_CODE);
     }
 
     public void setZipCode(String zipCode) {
-        this.contactZipCode = zipCode;
+        params.put(Parameters.ZIP_CODE, zipCode);
     }
 
     public String getPhone() {
-        return cellNumber;
+        return params.get(Parameters.CELL_NUMBER);
     }
 
     public void setPhone(String phone) {
-        this.cellNumber = phone;
+        params.put(Parameters.CELL_NUMBER, phone);
     }
 
     public String getBirthDay() {
-        return contactBirthday;
+        return params.get(Parameters.BIRTHDAY);
     }
 
     public void setBirthDay(String birthDay) {
-        this.contactBirthday = birthDay;
+        params.put(Parameters.BIRTHDAY, birthDay);
     }
 
     public String getFKey() {
-        return fKey;
+        return params.get(Parameters.F_KEY);
     }
 
     public void setFKey(String fKey) {
-        this.fKey = fKey;
+        params.put(Parameters.F_KEY, fKey);
     }
 
     public boolean getEmailOptIn() {
-        return emailOptin != 0;
+        return Integer.valueOf(params.get(Parameters.EMAIL_OPT_IN)) != 0;
     }
 
     public void setEmailOptIn(boolean emailOptIn) {
-        this.emailOptin = emailOptIn ? 1 : 0;
+        params.put(Parameters.EMAIL_OPT_IN, String.valueOf(emailOptIn ? 1 : 0));
     }
 
     public boolean getTxtOptIn() {
-        return txtOptin != 0;
+        return Integer.valueOf(params.get(Parameters.TXT_OPT_IN)) != 0;
     }
 
     public void setTxtOptIn(boolean txtOptIn) {
-        this.txtOptin = txtOptIn ? 1 : 0;
+        params.put(Parameters.TXT_OPT_IN, String.valueOf(txtOptIn ? 1 : 0));
     }
 
     public boolean isMale() {
-        return "Male".equalsIgnoreCase(gender);
+        return "Male".equalsIgnoreCase(getGender());
     }
 
     public String getGender() {
-        return gender;
+        return params.get(Parameters.GENDER);
     }
 
     public void setGender(String gender) {
-        this.gender = gender;
+        params.put(Parameters.GENDER, gender);
     }
 
     public String getContactId() {
-        return contactId;
+        return params.get(Parameters.ID);
     }
 
     public void setContactId(String contactId) {
-        this.contactId = contactId;
+        params.put(Parameters.ID, contactId);
     }
 
     public String getProspect() {
-        return prospect;
+        return params.get(Parameters.PROSPECT);
     }
 
     public void setProspect(String prospect) {
-        this.prospect = prospect;
+        params.put(Parameters.PROSPECT, prospect);
     }
 
     public String getPreferredReward() {
-        return preferredReward;
+        return params.get(Parameters.PREFERRED_REWARD);
     }
 
     public void setPreferredReward(String preferredReward) {
-        this.preferredReward = preferredReward;
+        params.put(Parameters.PREFERRED_REWARD, preferredReward);
     }
 
     public String getDeviceToken() {
-        return deviceToken;
+        return params.get(Parameters.DEVICE_TOKEN_EXT);
     }
 
     public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
+        params.put(Parameters.DEVICE_TOKEN_EXT, deviceToken);
     }
 
     public int getPushNotificationOptin() {
-        return pushNotificationOptin;
+        return Integer.valueOf(params.get(Parameters.PUSH_NOTIFICATION_OPT_IN));
     }
 
     public void setPushNotificationOptin(int pushNotificationOptin) {
-        this.pushNotificationOptin = pushNotificationOptin;
+        params.put(Parameters.PUSH_NOTIFICATION_OPT_IN, String.valueOf(pushNotificationOptin));
     }
 
     public int getInboxMessageOptin() {
-        return inboxMessageOptin;
+        return Integer.valueOf(params.get(Parameters.INBOX_MESSAGE_OPT_IN));
     }
 
     public void setInboxMessageOptin(int inboxMessageOptin) {
-        this.inboxMessageOptin = inboxMessageOptin;
+        params.put(Parameters.INBOX_MESSAGE_OPT_IN, String.valueOf(inboxMessageOptin));
+    }
+
+    public String getParam(String key) {
+        return params.get(key);
+    }
+
+    public void setParam(String key, String value) {
+        params.put(key, value);
     }
 
     @Override
@@ -198,49 +160,71 @@ public class Contact {
 
         Contact contact = (Contact) o;
 
-        if (txtOptin != contact.txtOptin) return false;
-        if (emailOptin != contact.emailOptin) return false;
-        if (pushNotificationOptin != contact.pushNotificationOptin) return false;
-        if (inboxMessageOptin != contact.inboxMessageOptin) return false;
-        if (contactId != null ? !contactId.equals(contact.contactId) : contact.contactId != null)
+        if (getTxtOptIn() != contact.getTxtOptIn()) return false;
+        if (getEmailOptIn() != contact.getEmailOptIn()) return false;
+        if (getPushNotificationOptin() != contact.getPushNotificationOptin()) return false;
+        if (getInboxMessageOptin() != contact.getInboxMessageOptin()) return false;
+        if (getContactId() != null ? !getContactId().equals(contact.getContactId()) : contact.getContactId() != null)
             return false;
-        if (contactFirstName != null ? !contactFirstName.equals(contact.contactFirstName) : contact.contactFirstName != null)
+        if (getFirstName() != null ? !getFirstName().equals(contact.getFirstName()) : contact.getFirstName() != null)
             return false;
-        if (contactLastName != null ? !contactLastName.equals(contact.contactLastName) : contact.contactLastName != null)
+        if (getLastName() != null ? !getLastName().equals(contact.getLastName()) : contact.getLastName() != null)
             return false;
-        if (contactZipCode != null ? !contactZipCode.equals(contact.contactZipCode) : contact.contactZipCode != null)
+        if (getZipCode() != null ? !getZipCode().equals(contact.getZipCode()) : contact.getZipCode() != null)
             return false;
-        if (contactEmail != null ? !contactEmail.equals(contact.contactEmail) : contact.contactEmail != null)
+        if (getEmail() != null ? !getEmail().equals(contact.getEmail()) : contact.getEmail() != null)
             return false;
-        if (prospect != null ? !prospect.equals(contact.prospect) : contact.prospect != null)
+        if (getProspect() != null ? !getProspect().equals(contact.getProspect()) : contact.getProspect() != null)
             return false;
-        if (gender != null ? !gender.equals(contact.gender) : contact.gender != null) return false;
-        if (contactBirthday != null ? !contactBirthday.equals(contact.contactBirthday) : contact.contactBirthday != null)
+        if (getGender() != null ? !getGender().equals(contact.getGender()) : contact.getGender() != null)
             return false;
-        if (fKey != null ? !fKey.equals(contact.fKey) : contact.fKey != null) return false;
-        if (cellNumber != null ? !cellNumber.equals(contact.cellNumber) : contact.cellNumber != null)
+        if (getBirthDay() != null ? !getBirthDay().equals(contact.getBirthDay()) : contact.getBirthDay() != null)
             return false;
-        if (!deviceToken.equals(contact.deviceToken)) return false;
-        return preferredReward != null ? preferredReward.equals(contact.preferredReward) : contact.preferredReward == null;
+        if (getFKey() != null ? !getFKey().equals(contact.getFKey()) : contact.getFKey() != null)
+            return false;
+        if (getPhone() != null ? !getPhone().equals(contact.getPhone()) : contact.getPhone() != null)
+            return false;
+        if (!getDeviceToken().equals(contact.getDeviceToken())) return false;
+        return getPreferredReward() != null ? getPreferredReward().equals(contact.getPreferredReward()) : contact.getPreferredReward() == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = contactId != null ? contactId.hashCode() : 0;
-        result = 31 * result + (contactFirstName != null ? contactFirstName.hashCode() : 0);
-        result = 31 * result + (contactLastName != null ? contactLastName.hashCode() : 0);
-        result = 31 * result + (contactZipCode != null ? contactZipCode.hashCode() : 0);
-        result = 31 * result + (contactEmail != null ? contactEmail.hashCode() : 0);
-        result = 31 * result + (prospect != null ? prospect.hashCode() : 0);
-        result = 31 * result + (gender != null ? gender.hashCode() : 0);
-        result = 31 * result + (contactBirthday != null ? contactBirthday.hashCode() : 0);
-        result = 31 * result + (fKey != null ? fKey.hashCode() : 0);
-        result = 31 * result + (cellNumber != null ? cellNumber.hashCode() : 0);
-        result = 31 * result + txtOptin;
-        result = 31 * result + emailOptin;
-        result = 31 * result + (preferredReward != null ? preferredReward.hashCode() : 0);
-        result = 31 * result + (deviceToken != null ? deviceToken.hashCode() : 0);
+        int result = getContactId() != null ? getContactId().hashCode() : 0;
+        result = 31 * result + (getFirstName() != null ? getFirstName().hashCode() : 0);
+        result = 31 * result + (getLastName() != null ? getLastName().hashCode() : 0);
+        result = 31 * result + (getZipCode() != null ? getZipCode().hashCode() : 0);
+        result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
+        result = 31 * result + (getProspect() != null ? getProspect().hashCode() : 0);
+        result = 31 * result + (getGender() != null ? getGender().hashCode() : 0);
+        result = 31 * result + (getBirthDay() != null ? getBirthDay().hashCode() : 0);
+        result = 31 * result + (getFKey() != null ? getFKey().hashCode() : 0);
+        result = 31 * result + (getPhone() != null ? getPhone().hashCode() : 0);
+        result = 31 * result + (getTxtOptIn() ? 1 : 0);
+        result = 31 * result + (getEmailOptIn() ? 1 : 0);
+        result = 31 * result + (getPreferredReward() != null ? getPreferredReward().hashCode() : 0);
+        result = 31 * result + (getDeviceToken() != null ? getDeviceToken().hashCode() : 0);
         return result;
     }
+
+    public interface Parameters {
+        String ID = "contactId";
+        String FIRST_NAME = "contactFirstName";
+        String LAST_NAME = "contactLastName";
+        String ZIP_CODE = "contactZipCode";
+        String EMAIL = "contactEmail";
+        String PROSPECT = "Prospect";
+        String GENDER = "gender";
+        String BIRTHDAY = "contactBirthday";
+        String F_KEY = "FKey";
+        String CELL_NUMBER = "Cell_Number";
+        String TXT_OPT_IN = "Txt_Optin";
+        String EMAIL_OPT_IN = "Email_Optin";
+        String PREFERRED_REWARD = "PreferredReward";
+        String DEVICE_TOKEN_EXT = "DeviceTokenExt";
+        String PUSH_NOTIFICATION_OPT_IN = "PushNotification_Optin";
+        String INBOX_MESSAGE_OPT_IN = "InboxMessage_Optin";
+    }
+
 }

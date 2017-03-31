@@ -14,7 +14,6 @@ import com.beanstalkdata.android.response.CardBalanceResponse;
 import com.beanstalkdata.android.response.CouponResponse;
 import com.beanstalkdata.android.response.GiftCardListResponse;
 import com.beanstalkdata.android.response.LocationResponse;
-import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.LocationsResponse;
 import com.beanstalkdata.android.response.PaymentTokenResponse;
 import com.beanstalkdata.android.response.PushMessageByIdResponse;
@@ -22,7 +21,9 @@ import com.beanstalkdata.android.response.PushMessagesResponse;
 import com.beanstalkdata.android.response.PushSuccessResponse;
 import com.beanstalkdata.android.response.RegisterGiftCardResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
+import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
+import com.beanstalkdata.android.response.SuccessResponse;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
 
 import java.util.Map;
@@ -116,6 +117,10 @@ public interface BeanstalkDataApi {
 
     @GET("/contacts")
     Call<ResponseBody> getContactRaw(@Query("key") String apiKey, @Query("q") String contactId);
+
+    @POST("/deleteContact")
+    @FormUrlEncoded
+    Call<SuccessResponse> deleteContact(@Query("key") String apiKey, @Field("ContactID") String contactId);
 
     @POST("bsdLoyalty/getProgress.php")
     @FormUrlEncoded

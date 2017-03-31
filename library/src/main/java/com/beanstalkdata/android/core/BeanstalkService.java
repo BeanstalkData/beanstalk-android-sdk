@@ -35,6 +35,7 @@ import com.beanstalkdata.android.response.RegisterGiftCardResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
 import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
+import com.beanstalkdata.android.response.SuccessResponse;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,6 +43,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -353,6 +355,40 @@ public class BeanstalkService {
                     listener.onFinished(null, Error.OFFERS_FAILED);
                 }
             }
+        });
+    }
+
+    /**
+     * Delete contact and wipe user session.
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void deleteContact(final OnReturnListener listener) {
+        String contactId = beanstalkUserSession.getContactId();
+
+        Call<SuccessResponse> call = service.deleteContact(beanstalkApiKey, contactId);
+
+        call.enqueue(new Callback<SuccessResponse>() {
+
+            @Override
+            public void onResponse(Call<SuccessResponse> call, Response<SuccessResponse> response) {
+                if ((response != null) && (response.body() != null) && response.body().isSuccess()) {
+                    beanstalkUserSession.release();
+                    if (listener != null) {
+                        listener.onFinished(null);
+                    }
+                } else {
+                    onFailure(call, null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SuccessResponse> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(Error.DELETE_CONTACT_FAILED);
+                }
+            }
+
         });
     }
 
@@ -1274,7 +1310,10 @@ public class BeanstalkService {
     }
 
     private Gson getGson() {
-        return new GsonBuilder().registerTypeAdapter(Date.class, new MultiDateFormatDeserializer()).create();
+        return new GsonBuilder()
+                .registerTypeAdapter(Contact.class, new ContactDeserializer())
+                .registerTypeAdapter(Date.class, new MultiDateFormatDeserializer())
+                .create();
     }
 
     private void checkLocation(LocationResponse.Location location, final OnReturnListener listener) {
@@ -1543,6 +1582,75 @@ public class BeanstalkService {
         protected T getResponseBody(Response<T> response) {
             T responseBody = response.body();
             return response.isSuccessful() && (responseBody != null) ? responseBody : null;
+        }
+
+    }
+
+    private static class ContactDeserializer implements JsonDeserializer<Contact> {
+
+        @Override
+        public Contact deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            Contact contact = new Contact();
+            for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
+                String key = entry.getKey();
+                JsonElement value = entry.getValue();
+                if (value instanceof JsonPrimitive) {
+                    switch (key) {
+                        case Contact.Parameters.ID:
+                            contact.setContactId(value.getAsString());
+                            break;
+                        case Contact.Parameters.FIRST_NAME:
+                            contact.setFirstName(value.getAsString());
+                            break;
+                        case Contact.Parameters.LAST_NAME:
+                            contact.setLastName(value.getAsString());
+                            break;
+                        case Contact.Parameters.ZIP_CODE:
+                            contact.setZipCode(value.getAsString());
+                            break;
+                        case Contact.Parameters.EMAIL:
+                            contact.setEmail(value.getAsString());
+                            break;
+                        case Contact.Parameters.PROSPECT:
+                            contact.setProspect(value.getAsString());
+                            break;
+                        case Contact.Parameters.GENDER:
+                            contact.setGender(value.getAsString());
+                            break;
+                        case Contact.Parameters.BIRTHDAY:
+                            contact.setBirthDay(value.getAsString());
+                            break;
+                        case Contact.Parameters.F_KEY:
+                            contact.setFKey(value.getAsString());
+                            break;
+                        case Contact.Parameters.CELL_NUMBER:
+                            contact.setPhone(value.getAsString());
+                            break;
+                        case Contact.Parameters.TXT_OPT_IN:
+                            contact.setTxtOptIn(value.getAsBoolean());
+                            break;
+                        case Contact.Parameters.EMAIL_OPT_IN:
+                            contact.setEmailOptIn(value.getAsBoolean());
+                            break;
+                        case Contact.Parameters.PREFERRED_REWARD:
+                            contact.setPreferredReward(value.getAsString());
+                            break;
+                        case Contact.Parameters.DEVICE_TOKEN_EXT:
+                            contact.setDeviceToken(value.getAsString());
+                            break;
+                        case Contact.Parameters.PUSH_NOTIFICATION_OPT_IN:
+                            contact.setPushNotificationOptin(value.getAsInt());
+                            break;
+                        case Contact.Parameters.INBOX_MESSAGE_OPT_IN:
+                            contact.setInboxMessageOptin(value.getAsInt());
+                            break;
+                        default:
+                            contact.setParam(key, value.getAsString());
+                            break;
+                    }
+                }
+            }
+            return contact;
         }
 
     }

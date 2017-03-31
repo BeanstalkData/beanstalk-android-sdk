@@ -17,6 +17,7 @@ interface Error {
     String ADD_CARD_FAILED = "Unable to add card. %s";
     String PAYMENT_FAILED = "Failed to start payment";
     String OFFERS_FAILED = "Unable to get offers";
+    String DELETE_CONTACT_FAILED = "Unable to delete contact";
     String LOYALTY_INFO_FAILED = "Unable to get loyalty Info";
     String INQUIRE_CARD_FAILED = "Unable to inquire about card";
     String PREFERRED_CARD_FAILED = "Unable to set preferred card";

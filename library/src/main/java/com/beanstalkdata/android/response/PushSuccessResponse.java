@@ -4,22 +4,9 @@
 
 package com.beanstalkdata.android.response;
 
-import com.google.gson.annotations.Expose;
-
 /**
  * Data model for Push Success response.
  */
-public class PushSuccessResponse {
-
-    @Expose
-    private boolean success;
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
+public class PushSuccessResponse extends SuccessResponse {
 
 }
