@@ -70,7 +70,7 @@ public class Contact {
     }
 
     public boolean getEmailOptIn() {
-        return Integer.valueOf(params.get(Parameters.EMAIL_OPT_IN)) != 0;
+        return parseInteger(params.get(Parameters.EMAIL_OPT_IN)) != 0;
     }
 
     public void setEmailOptIn(boolean emailOptIn) {
@@ -78,7 +78,7 @@ public class Contact {
     }
 
     public boolean getTxtOptIn() {
-        return Integer.valueOf(params.get(Parameters.TXT_OPT_IN)) != 0;
+        return parseInteger(params.get(Parameters.TXT_OPT_IN)) != 0;
     }
 
     public void setTxtOptIn(boolean txtOptIn) {
@@ -130,7 +130,7 @@ public class Contact {
     }
 
     public int getPushNotificationOptin() {
-        return Integer.valueOf(params.get(Parameters.PUSH_NOTIFICATION_OPT_IN));
+        return parseInteger(params.get(Parameters.PUSH_NOTIFICATION_OPT_IN));
     }
 
     public void setPushNotificationOptin(int pushNotificationOptin) {
@@ -138,7 +138,7 @@ public class Contact {
     }
 
     public int getInboxMessageOptin() {
-        return Integer.valueOf(params.get(Parameters.INBOX_MESSAGE_OPT_IN));
+        return parseInteger(params.get(Parameters.INBOX_MESSAGE_OPT_IN));
     }
 
     public void setInboxMessageOptin(int inboxMessageOptin) {
@@ -151,6 +151,10 @@ public class Contact {
 
     public void setParam(String key, String value) {
         params.put(key, value);
+    }
+
+    private int parseInteger(String s) {
+        return ((s != null) && !s.isEmpty()) ? Integer.valueOf(s) : 0;
     }
 
     @Override
