@@ -20,8 +20,11 @@
     <string name="gift_card_number">Gift Card Number</string>
     <string name="gift_card_pin_optional">Gift Card Pin (Optional)</string>
     <string name="register">Register</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="update_contact">Update Contact</string>
+    <string name="delete_contact">Delete Contact</string>
+    <string name="delete_contact_confirm">Are you sure you want to delete this contact?</string>
     <string name="messages">Messages</string>
     <string name="notifications">Notifications</string>
 

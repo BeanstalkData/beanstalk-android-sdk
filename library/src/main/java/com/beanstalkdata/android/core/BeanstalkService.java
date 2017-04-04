@@ -23,6 +23,7 @@ import com.beanstalkdata.android.model.type.PlatformType;
 import com.beanstalkdata.android.request.AuthenticateUserRequest;
 import com.beanstalkdata.android.request.ContactRequest;
 import com.beanstalkdata.android.response.CardBalanceResponse;
+import com.beanstalkdata.android.response.ContactDeletedResponse;
 import com.beanstalkdata.android.response.CouponResponse;
 import com.beanstalkdata.android.response.GiftCardListResponse;
 import com.beanstalkdata.android.response.LocationResponse;
@@ -366,12 +367,12 @@ public class BeanstalkService {
     public void deleteContact(final OnReturnListener listener) {
         String contactId = beanstalkUserSession.getContactId();
 
-        Call<SuccessResponse> call = service.deleteContact(beanstalkApiKey, contactId);
+        Call<ContactDeletedResponse> call = service.deleteContact(beanstalkApiKey, contactId);
 
-        call.enqueue(new Callback<SuccessResponse>() {
+        call.enqueue(new Callback<ContactDeletedResponse>() {
 
             @Override
-            public void onResponse(Call<SuccessResponse> call, Response<SuccessResponse> response) {
+            public void onResponse(Call<ContactDeletedResponse> call, Response<ContactDeletedResponse> response) {
                 if ((response != null) && (response.body() != null) && response.body().isSuccess()) {
                     beanstalkUserSession.release();
                     if (listener != null) {
@@ -383,7 +384,7 @@ public class BeanstalkService {
             }
 
             @Override
-            public void onFailure(Call<SuccessResponse> call, Throwable t) {
+            public void onFailure(Call<ContactDeletedResponse> call, Throwable t) {
                 if (listener != null) {
                     listener.onFinished(Error.DELETE_CONTACT_FAILED);
                 }

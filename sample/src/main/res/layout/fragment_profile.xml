@@ -209,6 +209,14 @@
             android:textColor="@android:color/white" />
 
         <Button
+            android:id="@+id/delete_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/delete_contact"
+            android:textColor="@android:color/white" />
+
+        <Button
             android:id="@+id/log_out"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

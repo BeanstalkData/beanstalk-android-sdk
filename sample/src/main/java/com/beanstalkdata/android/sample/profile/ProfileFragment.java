@@ -4,9 +4,12 @@
 
 package com.beanstalkdata.android.sample.profile;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,6 +67,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         view.findViewById(R.id.check_stores).setOnClickListener(this);
         view.findViewById(R.id.messages).setOnClickListener(this);
         view.findViewById(R.id.update_contact).setOnClickListener(this);
+        view.findViewById(R.id.delete_contact).setOnClickListener(this);
         view.findViewById(R.id.log_out).setOnClickListener(this);
         return view;
     }
@@ -144,6 +148,26 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     activityContract.replaceFragment(ContactInfoFragment.update());
                 }
                 break;
+            case R.id.delete_contact:
+                if (activityContract != null) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage(R.string.delete_contact_confirm);
+                    builder.setCancelable(true);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteContact();
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.create().show();
+                }
+                break;
             case R.id.log_out:
                 logOut();
                 break;
@@ -176,6 +200,28 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     birthdayField.setText(contact.getBirthDay());
                     phoneNumberField.setText(contact.getPhone());
                     zipCodeInput.setText(contact.getZipCode());
+                }
+            }
+        });
+    }
+
+    private void deleteContact() {
+        activityContract.showProgress();
+        getService().deleteContact(new OnReturnListener() {
+            @Override
+            public void onFinished(String error) {
+                if (activityContract != null) {
+                    activityContract.hideProgress();
+                }
+                if (error == null) {
+                    if (activityContract != null) {
+                        activityContract.startActivity(LoginActivity.class);
+                    }
+                } else {
+                    FragmentActivity activity = getActivity();
+                    if (activity != null) {
+                        ToastUtils.showLong(activity, error);
+                    }
                 }
             }
         });
