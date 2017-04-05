@@ -63,6 +63,7 @@ import static org.mockito.Mockito.when;
 public class ApiTests {
 
     private static final int TIMEOUT = 60;
+    private static final String API_KEY = BuildConfig.APP_KEY;
 
     private static final String STATUS_ERROR = "error";
     private static final String STATUS_LOGGED_OUT = "logged out";
@@ -74,16 +75,18 @@ public class ApiTests {
     private static final String STATUS_SESSION_ERROR = "invalid token";
 
     private static final String EMAIL1 = "not_found@example.com";
-    private static final String PASSWORD1 = "WRONG PASSWORD";
-    private static final String AUTH_REQ1 = "email=not_found%40example.com&password=WRONG%20PASSWORD&key=JOAA-RXHF-KFVU-JWKJ-GVIB&time=-1";
+    private static final String EMAIL1_ENC = "not_found%40example.com";
+    private static final String PASSWORD1 = "WRONG_PASSWORD";
+    private static final String AUTH_REQ1 = String.format("email=%s&password=%s&key=%s&time=-1", EMAIL1_ENC, PASSWORD1, API_KEY);
     private static final String TOKEN1 = "INVALID TOKEN";
     private static final String LOGOUT_REQ1 = "contact=1234567890&token=INVALID%20TOKEN";
     private static final String SESSION_CHECK_REQ1 = "contact=1234567890&token=";
 
     private static final String EMAIL2 = "test@example.com";
+    private static final String EMAIL2_ENC = "test%40example.com";
     private static final String PHONE2 = "1855567443";
     private static final String PASSWORD2 = "12345678";
-    private static final String AUTH_REQ2 = "email=test%40example.com&password=12345678&key=JOAA-RXHF-KFVU-JWKJ-GVIB&time=-1";
+    private static final String AUTH_REQ2 = String.format("email=%s&password=%s&key=%s&time=-1", EMAIL2_ENC, PASSWORD2, API_KEY);
     private static final String ID2 = "1234567890";
     private static final String TOKEN2 = "de763efff3f11b80034de9b0b5a6575131f6fa19";
     private static final String LOGOUT_REQ2 = "contact=1234567890&token=de763efff3f11b80034de9b0b5a6575131f6fa19";
@@ -214,6 +217,7 @@ public class ApiTests {
                                 .setResponseCode(200)
                                 .setBody(String.format("[%s,\"%s\"]", ID2, TOKEN2));
                     }
+                    break;
                 case "/logoutUser/":
                     if (body.equals(LOGOUT_REQ2)) {
                         return new MockResponse()
@@ -225,6 +229,7 @@ public class ApiTests {
                                 .setResponseCode(200)
                                 .setBody(STATUS_INVALID_TOKEN);
                     }
+                    break;
                 case "/addContact/?key=JOAA-RXHF-KFVU-JWKJ-GVIB":
                     // NOTE: According to the docs in update case the API should return "Update" string instead of "Add"
                     // but at the moment nothing updates and the API returns string "Add".
@@ -298,9 +303,8 @@ public class ApiTests {
                                 .setResponseCode(200)
                                 .setBody(STATUS_SESSION_OK);
                     }
-                default:
-                    return new MockResponse().setResponseCode(404);
             }
+            return new MockResponse().setResponseCode(404);
         }
 
         private String getStoreMock() {
