@@ -16,6 +16,10 @@ import com.beanstalkdata.android.model.Contact;
 import com.beanstalkdata.android.model.Coupon;
 import com.beanstalkdata.android.model.GiftCard;
 import com.beanstalkdata.android.model.LoyaltyUser;
+import com.beanstalkdata.android.model.PushMessage;
+import com.beanstalkdata.android.model.deserializer.PushMessagesDeserializer;
+import com.beanstalkdata.android.model.deserializer.ContactDeserializer;
+import com.beanstalkdata.android.model.deserializer.MultiDateFormatDeserializer;
 import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
@@ -36,15 +40,9 @@ import com.beanstalkdata.android.response.RegisterGiftCardResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
 import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
-import com.beanstalkdata.android.response.SuccessResponse;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,13 +51,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -85,6 +81,9 @@ public class BeanstalkService {
     private final String beanstalkApiKey;
     private final String googleMapsApiKey;
 
+    // Workaround for empty response for push notification messages
+    private final PushMessagesResponse defaultMessages;
+
     private boolean isLoggingEnabled;
 
     /**
@@ -108,10 +107,15 @@ public class BeanstalkService {
         this.beanstalkUserSession = beanstalkUserSession;
         this.beanstalkApiKey = beanstalkApiKey;
         this.googleMapsApiKey = googleMapsApiKey;
+
+        defaultMessages = new PushMessagesResponse();
+        defaultMessages.setPushMessages(new ArrayList<PushMessage>());
+
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://proc.beanstalkdata.com")
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -1155,7 +1159,7 @@ public class BeanstalkService {
      */
     public void enrollPushNotification(String deviceToken, OnReturnDataListener<PushSuccessResponse> listener) {
         service.enrollPushNotification(beanstalkApiKey, beanstalkUserSession.getContactId(), deviceToken, PlatformType.ANDROID)
-                .enqueue(new PushSuccessResponseCallback(Error.ENROLL_PUSH_NOTIFICATION_FAILED, listener));
+                .enqueue(new PushSuccessResponseCallback(Error.ENROLL_PUSH_NOTIFICATION_FAILED, listener, null));
     }
 
     /**
@@ -1166,7 +1170,7 @@ public class BeanstalkService {
      */
     public void modifyPushNotification(String deviceToken, OnReturnDataListener<PushSuccessResponse> listener) {
         service.modifyPushNotification(beanstalkApiKey, beanstalkUserSession.getContactId(), deviceToken, PlatformType.ANDROID)
-                .enqueue(new PushSuccessResponseCallback(Error.MODIFY_PUSH_NOTIFICATION_FAILED, listener));
+                .enqueue(new PushSuccessResponseCallback(Error.MODIFY_PUSH_NOTIFICATION_FAILED, listener, null));
     }
 
     /**
@@ -1176,7 +1180,7 @@ public class BeanstalkService {
      */
     public void deletePushNotification(OnReturnDataListener<PushSuccessResponse> listener) {
         service.deletePushNotification(beanstalkApiKey, beanstalkUserSession.getContactId())
-                .enqueue(new PushSuccessResponseCallback(Error.DELETE_PUSH_NOTIFICATION_FAILED, listener));
+                .enqueue(new PushSuccessResponseCallback(Error.DELETE_PUSH_NOTIFICATION_FAILED, listener, null));
     }
 
     /**
@@ -1187,7 +1191,7 @@ public class BeanstalkService {
      */
     public void getContactMessages(int maxResults, OnReturnDataListener<PushMessagesResponse> listener) {
         service.getContactMessages(beanstalkApiKey, beanstalkUserSession.getContactId(), maxResults)
-                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener));
+                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener, defaultMessages));
     }
 
     /**
@@ -1198,7 +1202,7 @@ public class BeanstalkService {
      */
     public void getMessagesByOsAndType(@MessageContentType String messageContentType, OnReturnDataListener<PushMessagesResponse> listener) {
         service.getMessagesByOsAndType(beanstalkApiKey, messageContentType, PlatformType.ANDROID)
-                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener));
+                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener, defaultMessages));
     }
 
     /**
@@ -1209,7 +1213,7 @@ public class BeanstalkService {
      */
     public void getMessagesByImageType(@ImageType String imageType, OnReturnDataListener<PushMessagesResponse> listener) {
         service.getMessagesByImageType(beanstalkApiKey, beanstalkUserSession.getContactId(), imageType)
-                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener));
+                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener, defaultMessages));
     }
 
     /**
@@ -1220,7 +1224,7 @@ public class BeanstalkService {
      */
     public void getMessageById(String messageId, OnReturnDataListener<PushMessageByIdResponse> listener) {
         service.getMessageById(beanstalkApiKey, messageId)
-                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener));
+                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener, null));
     }
 
     /**
@@ -1232,7 +1236,7 @@ public class BeanstalkService {
      */
     public void updateMessageStatus(String messageId, @MessageType String messageStatus, OnReturnDataListener<PushSuccessResponse> listener) {
         service.updateMessageStatus(beanstalkApiKey, messageId, messageStatus)
-                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener));
+                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener, null));
     }
 
     /**
@@ -1244,7 +1248,7 @@ public class BeanstalkService {
      */
     public void trackTransaction(String username, String details, final OnReturnDataListener<TrackTransactionResponse> listener) {
         service.trackTransaction(beanstalkApiKey, beanstalkUserSession.getContactId(), username, details)
-                .enqueue(new SimpleCallback<>(Error.TRACK_TRANSACTION_FAILED, listener));
+                .enqueue(new SimpleCallback<>(Error.TRACK_TRANSACTION_FAILED, listener, null));
     }
 
     /**
@@ -1312,7 +1316,9 @@ public class BeanstalkService {
 
     private Gson getGson() {
         return new GsonBuilder()
+                .setLenient()
                 .registerTypeAdapter(Contact.class, new ContactDeserializer())
+                .registerTypeAdapter(PushMessagesResponse.class, new PushMessagesDeserializer())
                 .registerTypeAdapter(Date.class, new MultiDateFormatDeserializer())
                 .create();
     }
@@ -1531,8 +1537,8 @@ public class BeanstalkService {
 
     private static class PushSuccessResponseCallback extends SimpleCallback<PushSuccessResponse> {
 
-        private PushSuccessResponseCallback(String error, OnReturnDataListener<PushSuccessResponse> listener) {
-            super(error, listener);
+        private PushSuccessResponseCallback(String error, OnReturnDataListener<PushSuccessResponse> listener, PushSuccessResponse defaultBody) {
+            super(error, listener, defaultBody);
         }
 
         @Override
@@ -1551,16 +1557,21 @@ public class BeanstalkService {
 
         private final String error;
         private final OnReturnDataListener<T> listener;
+        private final T defaultBody;
 
-        private SimpleCallback(String error, OnReturnDataListener<T> listener) {
+        private SimpleCallback(String error, OnReturnDataListener<T> listener, T defaultBody) {
             this.error = error;
             this.listener = listener;
+            this.defaultBody = defaultBody;
         }
 
         @Override
         public void onResponse(Call<T> call, Response<T> response) {
             if (response != null) {
                 T responseBody = getResponseBody(response);
+                if (responseBody == null) {
+                    responseBody = defaultBody;
+                }
                 if (responseBody != null) {
                     if (listener != null) {
                         listener.onFinished(responseBody, null);
@@ -1583,96 +1594,6 @@ public class BeanstalkService {
         protected T getResponseBody(Response<T> response) {
             T responseBody = response.body();
             return response.isSuccessful() && (responseBody != null) ? responseBody : null;
-        }
-
-    }
-
-    private static class ContactDeserializer implements JsonDeserializer<Contact> {
-
-        @Override
-        public Contact deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            Contact contact = new Contact();
-            for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
-                String key = entry.getKey();
-                JsonElement value = entry.getValue();
-                if (value instanceof JsonPrimitive) {
-                    switch (key) {
-                        case Contact.Parameters.ID:
-                            contact.setContactId(value.getAsString());
-                            break;
-                        case Contact.Parameters.FIRST_NAME:
-                            contact.setFirstName(value.getAsString());
-                            break;
-                        case Contact.Parameters.LAST_NAME:
-                            contact.setLastName(value.getAsString());
-                            break;
-                        case Contact.Parameters.ZIP_CODE:
-                            contact.setZipCode(value.getAsString());
-                            break;
-                        case Contact.Parameters.EMAIL:
-                            contact.setEmail(value.getAsString());
-                            break;
-                        case Contact.Parameters.PROSPECT:
-                            contact.setProspect(value.getAsString());
-                            break;
-                        case Contact.Parameters.GENDER:
-                            contact.setGender(value.getAsString());
-                            break;
-                        case Contact.Parameters.BIRTHDAY:
-                            contact.setBirthDay(value.getAsString());
-                            break;
-                        case Contact.Parameters.F_KEY:
-                            contact.setFKey(value.getAsString());
-                            break;
-                        case Contact.Parameters.CELL_NUMBER:
-                            contact.setPhone(value.getAsString());
-                            break;
-                        case Contact.Parameters.TXT_OPT_IN:
-                            contact.setTxtOptIn(value.getAsBoolean());
-                            break;
-                        case Contact.Parameters.EMAIL_OPT_IN:
-                            contact.setEmailOptIn(value.getAsBoolean());
-                            break;
-                        case Contact.Parameters.PREFERRED_REWARD:
-                            contact.setPreferredReward(value.getAsString());
-                            break;
-                        case Contact.Parameters.DEVICE_TOKEN_EXT:
-                            contact.setDeviceToken(value.getAsString());
-                            break;
-                        case Contact.Parameters.PUSH_NOTIFICATION_OPT_IN:
-                            contact.setPushNotificationOptin(value.getAsInt());
-                            break;
-                        case Contact.Parameters.INBOX_MESSAGE_OPT_IN:
-                            contact.setInboxMessageOptin(value.getAsInt());
-                            break;
-                        default:
-                            contact.setParam(key, value.getAsString());
-                            break;
-                    }
-                }
-            }
-            return contact;
-        }
-
-    }
-
-    private static class MultiDateFormatDeserializer implements JsonDeserializer<Date> {
-
-        private static final String[] DATE_FORMATS = new String[]{
-                "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-                "yyyy-MM-dd'T'HH:mm:ss",
-        };
-
-        @Override
-        public Date deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            for (String format : DATE_FORMATS) {
-                try {
-                    return new SimpleDateFormat(format, Locale.US).parse(element.getAsString());
-                } catch (ParseException e) {
-
-                }
-            }
-            throw new JsonParseException(String.format(Locale.US, "Failed to parse '%s' date", element.getAsString()));
         }
 
     }

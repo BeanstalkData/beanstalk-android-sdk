@@ -23,6 +23,6 @@ public class ContactDeletedResponse {
     }
 
     public boolean isSuccess() {
-        return status.equals("success");
+        return status != null && status.equals("success");
     }
 }

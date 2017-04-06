@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 
 import com.beanstalkdata.android.callback.OnReturnDataListener;
 import com.beanstalkdata.android.model.PushMessage;
-import com.beanstalkdata.android.model.PushMessageId;
 import com.beanstalkdata.android.response.PushMessagesResponse;
 import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseFragment;
@@ -92,19 +91,18 @@ public class MessagesFragment extends BaseFragment implements OnItemClickListene
 
     @Override
     public void onItemClick(PushMessage item, int position) {
-        PushMessageId pushMessageId = item.getPushMessageId();
-        if (pushMessageId != null) {
-            String messageId = pushMessageId.getId();
-            PushNotificationsContainer.getInstance().putPushNotifications(messageId, item.getPushNotifications());
+        String messageId = item.getId();
+        if (messageId != null) {
+//            PushNotificationsContainer.getInstance().putPushNotifications(messageId, item.getPushNotifications());
             NotificationsFragment.newInstance(messageId);
         }
     }
 
     @Override
     public void onItemLongClick(PushMessage item, int position) {
-        PushMessageId pushMessageId = item.getPushMessageId();
-        if (pushMessageId != null) {
-            activityContract.showDialog(UpdateMessageStatusDialogFragment.newInstance(pushMessageId.getId(), item.getStatus(), position, this));
+        String messageId = item.getId();
+        if (messageId != null) {
+            activityContract.showDialog(UpdateMessageStatusDialogFragment.newInstance(messageId, item.getStatus(), position, this));
         }
     }
 

@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.beanstalkdata.android.model.PushMessage;
-import com.beanstalkdata.android.model.PushMessageId;
 import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseRecyclerViewAdapter;
 import com.beanstalkdata.android.sample.base.BaseViewHolder;
@@ -61,18 +60,12 @@ public class MessagesAdapter extends BaseRecyclerViewAdapter<PushMessage, Messag
 
         @Override
         protected void bindItem() {
-            if (item == null) {
-                return;
+            if (item != null) {
+                id.setText(item.getStepId());
+                category.setText(item.getCategory());
+                sentDate.setText(DATE_FORMAT.format(item.getUpdatedAt()));
+                statusAndUpdatedDate.setText(itemView.getResources().getString(R.string.message_status_format, item.getStatus(), DATE_FORMAT.format(item.getUpdatedAt())));
             }
-
-            PushMessageId pushMessageId = item.getPushMessageId();
-            if (pushMessageId != null) {
-                id.setText(pushMessageId.getId());
-            }
-            category.setText(item.getCategory());
-            sentDate.setText(DATE_FORMAT.format(item.getSentDate()));
-            statusAndUpdatedDate.setText(itemView.getResources().getString(R.string.message_status_format,
-                    item.getStatus(), DATE_FORMAT.format(item.getStatusLastUpdated())));
         }
 
     }

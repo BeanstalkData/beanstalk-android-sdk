@@ -5,104 +5,148 @@
 package com.beanstalkdata.android.model;
 
 import com.beanstalkdata.android.model.type.MessageType;
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Data model for Push Message.
  */
 public class PushMessage {
 
-    @Expose
     @SerializedName("_id")
-    private PushMessageId pushMessageId;
+    private Id id;
 
-    @Expose
-    @SerializedName("CustomerId")
-    private String customerId;
+    @SerializedName("AppHook")
+    private String appHook;
 
-    @Expose
     @SerializedName("CampaignId")
     private String campaignId;
 
-    @Expose
-    @SerializedName("StepId")
-    private String stepId;
-
-    @Expose
-    @SerializedName("ContactId")
-    private String contactId;
-
-    @Expose
-    @SerializedName("DateSent")
-    private Date sentDate;
-
-    @Expose
-    @MessageType
-    @SerializedName("Status")
-    private String status;
-
-    @Expose
-    @SerializedName("StatusLastUpdated")
-    private Date statusLastUpdated;
-
-    @Expose
     @SerializedName("Category")
     private String category;
 
-    @Expose
-    @SerializedName("notification")
-    private List<PushNotification> pushNotifications;
+    @SerializedName("ContactId")
+    private String contactId;
 
-    public PushMessageId getPushMessageId() {
-        return pushMessageId;
+    @SerializedName("CustomerId")
+    private String customerId;
+
+    @SerializedName("MessageBody")
+    private String messageBody;
+
+    @SerializedName("MsgImage")
+    private String messageImage;
+
+    @SerializedName("MsgType")
+    private String messageType;
+
+    @SerializedName("OS")
+    private String os;
+
+    @SerializedName("StepId")
+    private String stepId;
+
+    @SerializedName("TitleImage")
+    private String titleImage;
+
+    @SerializedName("inboxTitle")
+    private String inboxTitle;
+
+    @SerializedName("messageUrl")
+    private String messageUrl;
+
+    @MessageType
+    @SerializedName("status")
+    private String status;
+
+    @SerializedName("subtitle")
+    private String subTitle;
+
+    @SerializedName("thumbnailUrl")
+    private String thumbnailUrl;
+
+    @SerializedName("title")
+    private String title;
+
+    @SerializedName("updated_at")
+    private UpdatedAt updatedAt;
+
+    private static class Id {
+
+        @SerializedName("$id")
+        private String id;
+
+        public String getId() {
+            return id;
+        }
+
     }
 
-    public void setPushMessageId(PushMessageId pushMessageId) {
-        this.pushMessageId = pushMessageId;
+    private static class UpdatedAt {
+
+        @SerializedName("sec")
+        private int timestamp;
+
+        public int getTimestamp() {
+            return timestamp;
+        }
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public String getId() {
+        return id.getId();
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public String getAppHook() {
+        return appHook;
     }
 
     public String getCampaignId() {
         return campaignId;
     }
 
-    public void setCampaignId(String campaignId) {
-        this.campaignId = campaignId;
-    }
-
-    public String getStepId() {
-        return stepId;
-    }
-
-    public void setStepId(String stepId) {
-        this.stepId = stepId;
+    public String getCategory() {
+        return category;
     }
 
     public String getContactId() {
         return contactId;
     }
 
-    public void setContactId(String contactId) {
-        this.contactId = contactId;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public Date getSentDate() {
-        return sentDate;
+    public String getMessageBody() {
+        return messageBody;
     }
 
-    public void setSentDate(Date sentDate) {
-        this.sentDate = sentDate;
+    public String getMessageImage() {
+        return messageImage;
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public String getOs() {
+        return os;
+    }
+
+    public String getStepId() {
+        return stepId;
+    }
+
+    public String getTitleImage() {
+        return titleImage;
+    }
+
+    public String getInboxTitle() {
+        return inboxTitle;
+    }
+
+    public String getMessageUrl() {
+        return messageUrl;
     }
 
     public String getStatus() {
@@ -113,28 +157,20 @@ public class PushMessage {
         this.status = status;
     }
 
-    public Date getStatusLastUpdated() {
-        return statusLastUpdated;
+    public String getSubTitle() {
+        return subTitle;
     }
 
-    public void setStatusLastUpdated(Date statusLastUpdated) {
-        this.statusLastUpdated = statusLastUpdated;
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
     }
 
-    public String getCategory() {
-        return category;
+    public String getTitle() {
+        return title;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public List<PushNotification> getPushNotifications() {
-        return pushNotifications;
-    }
-
-    public void setPushNotifications(List<PushNotification> pushNotifications) {
-        this.pushNotifications = pushNotifications;
+    public Date getUpdatedAt() {
+        return new Date((long)updatedAt.getTimestamp() * 1000);
     }
 
 }

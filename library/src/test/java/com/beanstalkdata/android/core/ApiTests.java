@@ -3,6 +3,7 @@ package com.beanstalkdata.android.core;
 import com.beanstalkdata.android.BuildConfig;
 import com.beanstalkdata.android.model.Contact;
 import com.beanstalkdata.android.model.Coupon;
+import com.beanstalkdata.android.model.deserializer.PushMessagesDeserializer;
 import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
@@ -24,6 +25,7 @@ import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.junit.BeforeClass;
@@ -56,6 +58,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -63,7 +66,7 @@ import static org.mockito.Mockito.when;
 public class ApiTests {
 
     private static final int TIMEOUT = 60;
-    private static final String API_KEY = BuildConfig.APP_KEY;
+    private static final String APP_KEY = BuildConfig.APP_KEY;
 
     private static final String STATUS_ERROR = "error";
     private static final String STATUS_LOGGED_OUT = "logged out";
@@ -77,7 +80,7 @@ public class ApiTests {
     private static final String EMAIL1 = "not_found@example.com";
     private static final String EMAIL1_ENC = "not_found%40example.com";
     private static final String PASSWORD1 = "WRONG_PASSWORD";
-    private static final String AUTH_REQ1 = String.format("email=%s&password=%s&key=%s&time=-1", EMAIL1_ENC, PASSWORD1, API_KEY);
+    private static final String AUTH_REQ1 = String.format("email=%s&password=%s&key=%s&time=-1", EMAIL1_ENC, PASSWORD1, APP_KEY);
     private static final String TOKEN1 = "INVALID TOKEN";
     private static final String LOGOUT_REQ1 = "contact=1234567890&token=INVALID%20TOKEN";
     private static final String SESSION_CHECK_REQ1 = "contact=1234567890&token=";
@@ -86,7 +89,7 @@ public class ApiTests {
     private static final String EMAIL2_ENC = "test%40example.com";
     private static final String PHONE2 = "1855567443";
     private static final String PASSWORD2 = "12345678";
-    private static final String AUTH_REQ2 = String.format("email=%s&password=%s&key=%s&time=-1", EMAIL2_ENC, PASSWORD2, API_KEY);
+    private static final String AUTH_REQ2 = String.format("email=%s&password=%s&key=%s&time=-1", EMAIL2_ENC, PASSWORD2, APP_KEY);
     private static final String ID2 = "1234567890";
     private static final String TOKEN2 = "de763efff3f11b80034de9b0b5a6575131f6fa19";
     private static final String LOGOUT_REQ2 = "contact=1234567890&token=de763efff3f11b80034de9b0b5a6575131f6fa19";
@@ -113,9 +116,14 @@ public class ApiTests {
     private static final String USERNAME3 = "New User";
     private static final String DETAILS3 = "Test transaction details";
     private static final String DEVICE_TOKEN3 = "Some android device token";
+    private static final String DEVICE_TOKEN3_ENC = "Some%20android%20device%20token";
     private static final String MESSAGE_ID3 = "12345678";
     private static final int MAX_MESSAGES3 = 2;
     private static final String STORE_ID3 = "1";
+
+    private static final String ID4 = "16666666";
+    private static final int MAX_MESSAGES4 = 100;
+    private static final String MSG_REQ4 = String.format("key=%s&contactId=%s&maxResults=%d", APP_KEY, ID4, MAX_MESSAGES4);
 
     private static MockWebServer server;
     private static BeanstalkDataApi service;
@@ -137,74 +145,106 @@ public class ApiTests {
         }
 
         private MockResponse processGet(String path) {
-            switch (path) {
-                case "/contacts?type=email&key=JOAA-RXHF-KFVU-JWKJ-GVIB&q=" + EMAIL1:
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            // NOTE: it should be "[]" but current API returns string with "null" text
-                            .setBody("null");
-                case "/contacts?type=email&key=JOAA-RXHF-KFVU-JWKJ-GVIB&q=" + EMAIL2:
-                    Contact contact1 = new Contact();
-                    contact1.setEmail(EMAIL2);
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody(new Gson().toJson(new Contact[]{contact1}));
-                case "/contacts?type=cell_number&key=JOAA-RXHF-KFVU-JWKJ-GVIB&q=" + PHONE2:
-                    Contact contact2 = new Contact();
-                    contact2.setPhone(PHONE2);
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody(new Gson().toJson(new Contact[]{contact2}));
-                case "/contacts?key=JOAA-RXHF-KFVU-JWKJ-GVIB&q=" + ID3:
-                    Contact contact3 = new Contact();
-                    contact3.setFirstName(FIRST_NAME3);
-                    contact3.setLastName(LAST_NAME3);
-                    contact3.setEmail(EMAIL3);
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody(new Gson().toJson(new Contact[]{contact3}));
-                case "/bsdPayment/list?key=JOAA-RXHF-KFVU-JWKJ-GVIB&contactId=" + ID3 + "&token=" + TOKEN3:
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{}");
-                case "/bsdStores/locate/?key=JOAA-RXHF-KFVU-JWKJ-GVIB&lat=28.6403769&long=-81.467637":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody(getStoreMock());
-                case "/bsdLoyalty/indentifyCustomer.php?field=CustomerID&key=JOAA-RXHF-KFVU-JWKJ-GVIB&value=123073":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{}");
-                case "/bsdLoyalty/getOffersM.php?key=JOAA-RXHF-KFVU-JWKJ-GVIB&Card=" + ID3:
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{\"Coupon\":[{\"CouponNo\":\"Free Side Item\"}]}");
-                case "/bsdLoyalty/GetLocation.php?key=JOAA-RXHF-KFVU-JWKJ-GVIB&locationId=" + STORE_ID3:
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody(getStoreInfoMock());
-                case "/bsdLoyalty/getLocations.php?key=JOAA-RXHF-KFVU-JWKJ-GVIB":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody(getLocationsMock());
-                case "/pushNotificationEnroll?key=JOAA-RXHF-KFVU-JWKJ-GVIB&contact_id=16666008&deviceToken=Some%20android%20device%20token&platform=Android":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{\"success\":true}");
-                case "/pushNotificationModify?key=JOAA-RXHF-KFVU-JWKJ-GVIB&contact_id=16666008&deviceToken=Some%20android%20device%20token&platform=Android":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{\"success\":true}");
-                case "/pushNotificationDelete?key=JOAA-RXHF-KFVU-JWKJ-GVIB&contact_id=16666008":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{\"success\":true}");
-                default:
-                    return new MockResponse().setResponseCode(404);
+            if (path.equals(String.format("/contacts?type=email&key=%s&q=%s", APP_KEY, EMAIL1))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        // NOTE: it should be "[]" but current API returns string with "null" text
+                        .setBody("null");
             }
+            if (path.equals(String.format("/contacts?type=email&key=%s&q=%s", APP_KEY, EMAIL2))) {
+                Contact contact1 = new Contact();
+                contact1.setEmail(EMAIL2);
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(new Gson().toJson(new Contact[]{contact1}));
+            }
+            if (path.equals(String.format("/contacts?type=cell_number&key=%s&q=%s", APP_KEY, PHONE2))) {
+                Contact contact2 = new Contact();
+                contact2.setPhone(PHONE2);
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(new Gson().toJson(new Contact[]{contact2}));
+            }
+            if (path.equals(String.format("/contacts?key=%s&q=%s", APP_KEY, ID3))) {
+                Contact contact3 = new Contact();
+                contact3.setFirstName(FIRST_NAME3);
+                contact3.setLastName(LAST_NAME3);
+                contact3.setEmail(EMAIL3);
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(new Gson().toJson(new Contact[]{contact3}));
+            }
+            if (path.equals(String.format("/bsdPayment/list?key=%s&contactId=%s&token=%s", APP_KEY, ID3, TOKEN3))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody("{}");
+            }
+            if (path.equals(String.format("/bsdStores/locate/?key=%s&lat=28.6403769&long=-81.467637", APP_KEY))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(getStoreMock());
+            }
+            if (path.equals(String.format("/bsdLoyalty/indentifyCustomer.php?field=CustomerID&key=%s&value=123073", APP_KEY))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody("{}");
+            }
+            if (path.equals(String.format("/bsdLoyalty/getOffersM.php?key=%s&Card=%s", APP_KEY, ID3))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody("{\"Coupon\":[{\"CouponNo\":\"Free Side Item\"}]}");
+            }
+            if (path.equals(String.format("/bsdLoyalty/GetLocation.php?key=%s&locationId=%s", APP_KEY, STORE_ID3))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(getStoreInfoMock());
+            }
+            if (path.equals(String.format("/bsdLoyalty/getLocations.php?key=%s", APP_KEY))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(getLocationsMock());
+            }
+            if (path.equals(String.format("/pushNotificationEnroll?key=%s&contact_id=16666008&deviceToken=%s&platform=Android", APP_KEY, DEVICE_TOKEN3_ENC))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody("{\"success\":true}");
+            }
+            if (path.equals(String.format("/pushNotificationModify?key=%s&contact_id=16666008&deviceToken=%s&platform=Android", APP_KEY, DEVICE_TOKEN3_ENC))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody("{\"success\":true}");
+            }
+            if (path.equals(String.format("/pushNotificationDelete?key=%s&contact_id=16666008", APP_KEY))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody("{\"success\":true}");
+            }
+            return new MockResponse().setResponseCode(404);
         }
 
         private MockResponse processPost(String path, String body) {
+            if (path.equals(String.format("/addContact/?key=%s", APP_KEY))) {
+                // NOTE: According to the docs in update case the API should return "Update" string instead of "Add"
+                // but at the moment nothing updates and the API returns string "Add".
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(String.format("[\"%s\",\"Add\"]", ID3));
+            }
+            if (path.equals(String.format("/bsdLoyalty/ResetPassword.php?key=%s", APP_KEY))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(String.format("Email has been sent to %s with the new password!", EMAIL3));
+            }
+            if (path.equals(String.format("/bsdLoyalty/getProgress.php?key=%s", APP_KEY))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(STATUS_PROGRESS);
+            }
+            if (path.equals(String.format("/bsdTransactions/add/?key=%s&contact=16666008&username=New%%20User", APP_KEY))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody("{\"status\":true,\"success\":{}}");
+            }
             switch (path) {
                 case "/authenticateUser/":
                     if (body.equals(AUTH_REQ1)) {
@@ -230,12 +270,6 @@ public class ApiTests {
                                 .setBody(STATUS_INVALID_TOKEN);
                     }
                     break;
-                case "/addContact/?key=JOAA-RXHF-KFVU-JWKJ-GVIB":
-                    // NOTE: According to the docs in update case the API should return "Update" string instead of "Add"
-                    // but at the moment nothing updates and the API returns string "Add".
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody(String.format("[\"%s\",\"Add\"]", ID3));
                 case "/addUser/":
                     return new MockResponse()
                             .setResponseCode(200)
@@ -244,14 +278,6 @@ public class ApiTests {
                     return new MockResponse()
                             .setResponseCode(200)
                             .setBody(STATUS_SUCCESS2);
-                case "/bsdLoyalty/ResetPassword.php?key=JOAA-RXHF-KFVU-JWKJ-GVIB":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody(String.format("Email has been sent to %s with the new password!", EMAIL3));
-                case "/bsdLoyalty/getProgress.php?key=JOAA-RXHF-KFVU-JWKJ-GVIB":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody(STATUS_PROGRESS);
                 case "/bsdPayment/register/":
                     return new MockResponse()
                             .setResponseCode(200)
@@ -268,22 +294,28 @@ public class ApiTests {
                     return new MockResponse()
                             .setResponseCode(200)
                             .setBody("{}");
-                case "/bsdTransactions/add/?key=JOAA-RXHF-KFVU-JWKJ-GVIB&contact=16666008&username=New%20User":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{\"status\":true,\"success\":{}}");
                 case "/pushNotification/getMessages":
-                    return new MockResponse()
-                            .setResponseCode(200)
-                            .setBody("{\"messages\":[]}");
+                    if (body.equals(MSG_REQ4)) {
+                        return new MockResponse()
+                                .setResponseCode(200)
+                                .setBody("");
+                    } else {
+                        // TODO: Put a real message example here
+                        // TODO: Add a test for such empty case
+                        return new MockResponse()
+                                .setResponseCode(200)
+                                .setBody("[]");
+                    }
                 case "/pushNotification/getMessagesByOsAndType":
+                    // TODO: Put a real message example here
                     return new MockResponse()
                             .setResponseCode(200)
-                            .setBody("{\"messages\":[]}");
+                            .setBody("[]");
                 case "/pushNotification/getMessagesByImageType":
+                    // TODO: Put a real message example here
                     return new MockResponse()
                             .setResponseCode(200)
-                            .setBody("{\"messages\":[]}");
+                            .setBody("[]");
                 case "/pushNotification/updateStatus":
                     return new MockResponse()
                             .setResponseCode(200)
@@ -385,6 +417,13 @@ public class ApiTests {
         }
     };
 
+    private static Gson getGson() {
+        return new GsonBuilder()
+                .setLenient()
+                .registerTypeAdapter(PushMessagesResponse.class, new PushMessagesDeserializer())
+                .create();
+    }
+
     @BeforeClass
     public static void initService() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -403,7 +442,7 @@ public class ApiTests {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .client(httpClient.build())
                 .build();
 
@@ -863,6 +902,15 @@ public class ApiTests {
     }
 
     @Test
+    public void getPushMessagesNull() throws Exception {
+        Call<PushMessagesResponse> call = service.getContactMessages(BuildConfig.APP_KEY, ID4, MAX_MESSAGES4);
+        Response<PushMessagesResponse> response = call.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
+
+        assertNull(response.body());
+    }
+
+    @Test
     public void getPushMessagesByOsAndType() throws Exception {
         Call<PushMessagesResponse> call = service.getMessagesByOsAndType(
                 BuildConfig.APP_KEY, MessageContentType.HTML, PlatformType.ANDROID);
@@ -875,8 +923,7 @@ public class ApiTests {
 
     @Test
     public void getPushMessagesByImageType() throws Exception {
-        Call<PushMessagesResponse> call = service.getMessagesByImageType(
-                BuildConfig.APP_KEY, MessageContentType.HTML, ImageType.LARGE);
+        Call<PushMessagesResponse> call = service.getMessagesByImageType(BuildConfig.APP_KEY, MessageContentType.HTML, ImageType.LARGE);
         Response<PushMessagesResponse> execute = call.execute();
         assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
 
