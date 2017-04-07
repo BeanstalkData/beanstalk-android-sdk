@@ -212,6 +212,38 @@ public class BeanstalkService {
     }
 
     /**
+     * Get contacts by fKey.
+     *
+     * @param fkey    fKey (Foreign key).
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getContactsByFkey(String fkey, final OnReturnDataListener<Contact[]> listener) {
+        Call<Contact[]> call = service.getContactByPhone(beanstalkApiKey, fkey);
+
+        call.enqueue(new Callback<Contact[]>() {
+
+            @Override
+            public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
+                if (listener != null) {
+                    if (response != null && response.isSuccessful()) {
+                        listener.onFinished(response.body(), null);
+                    } else {
+                        listener.onFinished(null, Error.CONTACTS_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Contact[]> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.CONTACTS_FAILED);
+                }
+            }
+
+        });
+    }
+
+    /**
      * Log out authenticated user.
      *
      * @param listener Callback that will run after network request is completed.

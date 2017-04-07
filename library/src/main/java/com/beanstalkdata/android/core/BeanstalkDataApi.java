@@ -46,6 +46,9 @@ public interface BeanstalkDataApi {
     @GET("/contacts?type=cell_number")
     Call<Contact[]> getContactByPhone(@Query("key") String apiKey, @Query("q") String phone);
 
+    @GET("/contacts?type=fkey")
+    Call<Contact[]> getContactByFkey(@Query("key") String apiKey, @Query("q") String fkey);
+
     @POST("/addContact/")
     @FormUrlEncoded
     Call<ResponseBody> createContact(@Query("key") String apiKey, @FieldMap Map<String, String> request);
