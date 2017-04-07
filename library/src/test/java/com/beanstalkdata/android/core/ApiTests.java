@@ -3,6 +3,7 @@ package com.beanstalkdata.android.core;
 import com.beanstalkdata.android.BuildConfig;
 import com.beanstalkdata.android.model.Contact;
 import com.beanstalkdata.android.model.Coupon;
+import com.beanstalkdata.android.model.PushMessage;
 import com.beanstalkdata.android.model.deserializer.PushMessagesDeserializer;
 import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
@@ -37,6 +38,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -121,9 +123,11 @@ public class ApiTests {
     private static final int MAX_MESSAGES3 = 2;
     private static final String STORE_ID3 = "1";
 
-    private static final String ID4 = "16666666";
+    private static final String ID4_1 = "16666666";
+    private static final String ID4_2 = "16666667";
     private static final int MAX_MESSAGES4 = 100;
-    private static final String MSG_REQ4 = String.format("key=%s&contactId=%s&maxResults=%d", APP_KEY, ID4, MAX_MESSAGES4);
+    private static final String MSG_REQ4_1 = String.format("key=%s&contactId=%s&maxResults=%s", APP_KEY, ID4_1, MAX_MESSAGES4);
+    private static final String MSG_REQ4_2 = String.format("key=%s&contactId=%s&maxResults=%s", APP_KEY, ID4_2, MAX_MESSAGES4);
 
     private static MockWebServer server;
     private static BeanstalkDataApi service;
@@ -223,6 +227,27 @@ public class ApiTests {
         }
 
         private MockResponse processPost(String path, String body) {
+            // language=JSON
+            String pushMessageJson = String.format("[{\n" +
+                    "  \"AppHook\": \"app://example\",\n" +
+                    "  \"CampaignId\": \"12345\",\n" +
+                    "  \"Category\": \"OFFER\",\n" +
+                    "  \"ContactId\": \"%s\",\n" +
+                    "  \"CustomerId\": \"123\",\n" +
+                    "  \"MessageBody\": \"\",\n" +
+                    "  \"MsgImage\": \"\",\n" +
+                    "  \"MsgType\": \"\",\n" +
+                    "  \"OS\": \"Android\",\n" +
+                    "  \"StepId\": \"12345\",\n" +
+                    "  \"TitleImage\": \"\",\n" +
+                    "  \"inboxTitle\": \"\",\n" +
+                    "  \"messageUrl\": \"\",\n" +
+                    "  \"status\": \"UNREAD\",\n" +
+                    "  \"subtitle\": \"\",\n" +
+                    "  \"thumbnailUrl\": \"\",\n" +
+                    "  \"title\": \"\"\n" +
+                    "}]", ID3);
+
             if (path.equals(String.format("/addContact/?key=%s", APP_KEY))) {
                 // NOTE: According to the docs in update case the API should return "Update" string instead of "Add"
                 // but at the moment nothing updates and the API returns string "Add".
@@ -295,27 +320,31 @@ public class ApiTests {
                             .setResponseCode(200)
                             .setBody("{}");
                 case "/pushNotification/getMessages":
-                    if (body.equals(MSG_REQ4)) {
+                    // Test case for empty response
+                    if (body.equals(MSG_REQ4_1)) {
                         return new MockResponse()
                                 .setResponseCode(200)
                                 .setBody("");
-                    } else {
-                        // TODO: Put a real message example here
-                        // TODO: Add a test for such empty case
+                    } else if (body.equals(MSG_REQ4_2)) {
+                        // Test case for no message response
                         return new MockResponse()
                                 .setResponseCode(200)
                                 .setBody("[]");
+                    } else {
+                        return new MockResponse()
+                                .setResponseCode(200)
+                                .setBody(pushMessageJson);
                     }
                 case "/pushNotification/getMessagesByOsAndType":
-                    // TODO: Put a real message example here
+                    // TODO: Update JSON when more info will be available
                     return new MockResponse()
                             .setResponseCode(200)
-                            .setBody("[]");
+                            .setBody(pushMessageJson);
                 case "/pushNotification/getMessagesByImageType":
-                    // TODO: Put a real message example here
+                    // TODO: Update JSON when more info will be available
                     return new MockResponse()
                             .setResponseCode(200)
-                            .setBody("[]");
+                            .setBody(pushMessageJson);
                 case "/pushNotification/updateStatus":
                     return new MockResponse()
                             .setResponseCode(200)
@@ -894,16 +923,20 @@ public class ApiTests {
     @Test
     public void getPushMessages() throws Exception {
         Call<PushMessagesResponse> call = service.getContactMessages(BuildConfig.APP_KEY, ID3, MAX_MESSAGES3);
-        Response<PushMessagesResponse> execute = call.execute();
-        assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
+        Response<PushMessagesResponse> response = call.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
 
-        PushMessagesResponse messages = execute.body();
-        assertNotNull(messages.getPushMessages());
+        List<PushMessage> messages = response.body().getPushMessages();
+        assertNotNull(messages);
+        assertEquals(1, messages.size());
+
+        PushMessage message = messages.get(0);
+        assertEquals(ID3, message.getContactId());
     }
 
     @Test
     public void getPushMessagesNull() throws Exception {
-        Call<PushMessagesResponse> call = service.getContactMessages(BuildConfig.APP_KEY, ID4, MAX_MESSAGES4);
+        Call<PushMessagesResponse> call = service.getContactMessages(BuildConfig.APP_KEY, ID4_1, MAX_MESSAGES4);
         Response<PushMessagesResponse> response = call.execute();
         assertEquals(response.code(), HttpURLConnection.HTTP_OK);
 
@@ -911,24 +944,39 @@ public class ApiTests {
     }
 
     @Test
-    public void getPushMessagesByOsAndType() throws Exception {
-        Call<PushMessagesResponse> call = service.getMessagesByOsAndType(
-                BuildConfig.APP_KEY, MessageContentType.HTML, PlatformType.ANDROID);
-        Response<PushMessagesResponse> execute = call.execute();
-        assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
+    public void getPushMessagesEmpty() throws Exception {
+        Call<PushMessagesResponse> call = service.getContactMessages(BuildConfig.APP_KEY, ID4_2, MAX_MESSAGES4);
+        Response<PushMessagesResponse> response = call.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
 
-        PushMessagesResponse messages = execute.body();
-        assertNotNull(messages.getPushMessages());
+        List<PushMessage> messages = response.body().getPushMessages();
+        assertNotNull(messages);
+        assertEquals(0, messages.size());
+    }
+
+    @Test
+    public void getPushMessagesByOsAndType() throws Exception {
+        Call<PushMessagesResponse> call = service.getMessagesByOsAndType(BuildConfig.APP_KEY, MessageContentType.HTML, PlatformType.ANDROID);
+        Response<PushMessagesResponse> response = call.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
+
+        List<PushMessage> messages = response.body().getPushMessages();
+        assertNotNull(messages);
+        assertEquals(1, messages.size());
+
+        PushMessage message = messages.get(0);
+        assertEquals(PlatformType.ANDROID, message.getOs());
     }
 
     @Test
     public void getPushMessagesByImageType() throws Exception {
         Call<PushMessagesResponse> call = service.getMessagesByImageType(BuildConfig.APP_KEY, MessageContentType.HTML, ImageType.LARGE);
-        Response<PushMessagesResponse> execute = call.execute();
-        assertEquals(execute.code(), HttpURLConnection.HTTP_OK);
+        Response<PushMessagesResponse> response = call.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
 
-        PushMessagesResponse messages = execute.body();
-        assertNotNull(messages.getPushMessages());
+        List<PushMessage> messages = response.body().getPushMessages();
+        assertNotNull(messages);
+        assertEquals(1, messages.size());
     }
 
     @Test

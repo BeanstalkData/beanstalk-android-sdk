@@ -108,6 +108,9 @@ public class MessagesFragment extends BaseFragment implements OnItemClickListene
 
     @Override
     public void onStatusUpdate(String messageStatus, int messagePosition) {
+        if (activityContract != null) {
+            activityContract.hideProgress();
+        }
         messagesAdapter.updateStatus(messageStatus, messagePosition);
     }
 

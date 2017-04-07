@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.beanstalkdata.android.sample.base.listener.OnItemClickListener;
 
-public abstract class BaseViewHolder<D> extends RecyclerView.ViewHolder implements View.OnClickListener {
+public abstract class BaseViewHolder<D> extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
     private final OnItemClickListener<D> listener;
 
@@ -19,6 +19,7 @@ public abstract class BaseViewHolder<D> extends RecyclerView.ViewHolder implemen
         super(itemView);
         initViews();
         itemView.setOnClickListener(this);
+        itemView.setOnLongClickListener(this);
         this.listener = listener;
     }
 
@@ -27,6 +28,15 @@ public abstract class BaseViewHolder<D> extends RecyclerView.ViewHolder implemen
         if (listener != null) {
             listener.onItemClick(item, getAdapterPosition());
         }
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if (listener != null) {
+            listener.onItemLongClick(item, getAdapterPosition());
+            return true;
+        }
+        return false;
     }
 
     public void setItem(D item) {

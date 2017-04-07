@@ -19,6 +19,7 @@ import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseDialogFragment;
 import com.beanstalkdata.android.sample.utils.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class UpdateMessageStatusDialogFragment extends BaseDialogFragment implem
     }
 
     private String[] getAvailableMessageTypes() {
-        List<String> messageTypes = Arrays.asList(MessageType.READ, MessageType.UNREAD, MessageType.DELETED);
+        List<String> messageTypes = new ArrayList<>(Arrays.asList(MessageType.READ, MessageType.UNREAD, MessageType.DELETED));
         messageTypes.remove(getArguments().getString(KEY_MESSAGE_CURRENT_STATUS));
         return messageTypes.toArray(new String[messageTypes.size()]);
     }
