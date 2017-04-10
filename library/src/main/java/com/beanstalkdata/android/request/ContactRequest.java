@@ -248,11 +248,11 @@ public class ContactRequest {
             }
 
             if (key.equalsIgnoreCase(EMAIL_OPT_IN)) {
-                original.setEmailOptIn(Boolean.parseBoolean(value));
+                original.setEmailOptIn(Integer.parseInt(value));
             }
 
             if (key.equalsIgnoreCase(TXT_OPT_IN)) {
-                original.setTxtOptIn(Boolean.parseBoolean(value));
+                original.setTxtOptIn(Integer.parseInt(value));
             }
         }
         params.clear();

@@ -55,22 +55,22 @@ public class ContactDeserializer implements JsonDeserializer<Contact> {
                         contact.setPhone(value.getAsString());
                         break;
                     case Contact.Parameters.TXT_OPT_IN:
-                        contact.setTxtOptIn(value.getAsBoolean());
+                        contact.setTxtOptIn(value.getAsInt());
                         break;
                     case Contact.Parameters.EMAIL_OPT_IN:
-                        contact.setEmailOptIn(value.getAsBoolean());
-                        break;
-                    case Contact.Parameters.PREFERRED_REWARD:
-                        contact.setPreferredReward(value.getAsString());
-                        break;
-                    case Contact.Parameters.DEVICE_TOKEN_EXT:
-                        contact.setDeviceToken(value.getAsString());
+                        contact.setEmailOptIn(value.getAsInt());
                         break;
                     case Contact.Parameters.PUSH_NOTIFICATION_OPT_IN:
                         contact.setPushNotificationOptin(value.getAsInt());
                         break;
                     case Contact.Parameters.INBOX_MESSAGE_OPT_IN:
                         contact.setInboxMessageOptin(value.getAsInt());
+                        break;
+                    case Contact.Parameters.PREFERRED_REWARD:
+                        contact.setPreferredReward(value.getAsString());
+                        break;
+                    case Contact.Parameters.DEVICE_TOKEN_EXT:
+                        contact.setDeviceToken(value.getAsString());
                         break;
                     default:
                         contact.setParam(key, value.getAsString());

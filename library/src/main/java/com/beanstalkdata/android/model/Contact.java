@@ -73,16 +73,16 @@ public class Contact {
         return parseInteger(params.get(Parameters.EMAIL_OPT_IN)) != 0;
     }
 
-    public void setEmailOptIn(boolean emailOptIn) {
-        params.put(Parameters.EMAIL_OPT_IN, String.valueOf(emailOptIn ? 1 : 0));
+    public void setEmailOptIn(int emailOptIn) {
+        params.put(Parameters.EMAIL_OPT_IN, String.valueOf(emailOptIn));
     }
 
     public boolean getTxtOptIn() {
         return parseInteger(params.get(Parameters.TXT_OPT_IN)) != 0;
     }
 
-    public void setTxtOptIn(boolean txtOptIn) {
-        params.put(Parameters.TXT_OPT_IN, String.valueOf(txtOptIn ? 1 : 0));
+    public void setTxtOptIn(int txtOptIn) {
+        params.put(Parameters.TXT_OPT_IN, String.valueOf(txtOptIn));
     }
 
     public boolean isMale() {
