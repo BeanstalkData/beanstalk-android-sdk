@@ -218,7 +218,7 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactsByFkey(String fkey, final OnReturnDataListener<Contact[]> listener) {
-        Call<Contact[]> call = service.getContactByPhone(beanstalkApiKey, fkey);
+        Call<Contact[]> call = service.getContactByFkey(beanstalkApiKey, fkey);
 
         call.enqueue(new Callback<Contact[]>() {
 
@@ -227,6 +227,43 @@ public class BeanstalkService {
                 if (listener != null) {
                     if (response != null && response.isSuccessful()) {
                         listener.onFinished(response.body(), null);
+                    } else {
+                        listener.onFinished(null, Error.CONTACTS_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Contact[]> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.CONTACTS_FAILED);
+                }
+            }
+
+        });
+    }
+
+    /**
+     * Get contact by fKey.
+     *
+     * @param fkey    fKey (Foreign key).
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getContactByFkey(String fkey, final OnReturnDataListener<Contact> listener) {
+        Call<Contact[]> call = service.getContactByFkey(beanstalkApiKey, fkey);
+
+        call.enqueue(new Callback<Contact[]>() {
+
+            @Override
+            public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
+                if (listener != null) {
+                    if (response != null && response.isSuccessful()) {
+                        Contact contact = response.body()[0];
+                        String fKey = contact.getFKey();
+                        if (fKey != null) {
+                            beanstalkUserSession.setFKey(fKey);
+                        }
+                        listener.onFinished(contact, null);
                     } else {
                         listener.onFinished(null, Error.CONTACTS_FAILED);
                     }
@@ -372,7 +409,7 @@ public class BeanstalkService {
                 Contact[] data = response.body();
                 if (data == null || data.length == 0) {
                     if (listener != null) {
-                        listener.onFinished(null, Error.OFFERS_FAILED);
+                        listener.onFinished(null, Error.CONTACT_FAILED);
                     }
                 } else {
                     Contact contact = data[0];
@@ -389,7 +426,7 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.OFFERS_FAILED);
+                    listener.onFinished(null, Error.CONTACT_FAILED);
                 }
             }
         });
@@ -804,7 +841,7 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void updateContact(final ContactRequest request, final OnReturnListener listener) {
-        Map<String, String> params = request.asParams();
+        final Map<String, String> params = request.asParams();
         if (params.size() <= 1) {
             listener.onFinished(null);
         } else {
@@ -820,8 +857,11 @@ public class BeanstalkService {
                             listener.onFinished(Error.CONTACT_UPDATE_FAILED);
                         }
                     } else {
+                        String fkey = params.get(ContactRequest.Parameters.F_KEY);
+                        if (fkey != null) {
+                            beanstalkUserSession.setFKey(fkey);
+                        }
                         if (listener != null) {
-//                            request.applyUpdate();
                             listener.onFinished(null);
                         }
                     }
