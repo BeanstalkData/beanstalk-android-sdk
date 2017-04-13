@@ -15,6 +15,7 @@
     <string name="progress">Progress</string>
     <string name="gift_cards">Gift Cards</string>
     <string name="check_stores">Check Stores</string>
+    <string name="check_fkey">Check FKey</string>
     <string name="register_new_gift_card">Register New Gift Card</string>
     <string name="update_message_status">Update Message Status</string>
     <string name="gift_card_number">Gift Card Number</string>
@@ -52,6 +53,7 @@
     <string name="last_name">Last Name</string>
     <string name="phone_number">Phone Number</string>
     <string name="zip_code">Zip Code</string>
+    <string name="fkey">Enter fkey</string>
     <string name="birthday">Birthday</string>
     <string name="gender">Gender</string>
     <string name="gender_male">Male</string>
@@ -63,6 +65,7 @@
 
     <string name="rewards_count">You have earned %d rewards.</string>
     <string name="stores_exist_at_zip_code_location">Stores exist at zip code location</string>
+    <string name="fkey_search_result">Contact exists</string>
 
     <string name="nearest_future_feature">This feature will be implemented in the nearest future</string>
 
@@ -75,5 +78,6 @@
     <string name="error_birthday_required">Correct birthday must be set</string>
     <string name="error_gender_required">Gender must be set</string>
     <string name="error_zip_code_not_empty">Zip code must not be empty</string>
+    <string name="error_fkey_not_empty">FKey must not be empty</string>
     <string name="error_gift_card_number_not_empty">Gift card number must not be empty</string>
 </resources>

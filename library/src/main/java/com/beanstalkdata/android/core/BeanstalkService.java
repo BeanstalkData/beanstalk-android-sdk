@@ -225,7 +225,7 @@ public class BeanstalkService {
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
                 if (listener != null) {
-                    if (response != null && response.isSuccessful()) {
+                    if (response != null && response.isSuccessful() && response.body() != null) {
                         listener.onFinished(response.body(), null);
                     } else {
                         listener.onFinished(null, Error.CONTACTS_FAILED);
@@ -257,7 +257,7 @@ public class BeanstalkService {
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
                 if (listener != null) {
-                    if (response != null && response.isSuccessful()) {
+                    if (response != null && response.isSuccessful() && response.body() != null) {
                         Contact contact = response.body()[0];
                         String fKey = contact.getFKey();
                         if (fKey != null) {
@@ -265,7 +265,7 @@ public class BeanstalkService {
                         }
                         listener.onFinished(contact, null);
                     } else {
-                        listener.onFinished(null, Error.CONTACTS_FAILED);
+                        listener.onFinished(null, Error.CONTACT_FAILED);
                     }
                 }
             }
@@ -273,7 +273,7 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.CONTACTS_FAILED);
+                    listener.onFinished(null, Error.CONTACT_FAILED);
                 }
             }
 

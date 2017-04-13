@@ -4,6 +4,7 @@
 
 package com.beanstalkdata.android.sample.profile;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -39,6 +41,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private TextView birthdayField;
     private TextView phoneNumberField;
     private EditText zipCodeInput;
+    private EditText fkeyInput;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -61,10 +64,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         birthdayField = (TextView) view.findViewById(R.id.field_birthday);
         phoneNumberField = (TextView) view.findViewById(R.id.field_phone_number);
         zipCodeInput = (EditText) view.findViewById(R.id.input_zip_code);
+        fkeyInput = (EditText) view.findViewById(R.id.input_fkey);
         view.findViewById(R.id.rewards).setOnClickListener(this);
         view.findViewById(R.id.progress).setOnClickListener(this);
         view.findViewById(R.id.gift_cards).setOnClickListener(this);
         view.findViewById(R.id.check_stores).setOnClickListener(this);
+        view.findViewById(R.id.check_fkey).setOnClickListener(this);
         view.findViewById(R.id.messages).setOnClickListener(this);
         view.findViewById(R.id.update_contact).setOnClickListener(this);
         view.findViewById(R.id.delete_contact).setOnClickListener(this);
@@ -115,6 +120,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 }
                 break;
             case R.id.check_stores:
+                hideKeyboard(zipCodeInput);
                 String zipCode = zipCodeInput.getText().toString();
                 if (InputUtils.notEmpty(zipCode)) {
                     activityContract.showProgress();
@@ -136,6 +142,31 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     });
                 } else {
                     ToastUtils.showLong(getActivity(), R.string.error_zip_code_not_empty);
+                }
+                break;
+            case R.id.check_fkey:
+                hideKeyboard(fkeyInput);
+                final String fkey = fkeyInput.getText().toString();
+                if (InputUtils.notEmpty(fkey)) {
+                    activityContract.showProgress();
+                    getService().getContactByFkey(fkey, new OnReturnDataListener<Contact>() {
+                        @Override
+                        public void onFinished(Contact contact, String error) {
+                            if (activityContract != null) {
+                                activityContract.hideProgress();
+                            }
+                            FragmentActivity activity = getActivity();
+                            if (activity != null) {
+                                if (error == null) {
+                                    ToastUtils.showLong(activity, R.string.fkey_search_result);
+                                } else {
+                                    ToastUtils.showLong(activity, error);
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    ToastUtils.showLong(getActivity(), R.string.error_fkey_not_empty);
                 }
                 break;
             case R.id.messages:
@@ -247,6 +278,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 }
             }
         });
+    }
+
+    private void hideKeyboard(EditText editText) {
+        // Hide soft keyboard on item was selected.
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 }
