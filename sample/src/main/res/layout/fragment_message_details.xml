@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:padding="@dimen/sixteen_dp"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_id"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_campaign_id"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_campaign_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_contact_id"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_contact_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_customer_id"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_customer_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_step_id"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_step_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_updated_at"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_updated_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_title"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_subtitle"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_inbox_title"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_inbox_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_os"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_os"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_status"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_category"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_app_hook"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_app_hook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_url"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_thumbnail_url"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_thumbnail_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_type"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/message_body"
+            android:textSize="@dimen/text_size_title" />
+
+        <TextView
+            android:id="@+id/message_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_body"
+            tools:text="Sample text" />
+
+    </LinearLayout>
+
+</ScrollView>

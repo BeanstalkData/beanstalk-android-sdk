@@ -5,8 +5,6 @@
 package com.beanstalkdata.android.response;
 
 import com.beanstalkdata.android.model.PushMessage;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -15,8 +13,6 @@ import java.util.List;
  */
 public class PushMessagesResponse {
 
-    @Expose
-    @SerializedName("messages")
     private List<PushMessage> pushMessages;
 
     public List<PushMessage> getPushMessages() {

@@ -44,7 +44,7 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
 
     private static final String KEY_MODE = "key_mode";
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
     private EditText emailInput;
     private EditText passwordInput;
@@ -378,7 +378,7 @@ public class ContactInfoFragment extends BaseFragment implements View.OnClickLis
 
     private void initCalendar() {
         if (calendar == null) {
-            calendar = Calendar.getInstance(Locale.ENGLISH);
+            calendar = Calendar.getInstance(Locale.US);
         }
     }
 

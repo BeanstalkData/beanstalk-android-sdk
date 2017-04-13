@@ -6,13 +6,13 @@ package com.beanstalkdata.android.sample.profile;
 
 import android.support.v4.util.ArrayMap;
 
-import com.beanstalkdata.android.model.PushNotification;
+import com.beanstalkdata.android.model.PushMessage;
 
 import java.util.List;
 
 class PushNotificationsContainer {
 
-    private ArrayMap<String, List<PushNotification>> pushNotificationsHolder;
+    private ArrayMap<String, List<PushMessage>> pushNotificationsHolder;
 
     private PushNotificationsContainer() {
         this.pushNotificationsHolder = new ArrayMap<>();
@@ -22,11 +22,11 @@ class PushNotificationsContainer {
         return PushNotificationsContainerHolder.INSTANCE;
     }
 
-    List<PushNotification> getPushNotifications(String pushMessageId) {
+    List<PushMessage> getPushNotifications(String pushMessageId) {
         return pushNotificationsHolder.get(pushMessageId);
     }
 
-    void putPushNotifications(String pushMessageId, List<PushNotification> pushNotifications) {
+    void putPushNotifications(String pushMessageId, List<PushMessage> pushNotifications) {
         pushNotificationsHolder.put(pushMessageId, pushNotifications);
     }
 

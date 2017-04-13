@@ -92,16 +92,15 @@ public class MessagesFragment extends BaseFragment implements OnItemClickListene
     @Override
     public void onItemClick(PushMessage item, int position) {
         String messageId = item.getId();
-        if (messageId != null) {
-//            PushNotificationsContainer.getInstance().putPushNotifications(messageId, item.getPushNotifications());
-            NotificationsFragment.newInstance(messageId);
+        if (messageId != null && activityContract != null) {
+            activityContract.replaceFragment(MessageDetailsFragment.newInstance(messageId));
         }
     }
 
     @Override
     public void onItemLongClick(PushMessage item, int position) {
         String messageId = item.getId();
-        if (messageId != null) {
+        if (messageId != null && activityContract != null) {
             activityContract.showDialog(UpdateMessageStatusDialogFragment.newInstance(messageId, item.getStatus(), position, this));
         }
     }

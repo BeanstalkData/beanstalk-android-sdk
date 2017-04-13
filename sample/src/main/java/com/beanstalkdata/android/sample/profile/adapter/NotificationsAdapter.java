@@ -8,14 +8,14 @@ import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
-import com.beanstalkdata.android.model.PushNotification;
+import com.beanstalkdata.android.model.PushMessage;
 import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseRecyclerViewAdapter;
 import com.beanstalkdata.android.sample.base.BaseViewHolder;
 import com.beanstalkdata.android.sample.base.listener.OnItemClickListener;
 
-public class NotificationsAdapter extends BaseRecyclerViewAdapter<PushNotification, NotificationsAdapter.MessageHolder> {
+public class NotificationsAdapter extends BaseRecyclerViewAdapter<PushMessage, NotificationsAdapter.MessageHolder> {
 
     @Override
     protected int getViewHolderLayoutResourceId() {
@@ -23,17 +23,17 @@ public class NotificationsAdapter extends BaseRecyclerViewAdapter<PushNotificati
     }
 
     @Override
-    protected MessageHolder getViewHolder(View view, OnItemClickListener<PushNotification> listener) {
+    protected MessageHolder getViewHolder(View view, OnItemClickListener<PushMessage> listener) {
         return new MessageHolder(view, listener);
     }
 
-    static class MessageHolder extends BaseViewHolder<PushNotification> {
+    static class MessageHolder extends BaseViewHolder<PushMessage> {
 
         private TextView title;
         private TextView text;
         private TextView os;
 
-        public MessageHolder(View itemView, OnItemClickListener<PushNotification> listener) {
+        public MessageHolder(View itemView, OnItemClickListener<PushMessage> listener) {
             super(itemView, listener);
         }
 
@@ -52,16 +52,15 @@ public class NotificationsAdapter extends BaseRecyclerViewAdapter<PushNotificati
 
             title.setText(item.getTitle());
             text.setText(getItemText());
-            os.setText(item.getOperationSystem());
+            os.setText(item.getOs());
         }
 
-        @SuppressWarnings("deprecation")
         private CharSequence getItemText() {
-            switch (item.getType()) {
+            switch (item.getMessageType()) {
                 case MessageContentType.STANDARD:
-                    return item.getContent();
+                    return item.getMessageBody();
                 case MessageContentType.HTML:
-                    return Html.fromHtml(item.getBody());
+                    return Html.fromHtml(item.getMessageBody());
                 default:
                     return null;
             }

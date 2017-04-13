@@ -61,7 +61,7 @@ public class DatePickerDialogFragment extends BaseDialogFragment {
             return null;
         }
 
-        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+        Calendar calendar = Calendar.getInstance(Locale.US);
         calendar.setTime(date);
         return buildArguments(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
     }

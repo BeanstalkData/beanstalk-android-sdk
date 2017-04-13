@@ -25,8 +25,28 @@
     <string name="update_contact">Update Contact</string>
     <string name="delete_contact">Delete Contact</string>
     <string name="delete_contact_confirm">Are you sure you want to delete this contact?</string>
+
     <string name="messages">Messages</string>
-    <string name="notifications">Notifications</string>
+    <string name="message_details">Message Details</string>
+    <string name="message_id">ID</string>
+    <string name="message_updated_at">Updated At</string>
+    <string name="message_app_hook">App hook</string>
+    <string name="message_campaign_id">Campaign ID</string>
+    <string name="message_category">Category</string>
+    <string name="message_contact_id">Contact ID</string>
+    <string name="message_customer_id">Customer ID</string>
+    <string name="message_body">Body</string>
+    <string name="message_image">Image</string>
+    <string name="message_type">Type</string>
+    <string name="message_os">OS</string>
+    <string name="message_step_id">Step ID</string>
+    <string name="message_title_image">Title Image</string>
+    <string name="message_inbox_title">Inbox Title</string>
+    <string name="message_url">URL</string>
+    <string name="message_status">Status</string>
+    <string name="message_subtitle">Subtitle</string>
+    <string name="message_thumbnail_url">Thumbnail URL</string>
+    <string name="message_title">Title</string>
 
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>

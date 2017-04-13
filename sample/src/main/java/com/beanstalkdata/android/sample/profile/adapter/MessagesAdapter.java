@@ -39,7 +39,7 @@ public class MessagesAdapter extends BaseRecyclerViewAdapter<PushMessage, Messag
 
     static class MessageHolder extends BaseViewHolder<PushMessage> {
 
-        private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+        private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
         private TextView id;
         private TextView category;
