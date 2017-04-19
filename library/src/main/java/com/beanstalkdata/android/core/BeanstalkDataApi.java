@@ -122,9 +122,8 @@ public interface BeanstalkDataApi {
     @GET("/contacts")
     Call<ResponseBody> getContactRaw(@Query("key") String apiKey, @Query("q") String contactId);
 
-    @POST("/deleteContact/")
-    @FormUrlEncoded
-    Call<ContactDeletedResponse> deleteContact(@Field("key") String apiKey, @Field("ContactID") String contactId);
+    @GET("/deleteContact/")
+    Call<ContactDeletedResponse> deleteContact(@Query("key") String apiKey, @Query("ContactID") String contactId);
 
     @POST("bsdLoyalty/getProgress.php")
     @FormUrlEncoded
