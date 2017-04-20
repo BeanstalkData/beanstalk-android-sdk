@@ -68,6 +68,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         view.findViewById(R.id.rewards).setOnClickListener(this);
         view.findViewById(R.id.progress).setOnClickListener(this);
         view.findViewById(R.id.gift_cards).setOnClickListener(this);
+        view.findViewById(R.id.transactions).setOnClickListener(this);
         view.findViewById(R.id.check_stores).setOnClickListener(this);
         view.findViewById(R.id.check_fkey).setOnClickListener(this);
         view.findViewById(R.id.messages).setOnClickListener(this);
@@ -117,6 +118,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             case R.id.gift_cards:
                 if (activityContract != null) {
                     activityContract.replaceFragment(GiftCardsFragment.newInstance());
+                }
+                break;
+            case R.id.transactions:
+                if (activityContract != null) {
+                    activityContract.replaceFragment(TransactionsFragment.newInstance());
                 }
                 break;
             case R.id.check_stores:

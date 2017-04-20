@@ -1,7 +1,7 @@
 buildscript {
     ext {
         gradlePlugins = [
-                androidGradle : "2.3.0",
+                androidGradle : "2.3.1",
                 googleServices: "3.0.0",
                 mavenGradle   : "1.5"
         ]

@@ -162,6 +162,14 @@
             android:text="@string/gift_cards"
             android:textColor="@android:color/white" />
 
+        <Button
+            android:id="@+id/transactions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/transactions"
+            android:textColor="@android:color/white" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

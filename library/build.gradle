@@ -14,6 +14,7 @@ android {
         buildConfigField 'String', 'BASE_URL', "\"${apiProperties['baseUrl']}\""
         buildConfigField 'String', 'COMPANY', "\"${apiProperties['company']}\""
         buildConfigField 'String', 'APP_KEY', "\"${apiProperties['appKey']}\""
+        buildConfigField 'String', 'APP_USERNAME', "\"${apiProperties['appUsername']}\""
         buildConfigField 'String', 'GOOGLE_MAPS_KEY', "\"${apiProperties['googleMapsKey']}\""
     }
     buildTypes {

@@ -17,9 +17,10 @@ import com.beanstalkdata.android.model.Coupon;
 import com.beanstalkdata.android.model.GiftCard;
 import com.beanstalkdata.android.model.LoyaltyUser;
 import com.beanstalkdata.android.model.PushMessage;
-import com.beanstalkdata.android.model.deserializer.PushMessagesDeserializer;
+import com.beanstalkdata.android.model.TransactionEvent;
 import com.beanstalkdata.android.model.deserializer.ContactDeserializer;
 import com.beanstalkdata.android.model.deserializer.MultiDateFormatDeserializer;
+import com.beanstalkdata.android.model.deserializer.PushMessagesDeserializer;
 import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
@@ -51,11 +52,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -80,6 +83,7 @@ public class BeanstalkService {
     private final BeanstalkUserSession beanstalkUserSession;
     private final String beanstalkApiKey;
     private final String googleMapsApiKey;
+    private final SimpleDateFormat transactionDateFormat;
 
     // Workaround for empty response for push notification messages
     private final PushMessagesResponse defaultMessages;
@@ -107,6 +111,8 @@ public class BeanstalkService {
         this.beanstalkUserSession = beanstalkUserSession;
         this.beanstalkApiKey = beanstalkApiKey;
         this.googleMapsApiKey = googleMapsApiKey;
+
+        transactionDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
         defaultMessages = new PushMessagesResponse();
         defaultMessages.setPushMessages(new ArrayList<PushMessage>());
@@ -214,7 +220,7 @@ public class BeanstalkService {
     /**
      * Get contacts by fKey.
      *
-     * @param fkey    fKey (Foreign key).
+     * @param fkey     fKey (Foreign key).
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactsByFkey(String fkey, final OnReturnDataListener<Contact[]> listener) {
@@ -246,7 +252,7 @@ public class BeanstalkService {
     /**
      * Get contact by fKey.
      *
-     * @param fkey    fKey (Foreign key).
+     * @param fkey     fKey (Foreign key).
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactByFkey(String fkey, final OnReturnDataListener<Contact> listener) {
@@ -1312,7 +1318,41 @@ public class BeanstalkService {
     }
 
     /**
+     * Retrieve all transaction events for authenticated user.
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getTransactionEvents(OnReturnDataListener<TransactionEvent[]> listener) {
+        getTransactionEvents(0, 0, listener);
+    }
+
+    /**
+     * Retrieve transaction events from start date to end date for authenticated user.
+     * <p>
+     * <b>Notes:</b><br/>
+     * <ul>
+     * <li>If no dates are passed, all events for authenticated user will be returned.</li>
+     * <li>To retrieve events for a specific date, set startDate and endDate to the same date.</li>
+     * <li>If startDate and endDate are both set, all events in that range will be returned.</li>
+     * <li>If only startDate is set, all events from that day until now will be returned.</li>
+     * <li>If only endDate is set, all events until that day will be returned.</li>
+     * </ul>
+     * </p>
+     *
+     * @param startDate Start date for transaction events.
+     * @param endDate   End date for transaction events.
+     */
+    public void getTransactionEvents(long startDate, long endDate, OnReturnDataListener<TransactionEvent[]> listener) {
+        service.getTransactionEvents(beanstalkApiKey, beanstalkUserSession.getContactId(), getTransactionEventDate(startDate), getTransactionEventDate(endDate))
+                .enqueue(new SimpleCallback<>(Error.GET_TRANSACTIONS_FAILED, listener, null));
+    }
+
+    /**
      * Add transaction event to authenticated user.
+     * <p>
+     * <b>Note:</b><br/>
+     * This method can only be performed if <b>username</b> is provided.
+     * </p>
      *
      * @param username Beanstalk username.
      * @param details  Any string. Can interpret JSON as parsed array and create searchable transaction object which can be used for campaigns and other generic transactional workflow.
@@ -1599,6 +1639,10 @@ public class BeanstalkService {
         Contact contact = new Contact();
         contact.setContactId(beanstalkUserSession.getContactId());
         return contact;
+    }
+
+    private String getTransactionEventDate(long date) {
+        return (date > 0) ? transactionDateFormat.format(new Date(date)) : null;
     }
 
     private void log(String msg) {

@@ -26,6 +26,7 @@ interface Error {
     String MODIFY_PUSH_NOTIFICATION_FAILED = "Unable to modify push notification";
     String DELETE_PUSH_NOTIFICATION_FAILED = "Unable to delete push notification";
     String GET_MESSAGES_FAILED = "Unable to get messages";
+    String GET_TRANSACTIONS_FAILED = "Unable to get transactions";
     String TRACK_TRANSACTION_FAILED = "Unable to track transaction";
     String CONTACT_EXISTED_PHONE = "This phone is already registered in our database. Please sign-in into your account. Use the forgot password button in case you need to reset it.";
     String CONTACT_EXISTED_EMAIL = "This email is already registered in our database. Please sign-in into your account. Use the forgot password button in case you need to reset it.";

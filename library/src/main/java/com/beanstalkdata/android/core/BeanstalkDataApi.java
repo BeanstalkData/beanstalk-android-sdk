@@ -24,8 +24,8 @@ import com.beanstalkdata.android.response.RegisterGiftCardResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
 import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
-import com.beanstalkdata.android.response.SuccessResponse;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
+import com.beanstalkdata.android.model.TransactionEvent;
 
 import java.util.Map;
 
@@ -177,6 +177,9 @@ public interface BeanstalkDataApi {
     @POST("pushNotification/getMessageById")
     @FormUrlEncoded
     Call<PushMessageByIdResponse> getMessageById(@Field("key") String apiKey, @Field("msg_id") String messageId);
+
+    @GET("bsdTransactionEvents")
+    Call<TransactionEvent[]> getTransactionEvents(@Query("key") String apiKey, @Query("contact_id") String contactId, @Query("start_date") String startDate, @Query("end_date") String endDate);
 
     @POST("bsdTransactions/add/")
     @FormUrlEncoded

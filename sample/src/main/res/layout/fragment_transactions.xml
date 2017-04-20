@@ -6,17 +6,23 @@
     android:padding="@dimen/sixteen_dp">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/gift_cards_list"
+        android:id="@+id/transactions_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false" />
 
-    <Button
-        android:id="@+id/register_new_gift_card"
+    <EditText
+        android:id="@+id/transaction_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/register_new_gift_card"
+        android:hint="@string/track_transaction" />
+
+    <Button
+        android:id="@+id/track_transaction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/track_transaction"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

@@ -26,6 +26,9 @@
     <string name="update_contact">Update Contact</string>
     <string name="delete_contact">Delete Contact</string>
     <string name="delete_contact_confirm">Are you sure you want to delete this contact?</string>
+    <string name="transactions">Transactions</string>
+    <string name="track_transaction">Track Transaction</string>
+    <string name="transaction_details">Transaction Details</string>
 
     <string name="messages">Messages</string>
     <string name="message_details">Message Details</string>
