@@ -5,6 +5,7 @@
 package com.beanstalkdata.android.core;
 
 import com.beanstalkdata.android.model.Contact;
+import com.beanstalkdata.android.model.ContactAsset;
 import com.beanstalkdata.android.model.LoyaltyUser;
 import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
@@ -194,5 +195,8 @@ public interface BeanstalkDataApi {
     @Deprecated
     @GET("https://maps.googleapis.com/maps/api/geocode/json")
     Call<LocationResponse> getLocationByZipCode(@Query("key") String googleMapsApiKey, @Query("address") String zip);
+
+    @GET("bsdContact/geoAssets.php")
+    Call<ContactAsset> getContactAsset(@Query("key") String apiKey, @Query("contactId") String contactId);
 
 }

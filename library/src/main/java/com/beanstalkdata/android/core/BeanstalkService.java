@@ -13,6 +13,7 @@ import com.beanstalkdata.android.callback.OnReturnDataListener;
 import com.beanstalkdata.android.callback.OnReturnListener;
 import com.beanstalkdata.android.model.CardBalance;
 import com.beanstalkdata.android.model.Contact;
+import com.beanstalkdata.android.model.ContactAsset;
 import com.beanstalkdata.android.model.Coupon;
 import com.beanstalkdata.android.model.GiftCard;
 import com.beanstalkdata.android.model.LoyaltyUser;
@@ -393,6 +394,42 @@ public class BeanstalkService {
             public void onFailure(Call<RewardsCountResponse> call, Throwable t) {
                 if (listener != null) {
                     listener.onFinished(null, Error.OFFERS_FAILED);
+                }
+            }
+        });
+    }
+
+    /**
+     * Get contact assets.
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getContactAsset(final OnReturnDataListener<ContactAsset> listener) {
+        String contactId = beanstalkUserSession.getContactId();
+        Call<ContactAsset> request = service.getContactAsset(beanstalkApiKey, contactId);
+        request.enqueue(new Callback<ContactAsset>() {
+            @Override
+            public void onResponse(Call<ContactAsset> call, Response<ContactAsset> response) {
+                ContactAsset contactAsset = response.body();
+                if (contactAsset != null) {
+                    if (contactAsset.isSuccess()) {
+                        listener.onFinished(contactAsset, null);
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, contactAsset.getError());
+                        }
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.CONTACT_ASSET_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ContactAsset> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.CONTACT_ASSET_FAILED);
                 }
             }
         });

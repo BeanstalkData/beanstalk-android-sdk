@@ -2,6 +2,7 @@ package com.beanstalkdata.android.core;
 
 import com.beanstalkdata.android.BuildConfig;
 import com.beanstalkdata.android.model.Contact;
+import com.beanstalkdata.android.model.ContactAsset;
 import com.beanstalkdata.android.model.Coupon;
 import com.beanstalkdata.android.model.PushMessage;
 import com.beanstalkdata.android.model.deserializer.PushMessagesDeserializer;
@@ -123,6 +124,8 @@ public class ApiTests {
     private static final String MESSAGE_ID3 = "12345678";
     private static final int MAX_MESSAGES3 = 2;
     private static final String STORE_ID3 = "1";
+    private static final String CURRENT_ASSET_IMAGE3 = "https://example.com/assets/current.png";
+    private static final String DEFAULT_ASSET_IMAGE3 = "https://example.com/assets/default.png";
 
     private static final String ID4_1 = "16666666";
     private static final String ID4_2 = "16666667";
@@ -230,6 +233,25 @@ public class ApiTests {
                 return new MockResponse()
                         .setResponseCode(200)
                         .setBody("{\"success\":true}");
+            }
+            if (path.equals(String.format("/bsdContact/geoAssets.php?key=%s&contactId=%s", APP_KEY, ID3))) {
+                // language=JSON
+                String contactAsset = "{\n" +
+                        "    \"CurrentImage\": \"https://example.com/assets/current.png\",\n" +
+                        "    \"DefaultImage\": \"https://example.com/assets/default.png\"\n" +
+                        "}\n";
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(contactAsset);
+            }
+            if (path.equals(String.format("/bsdContact/geoAssets.php?key=&contactId=%s", ID3))) {
+                // language=JSON
+                String contactAssetError = "{\n" +
+                        "  \"ERROR\": \"key parameter is required\"\n" +
+                        "}";
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody(contactAssetError);
             }
             return new MockResponse().setResponseCode(404);
         }
@@ -1016,4 +1038,29 @@ public class ApiTests {
         assertEquals(28.6403769, body.getLocation().getLatitude(), 0.1);
         assertEquals(-81.467637, body.getLocation().getLongitude(), 0.1);
     }
+
+    @Test
+    public void getContactAsset() throws Exception {
+        Call<ContactAsset> request = service.getContactAsset(APP_KEY, ID3);
+        Response<ContactAsset> response = request.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
+
+        ContactAsset contactAsset = response.body();
+        assertNotNull(contactAsset);
+        assertTrue(contactAsset.isSuccess());
+        assertEquals(contactAsset.getCurrentImage(), CURRENT_ASSET_IMAGE3);
+        assertEquals(contactAsset.getDefaultImage(), DEFAULT_ASSET_IMAGE3);
+    }
+
+    @Test
+    public void getContactAssetError() throws Exception {
+        Call<ContactAsset> request = service.getContactAsset("", ID3);
+        Response<ContactAsset> response = request.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
+
+        ContactAsset contactAsset = response.body();
+        assertNotNull(contactAsset);
+        assertFalse(contactAsset.isSuccess());
+    }
+
 }

@@ -32,6 +32,7 @@ interface Error {
     String CONTACT_EXISTED_EMAIL = "This email is already registered in our database. Please sign-in into your account. Use the forgot password button in case you need to reset it.";
     String CONTACTS_FAILED = "Unable to get contacts";
     String CONTACT_FAILED = "Unable to get contact";
+    String CONTACT_ASSET_FAILED = "Unable to get contact's assets";
     String SIGN_UP_ZIP_FAILED = "We apologize for the inconvenience, but our new REWARDS® Loyalty program is currently available only in certain markets. " +
             "We will be expanding the program to all markets this summer, so please check back often for updates!";
     String SIGN_UP_LOCATION_FAILED = "We apologize for the inconvenience, but our new REWARDS® Loyalty program is currently available only in certain markets. " +
