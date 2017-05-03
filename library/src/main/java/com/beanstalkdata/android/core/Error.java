@@ -41,5 +41,6 @@ interface Error {
     String SESSION_INVALID = "Session invalid";
     String STORE_INFO_FAILED = "Unable to find this store";
     String STORES_LOCATIONS_FAILED = "Unable to find any stores";
+    String CONTACT_RELOCATE_FAILED = "Unable to relocate a contact";
 
 }

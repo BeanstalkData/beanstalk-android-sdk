@@ -22,6 +22,7 @@ import com.beanstalkdata.android.response.PushMessageByIdResponse;
 import com.beanstalkdata.android.response.PushMessagesResponse;
 import com.beanstalkdata.android.response.PushSuccessResponse;
 import com.beanstalkdata.android.response.RegisterGiftCardResponse;
+import com.beanstalkdata.android.response.RelocateResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
 import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
@@ -198,5 +199,9 @@ public interface BeanstalkDataApi {
 
     @GET("bsdContact/geoAssets.php")
     Call<ContactAsset> getContactAsset(@Query("key") String apiKey, @Query("contactId") String contactId);
+
+    @POST("bsdContact/relocate.php")
+    @FormUrlEncoded
+    Call<RelocateResponse> relocateContact(@Field("key") String apiKey, @Field("contactId") String contactId, @Field("latitude") float lat, @Field("longitude") float lon);
 
 }

@@ -39,6 +39,7 @@ import com.beanstalkdata.android.response.PushMessageByIdResponse;
 import com.beanstalkdata.android.response.PushMessagesResponse;
 import com.beanstalkdata.android.response.PushSuccessResponse;
 import com.beanstalkdata.android.response.RegisterGiftCardResponse;
+import com.beanstalkdata.android.response.RelocateResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
 import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
@@ -506,6 +507,35 @@ public class BeanstalkService {
                 }
             }
 
+        });
+    }
+
+    /**
+     * Relocate contact.
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void relocateContact(float latitude, float longtitude, final OnReturnListener listener) {
+        String contactId = beanstalkUserSession.getContactId();
+        Call<RelocateResponse> request = service.relocateContact(beanstalkApiKey, contactId, latitude, longtitude);
+        request.enqueue(new Callback<RelocateResponse>() {
+            @Override
+            public void onResponse(Call<RelocateResponse> call, Response<RelocateResponse> response) {
+                if (response != null && response.isSuccessful()) {
+                    if (listener != null) {
+                        listener.onFinished(null);
+                    }
+                } else {
+                    onFailure(call, null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RelocateResponse> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(Error.CONTACT_RELOCATE_FAILED);
+                }
+            }
         });
     }
 

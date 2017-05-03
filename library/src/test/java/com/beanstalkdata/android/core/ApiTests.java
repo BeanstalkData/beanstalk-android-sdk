@@ -22,6 +22,7 @@ import com.beanstalkdata.android.response.PushMessageByIdResponse;
 import com.beanstalkdata.android.response.PushMessagesResponse;
 import com.beanstalkdata.android.response.PushSuccessResponse;
 import com.beanstalkdata.android.response.RegisterGiftCardResponse;
+import com.beanstalkdata.android.response.RelocateResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
 import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
@@ -394,6 +395,10 @@ public class ApiTests {
                                 .setResponseCode(200)
                                 .setBody(STATUS_SESSION_OK);
                     }
+                case "/bsdContact/relocate.php":
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .setBody("{\"Success\":true}");
             }
             return new MockResponse().setResponseCode(404);
         }
@@ -1061,6 +1066,17 @@ public class ApiTests {
         ContactAsset contactAsset = response.body();
         assertNotNull(contactAsset);
         assertFalse(contactAsset.isSuccess());
+    }
+
+    @Test
+    public void relocateContact() throws Exception {
+        Call<RelocateResponse> request = service.relocateContact(APP_KEY, ID3, 1, -1);
+        Response<RelocateResponse> response = request.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
+
+        RelocateResponse relocateResponse = response.body();
+        assertNotNull(relocateResponse);
+        assertTrue(relocateResponse.isSuccess());
     }
 
 }
