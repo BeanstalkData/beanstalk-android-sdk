@@ -4,6 +4,7 @@
 
 package com.beanstalkdata.android.core;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -511,13 +512,13 @@ public class BeanstalkService {
     }
 
     /**
-     * Relocate contact.
+     * Relocate a contact.
      *
      * @param listener Callback that will run after network request is completed.
      */
-    public void relocateContact(float latitude, float longtitude, final OnReturnListener listener) {
+    public void relocateContact(float latitude, float longitude, final OnReturnListener listener) {
         String contactId = beanstalkUserSession.getContactId();
-        Call<RelocateResponse> request = service.relocateContact(beanstalkApiKey, contactId, latitude, longtitude);
+        Call<RelocateResponse> request = service.relocateContact(beanstalkApiKey, contactId, latitude, longitude);
         request.enqueue(new Callback<RelocateResponse>() {
             @Override
             public void onResponse(Call<RelocateResponse> call, Response<RelocateResponse> response) {
@@ -537,6 +538,30 @@ public class BeanstalkService {
                 }
             }
         });
+    }
+
+    /**
+     * Start contact location tracking with the default tracking interval 1 hour.
+     */
+    public void startLocationTracking() {
+        beanstalkUserSession.startContactRelocation(AlarmManager.INTERVAL_HOUR);
+    }
+
+    /**
+     * Start contact location tracking with interval set. The interval is in seconds.
+     * The interval can't be less than 15 minutes.
+     *
+     * @param interval period in milliseconds for relocate contact updates.
+     */
+    public void startLocationTracking(long interval) {
+        beanstalkUserSession.startContactRelocation(interval);
+    }
+
+    /**
+     * Stop contact location tracking.
+     */
+    public void stopLocationTracking() {
+        beanstalkUserSession.stopContactRelocation();
     }
 
     /**

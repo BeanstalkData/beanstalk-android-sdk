@@ -29,6 +29,10 @@
     <string name="transactions">Transactions</string>
     <string name="track_transaction">Track Transaction</string>
     <string name="transaction_details">Transaction Details</string>
+    <string name="start_tracking">Start tracking</string>
+    <string name="stop_tracking">Stop tracking</string>
+    <string name="permission_denied">Permission Denied</string>
+    <string name="permission_description">Without location permission the app is unable to track user\'s location</string>
 
     <string name="messages">Messages</string>
     <string name="message_details">Message Details</string>

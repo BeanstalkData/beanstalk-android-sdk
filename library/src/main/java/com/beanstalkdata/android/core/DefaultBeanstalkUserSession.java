@@ -4,10 +4,14 @@
 
 package com.beanstalkdata.android.core;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.beanstalkdata.android.model.GiftCard;
+import com.beanstalkdata.android.service.AlarmReceiver;
 
 /**
  * Beanstalk user session default implementation.
@@ -22,10 +26,20 @@ public class DefaultBeanstalkUserSession implements BeanstalkUserSession {
 
     private final SharedPreferences coreSharedPreferences;
     private final SharedPreferences defaultCardSharedPreferences;
+    private final Context context;
+    private final AlarmManager alarmManager;
+    private PendingIntent alarmIntent;
 
     DefaultBeanstalkUserSession(Context context) {
+        this.context = context;
         this.coreSharedPreferences = context.getSharedPreferences(CORE_PREFS_NAME, Context.MODE_PRIVATE);
         this.defaultCardSharedPreferences = context.getSharedPreferences(DEFAULT_CARD_PREFS_NAME, Context.MODE_PRIVATE);
+        this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    }
+
+    @Override
+    public Context getContext() {
+        return context;
     }
 
     @Override
@@ -44,6 +58,7 @@ public class DefaultBeanstalkUserSession implements BeanstalkUserSession {
     public void release() {
         coreSharedPreferences.edit().clear().apply();
         defaultCardSharedPreferences.edit().clear().apply();
+        stopContactRelocation();
     }
 
     @Override
@@ -54,6 +69,24 @@ public class DefaultBeanstalkUserSession implements BeanstalkUserSession {
     @Override
     public String getContactId() {
         return coreSharedPreferences.getString(CONTACT_ID, null);
+    }
+
+    @Override
+    public void startContactRelocation(long interval) {
+        interval *= 1000;
+        if (interval < AlarmManager.INTERVAL_FIFTEEN_MINUTES) {
+            interval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+        }
+        alarmIntent = PendingIntent.getBroadcast(context, AlarmReceiver.REQUEST_CODE, new Intent(context, AlarmReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, alarmIntent);
+    }
+
+    @Override
+    public void stopContactRelocation() {
+        if (alarmIntent != null) {
+            alarmManager.cancel(alarmIntent);
+            alarmIntent = null;
+        }
     }
 
     @Override

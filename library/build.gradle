@@ -41,6 +41,7 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:${libraries.retrofit}"
     compile "com.squareup.retrofit2:converter-gson:${libraries.retrofit}"
     compile "com.squareup.retrofit2:converter-scalars:${libraries.retrofit}"
+    compile "com.google.android.gms:play-services-location:${libraries.googlePlayServices}"
 
     testCompile "junit:junit:${libraries.junit}"
     testCompile "com.squareup.okhttp3:logging-interceptor:${libraries.okhttp}"

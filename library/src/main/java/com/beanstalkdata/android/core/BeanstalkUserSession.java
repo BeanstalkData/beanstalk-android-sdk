@@ -4,12 +4,19 @@
 
 package com.beanstalkdata.android.core;
 
+import android.content.Context;
+
 import com.beanstalkdata.android.model.GiftCard;
 
 /**
  * Beanstalk user session info contract.
  */
 public interface BeanstalkUserSession {
+
+    /**
+     * Get context.
+     */
+    Context getContext();
 
     /**
      * Save Beanstalk user contact id and token.
@@ -34,6 +41,16 @@ public interface BeanstalkUserSession {
      * @return Beanstalk user contact id.
      */
     String getContactId();
+
+    /**
+     * Start contact relocation.
+     */
+    void startContactRelocation(long interval);
+
+    /**
+     * Stop contact relocation.
+     */
+    void stopContactRelocation();
 
     /**
      * Check if user is logged in.

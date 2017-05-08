@@ -181,6 +181,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:inputType="numberDecimal"
                 android:hint="@string/zip_code" />
 
             <Button
@@ -228,6 +229,26 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/four_dp"
             android:text="@string/messages"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/start_tracking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/start_tracking"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <Button
+            android:id="@+id/stop_tracking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/stop_tracking"
             android:textColor="@android:color/white" />
 
         <Space

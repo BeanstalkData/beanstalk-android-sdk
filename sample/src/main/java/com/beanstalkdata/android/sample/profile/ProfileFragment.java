@@ -4,13 +4,17 @@
 
 package com.beanstalkdata.android.sample.profile;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +37,8 @@ import com.beanstalkdata.android.sample.utils.InputUtils;
 import com.beanstalkdata.android.sample.utils.ToastUtils;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
+
+    public static final int REQUEST_LOCATION_PERMISSION = 9999;
 
     private TextView firstNameField;
     private TextView lastNameField;
@@ -75,12 +81,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         view.findViewById(R.id.update_contact).setOnClickListener(this);
         view.findViewById(R.id.delete_contact).setOnClickListener(this);
         view.findViewById(R.id.log_out).setOnClickListener(this);
+        view.findViewById(R.id.start_tracking).setOnClickListener(this);
+        view.findViewById(R.id.stop_tracking).setOnClickListener(this);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        checkPermissions();
         updateContactInfo();
     }
 
@@ -208,6 +217,12 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             case R.id.log_out:
                 logOut();
                 break;
+            case R.id.start_tracking:
+                getService().startLocationTracking();
+                break;
+            case R.id.stop_tracking:
+                getService().stopLocationTracking();
+                break;
         }
     }
 
@@ -290,6 +305,35 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         // Hide soft keyboard on item was selected.
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    private void checkPermissions() {
+        int locationPermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
+        if (locationPermission != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION_PERMISSION);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION:
+                if ((grantResults.length > 0) && (grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(R.string.permission_denied)
+                            .setMessage(R.string.permission_description)
+                            .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .show();
+                }
+                break;
+        }
     }
 
 }

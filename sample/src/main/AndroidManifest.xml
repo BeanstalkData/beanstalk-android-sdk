@@ -72,6 +72,14 @@
             </intent-filter>
         </receiver>
 
+        <!-- For mobile location tracking -->
+        <receiver
+            android:name="com.beanstalkdata.android.service.AlarmReceiver"
+            android:process=":remote" />
+        <service
+            android:name="com.beanstalkdata.android.service.ContactRelocationService"
+            android:exported="false" />
+
     </application>
 
 </manifest>
