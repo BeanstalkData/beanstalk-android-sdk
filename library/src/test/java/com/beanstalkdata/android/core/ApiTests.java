@@ -125,8 +125,8 @@ public class ApiTests {
     private static final String MESSAGE_ID3 = "12345678";
     private static final int MAX_MESSAGES3 = 2;
     private static final String STORE_ID3 = "1";
-    private static final String CURRENT_ASSET_IMAGE3 = "https://example.com/assets/current.png";
-    private static final String DEFAULT_ASSET_IMAGE3 = "https://example.com/assets/default.png";
+    private static final String CURRENT_ASSET_IMAGE3 = "https://example.com/assets/current.html";
+    private static final String DEFAULT_ASSET_IMAGE3 = "https://example.com/assets/default.html";
 
     private static final String ID4_1 = "16666666";
     private static final String ID4_2 = "16666667";
@@ -238,8 +238,8 @@ public class ApiTests {
             if (path.equals(String.format("/bsdContact/geoAssets.php?key=%s&contactId=%s", APP_KEY, ID3))) {
                 // language=JSON
                 String contactAsset = "{\n" +
-                        "    \"CurrentImage\": \"https://example.com/assets/current.png\",\n" +
-                        "    \"DefaultImage\": \"https://example.com/assets/default.png\"\n" +
+                        "    \"CurrentImage\": \"https://example.com/assets/current.html\",\n" +
+                        "    \"DefaultImage\": \"https://example.com/assets/default.html\"\n" +
                         "}\n";
                 return new MockResponse()
                         .setResponseCode(200)

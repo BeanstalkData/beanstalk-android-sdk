@@ -231,6 +231,22 @@
             android:text="@string/messages"
             android:textColor="@android:color/white" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <EditText
+            android:id="@+id/input_interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="numberDecimal"
+            android:hint="@string/input_interval" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
         <Button
             android:id="@+id/start_tracking"
             android:layout_width="match_parent"
@@ -249,6 +265,30 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/four_dp"
             android:text="@string/stop_tracking"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <Button
+            android:id="@+id/check_default_asset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/check_default_asset"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <Button
+            android:id="@+id/check_current_asset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/check_current_asset"
             android:textColor="@android:color/white" />
 
         <Space

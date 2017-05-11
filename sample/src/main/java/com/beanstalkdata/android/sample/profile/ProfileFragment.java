@@ -8,6 +8,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.net.ParseException;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +30,7 @@ import android.widget.TextView;
 import com.beanstalkdata.android.callback.OnReturnDataListener;
 import com.beanstalkdata.android.callback.OnReturnListener;
 import com.beanstalkdata.android.model.Contact;
+import com.beanstalkdata.android.model.ContactAsset;
 import com.beanstalkdata.android.response.LocationResponse;
 import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseFragment;
@@ -48,6 +51,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private TextView phoneNumberField;
     private EditText zipCodeInput;
     private EditText fkeyInput;
+    private EditText intervalInput;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -71,6 +75,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         phoneNumberField = (TextView) view.findViewById(R.id.field_phone_number);
         zipCodeInput = (EditText) view.findViewById(R.id.input_zip_code);
         fkeyInput = (EditText) view.findViewById(R.id.input_fkey);
+        intervalInput = (EditText) view.findViewById(R.id.input_interval);
         view.findViewById(R.id.rewards).setOnClickListener(this);
         view.findViewById(R.id.progress).setOnClickListener(this);
         view.findViewById(R.id.gift_cards).setOnClickListener(this);
@@ -83,6 +88,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         view.findViewById(R.id.log_out).setOnClickListener(this);
         view.findViewById(R.id.start_tracking).setOnClickListener(this);
         view.findViewById(R.id.stop_tracking).setOnClickListener(this);
+        view.findViewById(R.id.check_default_asset).setOnClickListener(this);
+        view.findViewById(R.id.check_current_asset).setOnClickListener(this);
         return view;
     }
 
@@ -218,10 +225,59 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 logOut();
                 break;
             case R.id.start_tracking:
-                getService().startLocationTracking();
+                try {
+                    int interval = Integer.parseInt(intervalInput.getText().toString());
+                    getService().startLocationTracking(interval * 60);
+                } catch(NumberFormatException e) {
+                    getService().startLocationTracking();
+                }
                 break;
             case R.id.stop_tracking:
                 getService().stopLocationTracking();
+                break;
+            case R.id.check_default_asset:
+                getService().getContactAsset(new OnReturnDataListener<ContactAsset>() {
+                    @Override
+                    public void onFinished(ContactAsset data, String error) {
+                        FragmentActivity activity = getActivity();
+                        if (error != null && activity != null) {
+                            ToastUtils.showLong(activity, error);
+                            return;
+                        }
+                        if (activityContract != null) {
+                            String url = data.getDefaultImage();
+                            if (url != null && !url.equals("")) {
+                                activityContract.replaceFragment(ContactAssetFragment.newInstance(url, R.string.default_asset));
+                            } else {
+                                if (activity != null) {
+                                    ToastUtils.showLong(activity, R.string.error_default_asset_not_available);
+                                }
+                            }
+                        }
+                    }
+                });
+                break;
+            case R.id.check_current_asset:
+                getService().getContactAsset(new OnReturnDataListener<ContactAsset>() {
+                    @Override
+                    public void onFinished(ContactAsset data, String error) {
+                        FragmentActivity activity = getActivity();
+                        if (error != null && activity != null) {
+                            ToastUtils.showLong(activity, error);
+                            return;
+                        }
+                        if (activityContract != null) {
+                            String url = data.getCurrentImage();
+                            if (url != null && !url.equals("")) {
+                                activityContract.replaceFragment(ContactAssetFragment.newInstance(url, R.string.current_asset));
+                            } else {
+                                if (activity != null) {
+                                    ToastUtils.showLong(activity, R.string.error_current_asset_not_available);
+                                }
+                            }
+                        }
+                    }
+                });
                 break;
         }
     }

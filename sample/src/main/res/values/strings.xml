@@ -31,8 +31,14 @@
     <string name="transaction_details">Transaction Details</string>
     <string name="start_tracking">Start tracking</string>
     <string name="stop_tracking">Stop tracking</string>
+    <string name="input_interval">Enter tracking interval in minutes</string>
     <string name="permission_denied">Permission Denied</string>
     <string name="permission_description">Without location permission the app is unable to track user\'s location</string>
+    <string name="check_default_asset">Check default asset</string>
+    <string name="check_current_asset">Check current asset</string>
+    <string name="contact_asset">Contact asset</string>
+    <string name="default_asset">Default asset</string>
+    <string name="current_asset">Current asset</string>
 
     <string name="messages">Messages</string>
     <string name="message_details">Message Details</string>
@@ -87,4 +93,6 @@
     <string name="error_zip_code_not_empty">Zip code must not be empty</string>
     <string name="error_fkey_not_empty">FKey must not be empty</string>
     <string name="error_gift_card_number_not_empty">Gift card number must not be empty</string>
+    <string name="error_default_asset_not_available">Default asset not available</string>
+    <string name="error_current_asset_not_available">Current asset not available</string>
 </resources>
