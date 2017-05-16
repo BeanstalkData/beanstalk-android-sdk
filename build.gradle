@@ -7,7 +7,7 @@ buildscript {
         ]
         libraries = [
                 supportVersion    : "25.3.1",
-                googlePlayServices: "10.2.1",
+                googlePlayServices: "10.2.4",
                 firebaseMessaging : "9.6.1",
                 retrofit          : "2.1.0",
                 okhttp            : "3.3.1",
