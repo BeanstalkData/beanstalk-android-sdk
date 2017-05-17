@@ -514,6 +514,8 @@ public class BeanstalkService {
     /**
      * Relocate a contact.
      *
+     * @param latitude user's latitude coordinate.
+     * @param longitude user's longitude coordinate.
      * @param listener Callback that will run after network request is completed.
      */
     public void relocateContact(float latitude, float longitude, final OnReturnListener listener) {
@@ -551,7 +553,7 @@ public class BeanstalkService {
      * Start contact location tracking with interval set. The interval is in seconds.
      * The interval can't be less than 15 minutes.
      *
-     * @param interval period in milliseconds for relocate contact updates.
+     * @param interval period in seconds for relocate contact updates.
      */
     public void startLocationTracking(long interval) {
         beanstalkUserSession.startContactRelocation(interval);
