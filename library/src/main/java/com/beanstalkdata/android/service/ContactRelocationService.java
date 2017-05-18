@@ -20,6 +20,9 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+/**
+ * ContactRelocationService is used to obtain and store geolocation position asynchronously.
+ */
 public class ContactRelocationService extends Service implements
         LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
