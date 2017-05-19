@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2017 Heartland Commerce, Inc. All rights reserved.
+ */
+
 package com.beanstalkdata.android.sample.gcm;
 
 import android.app.NotificationManager;
@@ -8,7 +12,7 @@ import android.support.v4.app.NotificationCompat;
 import com.beanstalkdata.android.sample.R;
 import com.google.android.gms.gcm.GcmListenerService;
 
-public final class NotificationsListenerService extends GcmListenerService {
+public class NotificationsListenerService extends GcmListenerService {
 
     private static final String PUSH_NOTIFICATION_TAG = "Sample";
     private static final String PUSH_NOTIFICATION_TITLE = "Sample Title";

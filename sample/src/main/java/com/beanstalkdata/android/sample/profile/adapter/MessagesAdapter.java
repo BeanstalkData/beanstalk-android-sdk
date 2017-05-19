@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Heartland Commerce, Inc. All rights reserved.
+ * Copyright (C) 2017 Heartland Commerce, Inc. All rights reserved.
  */
 
 package com.beanstalkdata.android.sample.profile.adapter;
