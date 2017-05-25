@@ -1458,7 +1458,7 @@ public class BeanstalkService {
     }
 
     /**
-     * Maintain loyalty cards for logged in user.
+     * Maintain default loyalty cards for logged in user.
      * <p>
      *     <b>Note:</b>
      *     By default loyalty card number is equal to contact ID.
