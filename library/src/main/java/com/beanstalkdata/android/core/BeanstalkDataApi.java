@@ -204,4 +204,7 @@ public interface BeanstalkDataApi {
     @FormUrlEncoded
     Call<RelocateResponse> relocateContact(@Field("key") String apiKey, @Field("contactId") String contactId, @Field("latitude") float lat, @Field("longitude") float lon);
 
+    @GET("bsdLoyalty/maintainLoyaltyCards.php?function=addNewCard")
+    Call<String> maintainLoyaltyCards(@Query("key") String apiKey, @Query("contact") String contactId, @Query("cardNumber") String cardNumber);
+
 }

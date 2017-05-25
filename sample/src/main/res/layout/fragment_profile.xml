@@ -296,6 +296,18 @@
             android:layout_height="@dimen/sixteen_dp" />
 
         <Button
+            android:id="@+id/maintain_loyalty_program"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/maintain_loyalty_program"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sixteen_dp" />
+
+        <Button
             android:id="@+id/update_contact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

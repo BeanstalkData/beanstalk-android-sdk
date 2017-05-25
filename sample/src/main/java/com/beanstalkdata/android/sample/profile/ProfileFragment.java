@@ -90,6 +90,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         view.findViewById(R.id.stop_tracking).setOnClickListener(this);
         view.findViewById(R.id.check_default_asset).setOnClickListener(this);
         view.findViewById(R.id.check_current_asset).setOnClickListener(this);
+        view.findViewById(R.id.maintain_loyalty_program).setOnClickListener(this);
         return view;
     }
 
@@ -274,6 +275,23 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                                 if (activity != null) {
                                     ToastUtils.showLong(activity, R.string.error_current_asset_not_available);
                                 }
+                            }
+                        }
+                    }
+                });
+                break;
+            case R.id.maintain_loyalty_program:
+                activityContract.showProgress();
+                getService().maintainLoyaltyCards(new OnReturnDataListener<String>() {
+                    @Override
+                    public void onFinished(String data, String error) {
+                        activityContract.hideProgress();
+                        FragmentActivity activity = getActivity();
+                        if (activity != null) {
+                            if (error != null) {
+                                ToastUtils.showLong(activity, error);
+                            } else {
+                                ToastUtils.showLong(activity, data);
                             }
                         }
                     }

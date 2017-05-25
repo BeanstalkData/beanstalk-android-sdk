@@ -39,6 +39,7 @@
     <string name="contact_asset">Contact asset</string>
     <string name="default_asset">Default asset</string>
     <string name="current_asset">Current asset</string>
+    <string name="maintain_loyalty_program">Maintain loyalty program</string>
 
     <string name="messages">Messages</string>
     <string name="message_details">Message Details</string>

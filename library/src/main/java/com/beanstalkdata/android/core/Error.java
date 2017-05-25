@@ -42,5 +42,6 @@ interface Error {
     String STORE_INFO_FAILED = "Unable to find this store";
     String STORES_LOCATIONS_FAILED = "Unable to find any stores";
     String CONTACT_RELOCATE_FAILED = "Unable to relocate a contact";
+    String LOYALTY_PROGRAM_ERROR = "Failed to associate loyalty program with a customer";
 
 }

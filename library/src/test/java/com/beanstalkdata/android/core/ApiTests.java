@@ -254,6 +254,11 @@ public class ApiTests {
                         .setResponseCode(200)
                         .setBody(contactAssetError);
             }
+            if (path.equals(String.format("/bsdLoyalty/maintainLoyaltyCards.php?function=addNewCard&key=%s&contact=%s&cardNumber=%s", APP_KEY, ID3, ID3))) {
+                return new MockResponse()
+                        .setResponseCode(200)
+                        .setBody("card added");
+            }
             return new MockResponse().setResponseCode(404);
         }
 
@@ -1077,6 +1082,16 @@ public class ApiTests {
         RelocateResponse relocateResponse = response.body();
         assertNotNull(relocateResponse);
         assertTrue(relocateResponse.isSuccess());
+    }
+
+    @Test
+    public void maintainLoyaltyCards() throws Exception {
+        Call<String> request = service.maintainLoyaltyCards(APP_KEY, ID3, ID3);
+        Response<String> response = request.execute();
+
+        String body = response.body();
+        assertNotNull(body);
+        assertTrue(body.equals("card added"));
     }
 
 }

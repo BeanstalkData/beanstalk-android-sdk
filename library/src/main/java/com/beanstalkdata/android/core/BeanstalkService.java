@@ -1458,6 +1458,52 @@ public class BeanstalkService {
     }
 
     /**
+     * Maintain loyalty cards for logged in user.
+     * <p>
+     *     <b>Note:</b>
+     *     By default loyalty card number is equal to contact ID.
+     * </p>
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void maintainLoyaltyCards(OnReturnDataListener<String> listener) {
+        maintainLoyaltyCards(beanstalkUserSession.getContactId(), listener);
+    }
+
+    /**
+     * Maintain loyalty cards for logged in user.
+     *
+     * @param cardNumber loyalty card number.
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void maintainLoyaltyCards(String cardNumber, final OnReturnDataListener<String> listener) {
+        Call<String> request = service.maintainLoyaltyCards(beanstalkApiKey, beanstalkUserSession.getContactId(), cardNumber);
+        request.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                String body = response.body();
+                if ("card added".equals(body)) {
+                    if (listener != null) {
+                        listener.onFinished(body, null);
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.LOYALTY_PROGRAM_ERROR);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.LOYALTY_PROGRAM_ERROR);
+                }
+            }
+        });
+    }
+
+    /**
      * Check logging state.
      *
      * @return Logging is enabled or not.
