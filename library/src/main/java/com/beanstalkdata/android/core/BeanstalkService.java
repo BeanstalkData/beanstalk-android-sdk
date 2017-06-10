@@ -1072,7 +1072,9 @@ public class BeanstalkService {
 
                 String body = "error";
                 try {
-                    body = response.body().string();
+                    if(response != null && response.body() != null) {
+                        body = response.body().string();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
