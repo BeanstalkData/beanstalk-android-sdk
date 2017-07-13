@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.beanstalkdata.android.callback.OnReturnDataListener;
 import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseFragment;
+import com.beanstalkdata.android.sample.common.ContactUsFragment;
 import com.beanstalkdata.android.sample.profile.ProfileActivity;
 import com.beanstalkdata.android.sample.utils.ToastUtils;
 
@@ -30,6 +31,7 @@ public class MenuFragment extends BaseFragment implements View.OnClickListener {
         view.findViewById(R.id.sign_in).setOnClickListener(this);
         view.findViewById(R.id.sign_up).setOnClickListener(this);
         view.findViewById(R.id.reset_password).setOnClickListener(this);
+        view.findViewById(R.id.contact_us).setOnClickListener(this);
         return view;
     }
 
@@ -83,6 +85,11 @@ public class MenuFragment extends BaseFragment implements View.OnClickListener {
             case R.id.reset_password:
                 if (activityContract != null) {
                     activityContract.replaceFragment(ResetPasswordFragment.newInstance());
+                }
+                break;
+            case R.id.contact_us:
+                if (activityContract != null) {
+                    activityContract.replaceFragment(ContactUsFragment.newInstance());
                 }
                 break;
         }

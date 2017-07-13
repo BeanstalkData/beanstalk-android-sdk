@@ -43,5 +43,6 @@ interface Error {
     String STORES_LOCATIONS_FAILED = "Unable to find any stores";
     String CONTACT_RELOCATE_FAILED = "Unable to relocate a contact";
     String LOYALTY_PROGRAM_ERROR = "Failed to associate loyalty program with a customer";
+    String CONTACT_US_ERROR = "Unable to deliver message";
 
 }

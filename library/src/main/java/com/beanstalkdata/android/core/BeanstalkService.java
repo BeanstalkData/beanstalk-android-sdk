@@ -31,6 +31,7 @@ import com.beanstalkdata.android.request.AuthenticateUserRequest;
 import com.beanstalkdata.android.request.ContactRequest;
 import com.beanstalkdata.android.response.CardBalanceResponse;
 import com.beanstalkdata.android.response.ContactDeletedResponse;
+import com.beanstalkdata.android.response.ContactUsResponse;
 import com.beanstalkdata.android.response.CouponResponse;
 import com.beanstalkdata.android.response.GiftCardListResponse;
 import com.beanstalkdata.android.response.LocationResponse;
@@ -514,9 +515,9 @@ public class BeanstalkService {
     /**
      * Relocate a contact.
      *
-     * @param latitude user's latitude coordinate.
+     * @param latitude  user's latitude coordinate.
      * @param longitude user's longitude coordinate.
-     * @param listener Callback that will run after network request is completed.
+     * @param listener  Callback that will run after network request is completed.
      */
     public void relocateContact(float latitude, float longitude, final OnReturnListener listener) {
         String contactId = beanstalkUserSession.getContactId();
@@ -1072,7 +1073,7 @@ public class BeanstalkService {
 
                 String body = "error";
                 try {
-                    if(response != null && response.body() != null) {
+                    if (response != null && response.body() != null) {
                         body = response.body().string();
                     }
                 } catch (IOException e) {
@@ -1462,8 +1463,8 @@ public class BeanstalkService {
     /**
      * Maintain default loyalty cards for logged in user.
      * <p>
-     *     <b>Note:</b>
-     *     By default loyalty card number is equal to contact ID.
+     * <b>Note:</b>
+     * By default loyalty card number is equal to contact ID.
      * </p>
      *
      * @param listener Callback that will run after network request is completed.
@@ -1475,8 +1476,8 @@ public class BeanstalkService {
     /**
      * Maintain loyalty cards for logged in user.
      *
-     * @param cardNumber loyalty card number.
-     * @param listener Callback that will run after network request is completed.
+     * @param cardNumber Loyalty card number.
+     * @param listener   Callback that will run after network request is completed.
      */
     public void maintainLoyaltyCards(String cardNumber, final OnReturnDataListener<String> listener) {
         Call<String> request = service.maintainLoyaltyCards(beanstalkApiKey, beanstalkUserSession.getContactId(), cardNumber);
@@ -1503,6 +1504,45 @@ public class BeanstalkService {
                 }
             }
         });
+    }
+
+    /**
+     * Send comments to Contact Us responder.
+     *
+     * @param firstName   First name of the user.
+     * @param lastName    Last name of the user.
+     * @param fromEmail   Email  of the user.
+     * @param toEmail     Email of the responder.
+     * @param phoneNumber Phone number  of the use.
+     * @param comments    Comments.
+     * @param listener    Callback that will run after network request is completed.
+     */
+    public void contactUs(String firstName, String lastName, String fromEmail, String toEmail, String phoneNumber, String comments, final OnReturnListener listener) {
+        Call<ContactUsResponse> request = service.contactUs(beanstalkApiKey, firstName, lastName, fromEmail, toEmail, phoneNumber, comments);
+        request.enqueue(new Callback<ContactUsResponse>() {
+
+            @Override
+            public void onResponse(Call<ContactUsResponse> call, Response<ContactUsResponse> response) {
+                ContactUsResponse body = response.body();
+                if (body != null) {
+                    if (listener != null) {
+                        String error = body.getError();
+                        listener.onFinished((error != null) ? error : null);
+                    }
+                } else {
+                    onFailure(call, null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ContactUsResponse> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(Error.CONTACT_US_ERROR);
+                }
+            }
+
+        });
+
     }
 
     /**

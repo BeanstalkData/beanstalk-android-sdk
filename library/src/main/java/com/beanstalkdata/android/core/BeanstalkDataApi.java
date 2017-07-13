@@ -13,6 +13,7 @@ import com.beanstalkdata.android.model.type.MessageType;
 import com.beanstalkdata.android.model.type.PlatformType;
 import com.beanstalkdata.android.response.CardBalanceResponse;
 import com.beanstalkdata.android.response.ContactDeletedResponse;
+import com.beanstalkdata.android.response.ContactUsResponse;
 import com.beanstalkdata.android.response.CouponResponse;
 import com.beanstalkdata.android.response.GiftCardListResponse;
 import com.beanstalkdata.android.response.LocationResponse;
@@ -206,5 +207,9 @@ public interface BeanstalkDataApi {
 
     @GET("bsdLoyalty/maintainLoyaltyCards.php?function=addNewCard")
     Call<String> maintainLoyaltyCards(@Query("key") String apiKey, @Query("contact") String contactId, @Query("cardNumber") String cardNumber);
+
+    @POST("feedback/contactUs/index.php")
+    @FormUrlEncoded
+    Call<ContactUsResponse> contactUs(@Field("key") String apiKey, @Field("first_name") String firstName, @Field("last_name") String lastName, @Field("from_email") String fromEmail, @Field("to_email") String toEmail, @Field("phone_number") String phoneNumber, @Field("comments") String comments);
 
 }

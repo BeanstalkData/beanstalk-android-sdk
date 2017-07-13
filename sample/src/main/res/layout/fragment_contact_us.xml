@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:padding="@dimen/sixteen_dp"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/first_name"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <EditText
+            android:id="@+id/input_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/last_name"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <EditText
+            android:id="@+id/input_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/from_email"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <EditText
+            android:id="@+id/input_from_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/to_email"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <EditText
+            android:id="@+id/input_to_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_number"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <EditText
+            android:id="@+id/input_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/comments"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <EditText
+            android:id="@+id/input_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <Button
+            android:id="@+id/send_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/send_comments"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+</ScrollView>

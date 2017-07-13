@@ -40,6 +40,8 @@
     <string name="default_asset">Default asset</string>
     <string name="current_asset">Current asset</string>
     <string name="maintain_loyalty_program">Maintain loyalty program</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="send_comments">Send Comments</string>
 
     <string name="messages">Messages</string>
     <string name="message_details">Message Details</string>
@@ -74,6 +76,9 @@
     <string name="gender_female">Female</string>
     <string name="email_opt_in">Email Opt In</string>
     <string name="push_opt_in">Push notifications Opt In</string>
+    <string name="from_email">From Email</string>
+    <string name="to_email">To Email</string>
+    <string name="comments">Comments</string>
 
     <string name="message_status_format" formatted="false">%s (%s)</string>
 

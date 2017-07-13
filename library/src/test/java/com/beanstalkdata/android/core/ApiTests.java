@@ -13,6 +13,7 @@ import com.beanstalkdata.android.model.type.PlatformType;
 import com.beanstalkdata.android.request.AuthenticateUserRequest;
 import com.beanstalkdata.android.request.ContactRequest;
 import com.beanstalkdata.android.response.CardBalanceResponse;
+import com.beanstalkdata.android.response.ContactUsResponse;
 import com.beanstalkdata.android.response.CouponResponse;
 import com.beanstalkdata.android.response.GiftCardListResponse;
 import com.beanstalkdata.android.response.LocationResponse;
@@ -127,6 +128,8 @@ public class ApiTests {
     private static final String STORE_ID3 = "1";
     private static final String CURRENT_ASSET_IMAGE3 = "https://example.com/assets/current.html";
     private static final String DEFAULT_ASSET_IMAGE3 = "https://example.com/assets/default.html";
+    private static final String TO_EMAIL3 = "to_new@example.com";
+    private static final String COMMENTS3 = "test comments";
 
     private static final String ID4_1 = "16666666";
     private static final String ID4_2 = "16666667";
@@ -404,6 +407,10 @@ public class ApiTests {
                     return new MockResponse()
                             .setResponseCode(200)
                             .setBody("{\"Success\":true}");
+                case "/feedback/contactUs/index.php":
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .setBody("{\"success\":\"true\"}");
             }
             return new MockResponse().setResponseCode(404);
         }
@@ -1092,6 +1099,16 @@ public class ApiTests {
         String body = response.body();
         assertNotNull(body);
         assertTrue(body.equals("card added"));
+    }
+
+    @Test
+    public void contactUs() throws Exception {
+        Call<ContactUsResponse> request = service.contactUs(APP_KEY, FIRST_NAME3, LAST_NAME3, EMAIL3, TO_EMAIL3, PHONE3, COMMENTS3);
+        Response<ContactUsResponse> response = request.execute();
+
+        ContactUsResponse body = response.body();
+        assertNotNull(body);
+        assertTrue("true".equals(body.getSuccess()));
     }
 
 }

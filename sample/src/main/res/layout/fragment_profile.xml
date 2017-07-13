@@ -181,8 +181,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:inputType="numberDecimal"
-                android:hint="@string/zip_code" />
+                android:hint="@string/zip_code"
+                android:inputType="numberDecimal" />
 
             <Button
                 android:id="@+id/check_stores"
@@ -240,8 +240,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="numberDecimal"
-            android:hint="@string/input_interval" />
+            android:hint="@string/input_interval"
+            android:inputType="numberDecimal" />
 
         <Space
             android:layout_width="match_parent"
@@ -301,6 +301,18 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/four_dp"
             android:text="@string/maintain_loyalty_program"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sixteen_dp" />
+
+        <Button
+            android:id="@+id/contact_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/contact_us"
             android:textColor="@android:color/white" />
 
         <Space

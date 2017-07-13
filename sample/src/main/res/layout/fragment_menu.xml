@@ -38,4 +38,16 @@
         android:text="@string/reset_password"
         android:textColor="@android:color/white" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/thirty_two_dp" />
+
+    <Button
+        android:id="@+id/contact_us"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/eight_dp"
+        android:text="@string/contact_us"
+        android:textColor="@android:color/white" />
+
 </LinearLayout>

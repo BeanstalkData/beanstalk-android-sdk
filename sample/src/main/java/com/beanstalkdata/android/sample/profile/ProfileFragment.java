@@ -8,7 +8,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.net.ParseException;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +15,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +32,7 @@ import com.beanstalkdata.android.model.ContactAsset;
 import com.beanstalkdata.android.response.LocationResponse;
 import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseFragment;
+import com.beanstalkdata.android.sample.common.ContactUsFragment;
 import com.beanstalkdata.android.sample.login.ContactInfoFragment;
 import com.beanstalkdata.android.sample.login.LoginActivity;
 import com.beanstalkdata.android.sample.utils.InputUtils;
@@ -229,7 +228,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 try {
                     int interval = Integer.parseInt(intervalInput.getText().toString());
                     getService().startLocationTracking(interval * 60);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     getService().startLocationTracking();
                 }
                 break;
@@ -285,7 +284,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 getService().maintainLoyaltyCards(new OnReturnDataListener<String>() {
                     @Override
                     public void onFinished(String data, String error) {
-                        activityContract.hideProgress();
+                        if (activityContract != null) {
+                            activityContract.hideProgress();
+                        }
                         FragmentActivity activity = getActivity();
                         if (activity != null) {
                             if (error != null) {
@@ -296,6 +297,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         }
                     }
                 });
+                break;
+            case R.id.contact_us:
+                activityContract.replaceFragment(ContactUsFragment.newInstance());
                 break;
         }
     }
