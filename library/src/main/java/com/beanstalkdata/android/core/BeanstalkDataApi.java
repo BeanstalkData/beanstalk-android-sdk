@@ -72,6 +72,14 @@ public interface BeanstalkDataApi {
     @FormUrlEncoded
     Call<ResponseBody> authenticateUser(@Field("email") String email, @Field("password") String password, @Field("key") String key, @Field("time") String time);
 
+    @POST("/bsdLoyalty/?function=checkGoogle")
+    @FormUrlEncoded
+    Call<ResponseBody> authenticateUserGoogle(@Field("key") String key, @Field("GoogleId") String googleId, @Field("GoogleToken") String googleToken);
+
+    @POST("/bsdLoyalty/?function=checkFacebook")
+    @FormUrlEncoded
+    Call<ResponseBody> authenticateUserFacebook(@Field("key") String key, @Field("Fb") String facebookId, @Field("fbtoken") String facebookToken);
+
     @POST("/checkSession/")
     @FormUrlEncoded
     Call<String> checkSession(@Field("contact") String contact, @Field("token") String token);

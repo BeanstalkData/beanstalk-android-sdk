@@ -27,6 +27,8 @@ import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
 import com.beanstalkdata.android.model.type.PlatformType;
+import com.beanstalkdata.android.request.AuthenticateUserFacebookRequest;
+import com.beanstalkdata.android.request.AuthenticateUserGoogleRequest;
 import com.beanstalkdata.android.request.AuthenticateUserRequest;
 import com.beanstalkdata.android.request.ContactRequest;
 import com.beanstalkdata.android.response.CardBalanceResponse;
@@ -885,6 +887,106 @@ public class BeanstalkService {
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
                     listener.onFinished(false, null);
+                }
+            }
+        });
+    }
+
+    /**
+     * Authenticate user using Google.
+     *
+     * @param request  Request information for user authentication using Google.
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void authenticateUserGoogle(final AuthenticateUserGoogleRequest request, final OnReturnDataListener<Boolean> listener) {
+        Call<ResponseBody> authRequest = service.authenticateUserGoogle(beanstalkApiKey, request.getGoogleId(), request.getGoogleToken());
+        authRequest.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String body = "error";
+                try {
+                    body = response.body().string();
+                } catch (IOException e) {
+                    log("authenticateUser exception: " + e);
+                }
+                log("authenticateUser: " + body);
+                if ("error".equalsIgnoreCase(body)) {
+                    if (listener != null) {
+                        listener.onFinished(false, Error.AUTHORIZATION_GOOGLE_FAILED);
+                    }
+                    return;
+                }
+                String[] authResponseArgs = parseAuthUserResponse(body);
+                if (authResponseArgs != null) {
+                    if (authResponseArgs.length == 2) {
+                        String contactId = authResponseArgs[0];
+                        String token = authResponseArgs[1];
+                        if (listener != null) {
+                            beanstalkUserSession.save(contactId, token);
+                            listener.onFinished(true, null);
+                        }
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(false, Error.AUTHORIZATION_GOOGLE_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(false, Error.AUTHORIZATION_GOOGLE_FAILED);
+                }
+            }
+        });
+    }
+
+    /**
+     * Authenticate user using Facebook.
+     *
+     * @param request  Request information for user authentication using Facebook.
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void authenticateUserFacebook(final AuthenticateUserFacebookRequest request, final OnReturnDataListener<Boolean> listener) {
+        Call<ResponseBody> authRequest = service.authenticateUserFacebook(beanstalkApiKey, request.getFacebookId(), request.getFacebookToken());
+        authRequest.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                String body = "error";
+                try {
+                    body = response.body().string();
+                } catch (IOException e) {
+                    log("authenticateUser exception: " + e);
+                }
+                log("authenticateUser: " + body);
+                if ("error".equalsIgnoreCase(body)) {
+                    if (listener != null) {
+                        listener.onFinished(false, Error.AUTHORIZATION_FACEBOOK_FAILED);
+                    }
+                    return;
+                }
+                String[] authResponseArgs = parseAuthUserResponse(body);
+                if (authResponseArgs != null) {
+                    if (authResponseArgs.length == 2) {
+                        String contactId = authResponseArgs[0];
+                        String token = authResponseArgs[1];
+                        if (listener != null) {
+                            beanstalkUserSession.save(contactId, token);
+                            listener.onFinished(true, null);
+                        }
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(false, Error.AUTHORIZATION_FACEBOOK_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(false, Error.AUTHORIZATION_FACEBOOK_FAILED);
                 }
             }
         });

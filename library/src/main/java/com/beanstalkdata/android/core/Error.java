@@ -11,6 +11,8 @@ interface Error {
     String REGISTRATION_FAILED = "Unable to complete registration";
     String CONTACT_UPDATE_FAILED = "Unable to update contact";
     String AUTHORIZATION_FAILED = "Unable to login";
+    String AUTHORIZATION_GOOGLE_FAILED = "Unable to login using Google";
+    String AUTHORIZATION_FACEBOOK_FAILED = "Unable to login using Facebook";
     String LOGOUT_FAILED = "Logout Error";
     String UPDATE_PASSWORD_FAILED = "Unable to update password";
     String RESET_PASSWORD_FAILED = "Unable to reset password";
