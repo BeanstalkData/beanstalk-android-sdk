@@ -4,6 +4,8 @@
 
 package com.beanstalkdata.android.model;
 
+import com.beanstalkdata.android.request.ContactRequest;
+
 import java.util.HashMap;
 
 /**
@@ -145,6 +147,38 @@ public class Contact {
         params.put(Parameters.INBOX_MESSAGE_OPT_IN, String.valueOf(inboxMessageOptin));
     }
 
+    public String getFbId() {
+        return params.get(Parameters.FB_ID);
+    }
+
+    public void setFbId(String value) {
+        params.put(ContactRequest.Parameters.FB_ID, value);
+    }
+
+    public String getFbToken() {
+        return params.get(Parameters.FB_TOKEN);
+    }
+
+    public void setFbToken(String value) {
+        params.put(ContactRequest.Parameters.FB_TOKEN, value);
+    }
+
+    public String getGoogleId() {
+        return params.get(Parameters.GOOGLE_ID);
+    }
+
+    public void setGoogleId(String value) {
+        params.put(ContactRequest.Parameters.GOOGLE_ID, value);
+    }
+
+    public String getGoogleToken() {
+        return params.get(Parameters.GOOGLE_TOKEN);
+    }
+
+    public void setGoogleToken(String value) {
+        params.put(ContactRequest.Parameters.GOOGLE_TOKEN, value);
+    }
+
     public String getParam(String key) {
         return params.get(key);
     }
@@ -188,7 +222,16 @@ public class Contact {
             return false;
         if (getPhone() != null ? !getPhone().equals(contact.getPhone()) : contact.getPhone() != null)
             return false;
-        if (!getDeviceToken().equals(contact.getDeviceToken())) return false;
+        if (!getDeviceToken().equals(contact.getDeviceToken()))
+            return false;
+        if (!getFbId().equals(contact.getFbId()))
+            return false;
+        if (!getFbToken().equals(contact.getFbToken()))
+            return false;
+        if (!getGoogleId().equals(contact.getGoogleId()))
+            return false;
+        if (!getGoogleToken().equals(contact.getGoogleToken()))
+            return false;
         return getPreferredReward() != null ? getPreferredReward().equals(contact.getPreferredReward()) : contact.getPreferredReward() == null;
 
     }
@@ -209,6 +252,10 @@ public class Contact {
         result = 31 * result + (getEmailOptIn() ? 1 : 0);
         result = 31 * result + (getPreferredReward() != null ? getPreferredReward().hashCode() : 0);
         result = 31 * result + (getDeviceToken() != null ? getDeviceToken().hashCode() : 0);
+        result = 31 * result + (getFbId() != null ? getFbId().hashCode() : 0);
+        result = 31 * result + (getFbToken() != null ? getFbToken().hashCode() : 0);
+        result = 31 * result + (getGoogleId() != null ? getGoogleId().hashCode() : 0);
+        result = 31 * result + (getGoogleToken() != null ? getGoogleToken().hashCode() : 0);
         return result;
     }
 
@@ -229,6 +276,10 @@ public class Contact {
         String DEVICE_TOKEN_EXT = "DeviceTokenExt";
         String PUSH_NOTIFICATION_OPT_IN = "PushNotification_Optin";
         String INBOX_MESSAGE_OPT_IN = "InboxMessage_Optin";
+        String FB_ID = "FBid";
+        String FB_TOKEN = "FBToken";
+        String GOOGLE_ID = "GoogleId";
+        String GOOGLE_TOKEN = "GoogleToken";
     }
 
 }

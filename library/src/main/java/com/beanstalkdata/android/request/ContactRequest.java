@@ -16,9 +16,13 @@ import static com.beanstalkdata.android.request.ContactRequest.Parameters.BIRTHD
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.CONTACT_ID;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.EMAIL;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.EMAIL_OPT_IN;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.FB_ID;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.FB_TOKEN;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.FIRST_NAME;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.F_KEY;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.GENDER;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.GOOGLE_ID;
+import static com.beanstalkdata.android.request.ContactRequest.Parameters.GOOGLE_TOKEN;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.LAST_NAME;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.PHONE;
 import static com.beanstalkdata.android.request.ContactRequest.Parameters.PREFERRED_REWARD;
@@ -193,6 +197,66 @@ public class ContactRequest {
         params.put(PHONE, value);
     }
 
+    public String getFbId() {
+        return params.get(FB_ID);
+    }
+
+    public void setFbId(String value) {
+        if (TextUtils.isEmpty(value)) {
+            return;
+        }
+
+        if (original != null && value.equalsIgnoreCase(original.getFbId())) {
+            return;
+        }
+        params.put(FB_ID, value);
+    }
+
+    public String getFbToken() {
+        return params.get(FB_TOKEN);
+    }
+
+    public void setFbToken(String value) {
+        if (TextUtils.isEmpty(value)) {
+            return;
+        }
+
+        if (original != null && value.equalsIgnoreCase(original.getFbToken())) {
+            return;
+        }
+        params.put(FB_TOKEN, value);
+    }
+
+    public String getGoogleId() {
+        return params.get(GOOGLE_ID);
+    }
+
+    public void setGoogleId(String value) {
+        if (TextUtils.isEmpty(value)) {
+            return;
+        }
+
+        if (original != null && value.equalsIgnoreCase(original.getGoogleId())) {
+            return;
+        }
+        params.put(GOOGLE_ID, value);
+    }
+
+    public String getGoogleToken() {
+        return params.get(GOOGLE_TOKEN);
+    }
+
+    public void setGoogleToken(String value) {
+        if (TextUtils.isEmpty(value)) {
+            return;
+        }
+
+        if (original != null && value.equalsIgnoreCase(original.getGoogleToken())) {
+            return;
+        }
+        params.put(GOOGLE_TOKEN, value);
+    }
+
     public void setParam(String key, String value) {
         if (TextUtils.isEmpty(value)) {
             clearParam(key);
@@ -277,6 +341,10 @@ public class ContactRequest {
         String SOURCE = "Source";
         String LOYALTY_PASSWORD = "Password";
         String LOYALTY_PHONE = "CellNumber";
+        String FB_ID = "FBid";
+        String FB_TOKEN = "FBToken";
+        String GOOGLE_ID = "GoogleId";
+        String GOOGLE_TOKEN = "GoogleToken";
     }
 
 }
