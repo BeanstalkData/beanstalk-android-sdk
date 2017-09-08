@@ -78,7 +78,7 @@ public interface BeanstalkDataApi {
 
     @POST("/bsdLoyalty/?function=checkFacebook")
     @FormUrlEncoded
-    Call<ResponseBody> authenticateUserFacebook(@Field("key") String key, @Field("Fb") String facebookId, @Field("fbtoken") String facebookToken);
+    Call<ResponseBody> authenticateUserFacebook(@Field("key") String key, @Field("fb") String facebookId, @Field("fbtoken") String facebookToken);
 
     @POST("/checkSession/")
     @FormUrlEncoded
