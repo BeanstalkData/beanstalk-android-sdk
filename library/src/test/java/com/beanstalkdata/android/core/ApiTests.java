@@ -74,6 +74,7 @@ public class ApiTests {
     private static final String APP_KEY = BuildConfig.APP_KEY;
 
     private static final String STATUS_ERROR = "error";
+    private static final String STATUS_BLANK = "blank";
     private static final String STATUS_LOGGED_OUT = "logged out";
     private static final String STATUS_INVALID_TOKEN = "invalid token";
     private static final String STATUS_SUCCESS = "Success";
@@ -100,6 +101,10 @@ public class ApiTests {
     private static final String TOKEN2 = "de763efff3f11b80034de9b0b5a6575131f6fa19";
     private static final String LOGOUT_REQ2 = "contact=1234567890&token=de763efff3f11b80034de9b0b5a6575131f6fa19";
     private static final String SESSION_CHECK_REQ2 = "contact=1234567890&token=de763efff3f11b80034de9b0b5a6575131f6fa19";
+    private static final String GOOGLE_ID2 = "987654321987654321";
+    private static final String GOOGLE_TOKEN2 = "GOOGLE_TOKEN2";
+    private static final String FACEBOOK_ID2 = "98765432198765";
+    private static final String FACEBOOK_TOKEN2 = "FACEBOOK_TOKEN2";
 
     private static final String ID3 = "16666008";
     private static final String TOKEN3 = "8ba376567471cbcc4bfb3188b4e5aabbc553f413";
@@ -130,6 +135,12 @@ public class ApiTests {
     private static final String DEFAULT_ASSET_IMAGE3 = "https://example.com/assets/default.html";
     private static final String TO_EMAIL3 = "to_new@example.com";
     private static final String COMMENTS3 = "test comments";
+    private static final String GOOGLE_ID3 = "123456789012345678901";
+    private static final String GOOGLE_TOKEN3 = "GOOGLE_TOKEN3";
+    private static final String GOOGLE_AUTH_REQ3 = String.format("key=%s&GoogleId=%s&GoogleToken=%s", APP_KEY, GOOGLE_ID3, GOOGLE_TOKEN3);
+    private static final String FACEBOOK_ID3 = "123456789012345";
+    private static final String FACEBOOK_TOKEN3 = "FACEBOOK_TOKEN";
+    private static final String FACEBOOK_AUTH_REQ3 = String.format("key=%s&fb=%s&fbtoken=%s", APP_KEY, FACEBOOK_ID3, FACEBOOK_TOKEN3);
 
     private static final String ID4_1 = "16666666";
     private static final String ID4_2 = "16666667";
@@ -411,6 +422,24 @@ public class ApiTests {
                     return new MockResponse()
                             .setResponseCode(200)
                             .setBody("{\"success\":\"true\"}");
+                case "/bsdLoyalty/?function=checkGoogle":
+                    if (body.equals(GOOGLE_AUTH_REQ3)) {
+                        return new MockResponse()
+                                .setResponseCode(200)
+                                .setBody(String.format("[%s,\"%s\"]", ID3, TOKEN3));
+                    }
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .setBody(STATUS_BLANK);
+                case "/bsdLoyalty/?function=checkFacebook":
+                    if (body.equals(FACEBOOK_AUTH_REQ3)) {
+                        return new MockResponse()
+                                .setResponseCode(200)
+                                .setBody(String.format("[%s,\"%s\"]", ID3, TOKEN3));
+                    }
+                    return new MockResponse()
+                            .setResponseCode(200)
+                            .setBody(STATUS_BLANK);
             }
             return new MockResponse().setResponseCode(404);
         }
@@ -1109,6 +1138,54 @@ public class ApiTests {
         ContactUsResponse body = response.body();
         assertNotNull(body);
         assertTrue("true".equals(body.getSuccess()));
+    }
+
+    @Test
+    public void authenticateUserGoogle() throws Exception {
+        Call<ResponseBody> request = service.authenticateUserGoogle(APP_KEY, GOOGLE_ID3, GOOGLE_TOKEN3);
+        Response<ResponseBody> response = request.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
+
+        String body = response.body().string();
+
+        JSONArray array = linkMockJsonArrayWithBody(body);
+        assertEquals(array.length(), 2);
+        assertEquals(array.optString(0), ID3);
+        assertEquals(array.optString(1), TOKEN3);
+    }
+
+    @Test
+    public void authenticateUserGoogleError() throws Exception {
+        Call<ResponseBody> request = service.authenticateUserGoogle(APP_KEY, GOOGLE_ID2, GOOGLE_TOKEN2);
+        Response<ResponseBody> response = request.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
+
+        String body = response.body().string();
+        assertEquals(body, STATUS_BLANK);
+    }
+
+    @Test
+    public void authenticateUserFacebook() throws Exception {
+        Call<ResponseBody> request = service.authenticateUserFacebook(APP_KEY, FACEBOOK_ID3, FACEBOOK_TOKEN3);
+        Response<ResponseBody> response = request.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
+
+        String body = response.body().string();
+
+        JSONArray array = linkMockJsonArrayWithBody(body);
+        assertEquals(array.length(), 2);
+        assertEquals(array.optString(0), ID3);
+        assertEquals(array.optString(1), TOKEN3);
+    }
+
+    @Test
+    public void authenticateUserFacebookError() throws Exception {
+        Call<ResponseBody> request = service.authenticateUserFacebook(APP_KEY, FACEBOOK_ID2, FACEBOOK_TOKEN2);
+        Response<ResponseBody> response = request.execute();
+        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
+
+        String body = response.body().string();
+        assertEquals(body, STATUS_BLANK);
     }
 
 }
