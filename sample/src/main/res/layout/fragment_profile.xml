@@ -293,7 +293,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="@dimen/sixteen_dp" />
+            android:layout_height="@dimen/eight_dp" />
 
         <Button
             android:id="@+id/maintain_loyalty_program"
@@ -305,7 +305,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="@dimen/sixteen_dp" />
+            android:layout_height="@dimen/eight_dp" />
 
         <Button
             android:id="@+id/contact_us"
@@ -317,7 +317,77 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="@dimen/sixteen_dp" />
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/google_info"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <TextView
+            android:id="@+id/google_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <Button
+            android:id="@+id/connect_google"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/connect_google"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/facebook_info"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <TextView
+            android:id="@+id/facebook_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            android:visibility="gone"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <Button
+            android:id="@+id/connect_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/connect_facebook"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
 
         <Button
             android:id="@+id/update_contact"
@@ -327,6 +397,10 @@
             android:text="@string/update_contact"
             android:textColor="@android:color/white" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
         <Button
             android:id="@+id/delete_contact"
             android:layout_width="match_parent"
@@ -334,6 +408,10 @@
             android:layout_margin="@dimen/four_dp"
             android:text="@string/delete_contact"
             android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
 
         <Button
             android:id="@+id/log_out"
@@ -345,8 +423,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="@dimen/sixteen_dp" />
 
     </LinearLayout>
 

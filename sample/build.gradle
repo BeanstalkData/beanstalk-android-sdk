@@ -73,6 +73,9 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${libraries.supportVersion}"
     compile "com.squareup.picasso:picasso:${libraries.picasso}"
     compile "com.google.android.gms:play-services-gcm:${libraries.googlePlayServices}"
+    compile "com.google.android.gms:play-services-auth:${libraries.googlePlayServices}"
+    compile "com.facebook.android:facebook-android-sdk:${libraries.facebookSdk}"
+    compile "com.facebook.android:account-kit-sdk:${libraries.facebookSdk}"
     testCompile "junit:junit:${libraries.junit}"
 }
 

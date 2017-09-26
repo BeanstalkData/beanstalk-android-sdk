@@ -16,7 +16,37 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="@dimen/thirty_two_dp" />
+        android:layout_height="@dimen/twenty_dp" />
+
+    <Button
+        android:id="@+id/google_sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/eight_dp"
+        android:text="@string/google_sign_in"
+        android:textColor="@android:color/white" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/twenty_dp" />
+
+    <Button
+        android:id="@+id/facebook_sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/eight_dp"
+        android:text="@string/facebook_sign_in"
+        android:textColor="@android:color/white" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/facebook_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/twenty_dp" />
 
     <Button
         android:id="@+id/sign_up"
@@ -28,7 +58,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="@dimen/thirty_two_dp" />
+        android:layout_height="@dimen/twenty_dp" />
 
     <Button
         android:id="@+id/reset_password"
@@ -40,7 +70,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="@dimen/thirty_two_dp" />
+        android:layout_height="@dimen/twenty_dp" />
 
     <Button
         android:id="@+id/contact_us"

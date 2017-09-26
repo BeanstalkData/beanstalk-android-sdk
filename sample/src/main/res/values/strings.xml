@@ -8,6 +8,8 @@
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="sign_in">Sign In</string>
+    <string name="google_sign_in">Google Sign In</string>
+    <string name="facebook_sign_in">Facebook Sign In</string>
     <string name="sign_up">Sign Up</string>
     <string name="reset_password">Reset Password</string>
     <string name="log_out">Log Out</string>
@@ -41,6 +43,8 @@
     <string name="current_asset">Current asset</string>
     <string name="maintain_loyalty_program">Maintain loyalty program</string>
     <string name="contact_us">Contact Us</string>
+    <string name="connect_google">Connect Google</string>
+    <string name="connect_facebook">Connect Facebook</string>
     <string name="send_comments">Send Comments</string>
 
     <string name="messages">Messages</string>
@@ -79,6 +83,8 @@
     <string name="from_email">From Email</string>
     <string name="to_email">To Email</string>
     <string name="comments">Comments</string>
+    <string name="google_info">Google info</string>
+    <string name="facebook_info">Facebook info</string>
 
     <string name="message_status_format" formatted="false">%s (%s)</string>
 
@@ -101,4 +107,25 @@
     <string name="error_gift_card_number_not_empty">Gift card number must not be empty</string>
     <string name="error_default_asset_not_available">Default asset not available</string>
     <string name="error_current_asset_not_available">Current asset not available</string>
+    <string name="error_google_sign_in">Failed to sign in with Google</string>
+    <string name="error_facebook_sign_in">Failed to sign in with Facebook</string>
+    <string name="error_facebook_sign_in_cancelled">Cancelled to sign in with Facebook</string>
+
+    <!-- Facebook sign in credentials. -->
+    <!-- TODO: Obtain the real credentials. These credentials were taken from the Facebook demo app! Until the real IDs are used the sample won't work. -->
+    <!-- NOTE: The instructions and IDs from the links below were used.
+    https://developers.facebook.com/docs/accountkit/android/
+    https://developers.facebook.com/docs/facebook-login/android/
+    https://github.com/facebook/facebook-android-sdk -->
+    <string name="facebook_app_id">133094273807591</string>
+    <string name="fb_login_protocol_scheme">fb133094273807591</string>
+    <string name="account_kit_client_token">9d92ebdd3db421ff3ddb041fb8fe60c0</string>
+    <string name="ak_login_protocol_scheme">ak133094273807591</string>
+
+    <!-- Google sign in credentials. -->
+    <!-- TODO: Replace with your real server client ID! Also google-services.json file must be updated. Until the real IDs are used the sample won't work. -->
+    <!-- NOTE: The instructions from this link https://developers.google.com/identity/sign-in/android/start were used -->
+    <!-- Server Client ID. This should be a valid Web OAuth 2.0 Client ID obtained from https://console.developers.google.com/ -->
+    <string name="server_client_id">1052499806693-d0v0homotoqjcjhia2h73m0u57td3edu.apps.googleusercontent.com</string>
+
 </resources>

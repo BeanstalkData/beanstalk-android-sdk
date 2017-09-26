@@ -88,6 +88,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Activity
         backgroundOpsProgress.setVisibility(View.GONE);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment != null) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
     protected abstract Fragment getInitFragment();
 
 }

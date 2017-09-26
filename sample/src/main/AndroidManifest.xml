@@ -80,6 +80,18 @@
             android:name="com.beanstalkdata.android.service.ContactRelocationService"
             android:exported="false" />
 
+        <!-- For Facebook sign in integration -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <!-- TODO: Put the real Facebook application name here. -->
+        <meta-data android:name="com.facebook.accountkit.ApplicationName"
+            android:value="@string/app_name" />
+
+        <meta-data android:name="com.facebook.accountkit.ClientToken"
+            android:value="@string/account_kit_client_token" />
+
     </application>
 
 </manifest>
