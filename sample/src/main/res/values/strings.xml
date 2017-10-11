@@ -44,7 +44,9 @@
     <string name="maintain_loyalty_program">Maintain loyalty program</string>
     <string name="contact_us">Contact Us</string>
     <string name="connect_google">Connect Google</string>
+    <string name="disconnect_google">Disconnect Google</string>
     <string name="connect_facebook">Connect Facebook</string>
+    <string name="disconnect_facebook">Disconnect Facebook</string>
     <string name="send_comments">Send Comments</string>
 
     <string name="messages">Messages</string>

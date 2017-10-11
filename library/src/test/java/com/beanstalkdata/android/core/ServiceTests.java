@@ -172,7 +172,7 @@ public class ServiceTests {
         coupons.add("firstCoupon");
         coupons.add("secondCoupon");
         BeanstalkService coreSpyService = spy(beanstalkService);
-        doReturn("firstCoupon, secondCoupon").when(coreSpyService).getCouponsString(anyList());
+        doReturn("firstCoupon, secondCoupon").when(coreSpyService).getCouponsString(coupons);
         doReturn(true).when(coreSpyService).isPaymentTokenEmpty(any(PaymentTokenResponse.class));
         coreSpyService.startPaymentWithPaymentId("00001", coupons, new OnReturnDataListener<String>() {
             @Override

@@ -105,6 +105,16 @@ public class MenuFragment extends BaseFragment implements View.OnClickListener, 
     protected boolean displayHomeAsUp() {
         return false;
     }
+    
+    @Override
+    public void onStop() {
+        if (googleApiClient != null) {
+            googleApiClient.stopAutoManage(getActivity());
+            googleApiClient.disconnect();
+            googleApiClient = null;
+        }
+        super.onStop();
+    }
 
     @Override
     public void onClick(View button) {

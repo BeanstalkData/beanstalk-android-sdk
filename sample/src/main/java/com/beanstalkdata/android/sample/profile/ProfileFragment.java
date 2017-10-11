@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -29,14 +30,23 @@ import com.beanstalkdata.android.callback.OnReturnDataListener;
 import com.beanstalkdata.android.callback.OnReturnListener;
 import com.beanstalkdata.android.model.Contact;
 import com.beanstalkdata.android.model.ContactAsset;
+import com.beanstalkdata.android.request.ContactRequest;
 import com.beanstalkdata.android.response.LocationResponse;
+import com.beanstalkdata.android.response.PushSuccessResponse;
 import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseFragment;
 import com.beanstalkdata.android.sample.common.ContactUsFragment;
+import com.beanstalkdata.android.sample.gcm.RegistrationIntentService;
 import com.beanstalkdata.android.sample.login.ContactInfoFragment;
 import com.beanstalkdata.android.sample.login.LoginActivity;
 import com.beanstalkdata.android.sample.utils.InputUtils;
 import com.beanstalkdata.android.sample.utils.ToastUtils;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener {
 
@@ -51,6 +61,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private EditText zipCodeInput;
     private EditText fkeyInput;
     private EditText intervalInput;
+    private Button connectGoogle;
+    private Button disconnectGoogle;
+    private Button connectFacebook;
+    private Button disconnectFacebook;
+    private TextView googleInfoHeader;
+    private TextView googleInfo;
+    private TextView facebookInfoHeader;
+    private TextView facebookInfo;
+
+    private Contact currentContact;
+    private GoogleApiClient googleApiClient;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -75,6 +96,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         zipCodeInput = (EditText) view.findViewById(R.id.input_zip_code);
         fkeyInput = (EditText) view.findViewById(R.id.input_fkey);
         intervalInput = (EditText) view.findViewById(R.id.input_interval);
+        googleInfoHeader = (TextView) view.findViewById(R.id.google_info_header);
+        googleInfo = (TextView) view.findViewById(R.id.google_info);
+        facebookInfoHeader = (TextView) view.findViewById(R.id.facebook_info_header);
+        facebookInfo = (TextView) view.findViewById(R.id.facebook_info);
         view.findViewById(R.id.rewards).setOnClickListener(this);
         view.findViewById(R.id.progress).setOnClickListener(this);
         view.findViewById(R.id.gift_cards).setOnClickListener(this);
@@ -90,6 +115,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         view.findViewById(R.id.check_default_asset).setOnClickListener(this);
         view.findViewById(R.id.check_current_asset).setOnClickListener(this);
         view.findViewById(R.id.maintain_loyalty_program).setOnClickListener(this);
+        connectGoogle = (Button) view.findViewById(R.id.connect_google);
+        connectGoogle.setOnClickListener(this);
+        disconnectGoogle = (Button) view.findViewById(R.id.disconnect_google);
+        disconnectGoogle.setOnClickListener(this);
+        connectFacebook = (Button) view.findViewById(R.id.connect_facebook);
+        connectFacebook.setOnClickListener(this);
+        disconnectFacebook = (Button) view.findViewById(R.id.disconnect_facebook);
+        disconnectFacebook.setOnClickListener(this);
         return view;
     }
 
@@ -301,6 +334,32 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             case R.id.contact_us:
                 activityContract.replaceFragment(ContactUsFragment.newInstance());
                 break;
+            case R.id.connect_google:
+                break;
+            case R.id.disconnect_google:
+                if ((googleApiClient != null) && googleApiClient.isConnected()) {
+                    Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(@NonNull Status status) {
+                            // TODO: Show notifications if required
+                        }
+                    });
+                    googleApiClient.stopAutoManage(getActivity());
+                    googleApiClient.disconnect();
+                    googleApiClient = null;
+                }
+                if (currentContact != null) {
+                    final ContactRequest contactRequest = new ContactRequest(currentContact);
+                    contactRequest.setGoogleId("");
+                    contactRequest.setGoogleToken("");
+                    activityContract.showProgress();
+                    updateContact(contactRequest);
+                }
+                break;
+            case R.id.connect_facebook:
+                break;
+            case R.id.disconnect_facebook:
+                break;
         }
     }
 
@@ -322,6 +381,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (activityContract != null) {
                     activityContract.hideProgress();
                 }
+                currentContact = contact;
                 if (getView() != null) {
                     firstNameField.setText(contact.getFirstName());
                     lastNameField.setText(contact.getLastName());
@@ -330,6 +390,36 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                     birthdayField.setText(contact.getBirthDay());
                     phoneNumberField.setText(contact.getPhone());
                     zipCodeInput.setText(contact.getZipCode());
+                    if (contact.getGoogleId() != null && contact.getGoogleId().length() > 0) {
+                        // Initialize GoogleApiClient in case if users will want to do something with their connected accounts
+                        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                .requestIdToken(getString(R.string.server_client_id))
+                                .requestEmail()
+                                .requestId()
+                                .build();
+                        googleApiClient = new GoogleApiClient.Builder(getContext())
+                                .enableAutoManage(getActivity(), new GoogleApiClient.OnConnectionFailedListener() {
+                                    @Override
+                                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                                        // TODO: Show notifications if required
+                                    }
+                                })
+                                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                                .build();
+
+                        connectGoogle.setVisibility(View.GONE);
+                        disconnectGoogle.setVisibility(View.VISIBLE);
+                        googleInfoHeader.setVisibility(View.VISIBLE);
+                        googleInfo.setText(contact.getGoogleId());
+                        googleInfo.setVisibility(View.VISIBLE);
+                    }
+                    if (contact.getFbId() != null && contact.getFbId().length() > 0) {
+                        connectFacebook.setVisibility(View.GONE);
+                        disconnectFacebook.setVisibility(View.VISIBLE);
+                        facebookInfoHeader.setVisibility(View.VISIBLE);
+                        facebookInfo.setText(contact.getFbId());
+                        facebookInfo.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -412,6 +502,23 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 }
                 break;
         }
+    }
+
+    private void updateContact(final ContactRequest contactRequest) {
+        getService().updateContact(contactRequest, new OnReturnListener() {
+            @Override
+            public void onFinished(String error) {
+                if (activityContract != null) {
+                    activityContract.hideProgress();
+                }
+                if (error != null) {
+                    FragmentActivity activity = getActivity();
+                    if (activity != null) {
+                        ToastUtils.showLong(activity, error);
+                    }
+                }
+            }
+        });
     }
 
 }

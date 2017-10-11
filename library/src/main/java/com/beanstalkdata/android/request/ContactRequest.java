@@ -202,10 +202,6 @@ public class ContactRequest {
     }
 
     public void setFbId(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return;
-        }
-
         if (original != null && value.equalsIgnoreCase(original.getFbId())) {
             return;
         }
@@ -217,10 +213,6 @@ public class ContactRequest {
     }
 
     public void setFbToken(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return;
-        }
-
         if (original != null && value.equalsIgnoreCase(original.getFbToken())) {
             return;
         }
@@ -232,10 +224,6 @@ public class ContactRequest {
     }
 
     public void setGoogleId(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return;
-        }
-
         if (original != null && value.equalsIgnoreCase(original.getGoogleId())) {
             return;
         }
@@ -247,10 +235,6 @@ public class ContactRequest {
     }
 
     public void setGoogleToken(String value) {
-        if (TextUtils.isEmpty(value)) {
-            return;
-        }
-
         if (original != null && value.equalsIgnoreCase(original.getGoogleToken())) {
             return;
         }

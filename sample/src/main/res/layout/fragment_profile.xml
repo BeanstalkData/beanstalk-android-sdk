@@ -138,6 +138,54 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/eight_dp" />
 
+        <TextView
+            android:id="@+id/google_info_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/google_info"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <TextView
+            android:id="@+id/google_info"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
+        <TextView
+            android:id="@+id/facebook_info_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@string/facebook_info"
+            android:textSize="@dimen/text_size_body" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/four_dp" />
+
+        <TextView
+            android:id="@+id/facebook_info"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_title"
+            tools:text="Sample text" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/eight_dp" />
+
         <Button
             android:id="@+id/rewards"
             android:layout_width="match_parent"
@@ -330,24 +378,21 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/four_dp" />
 
-        <TextView
-            android:id="@+id/google_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:textSize="@dimen/text_size_title"
-            tools:text="Sample text" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/eight_dp" />
-
         <Button
             android:id="@+id/connect_google"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/four_dp"
             android:text="@string/connect_google"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/disconnect_google"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/disconnect_google"
             android:textColor="@android:color/white" />
 
         <Space
@@ -365,24 +410,21 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/four_dp" />
 
-        <TextView
-            android:id="@+id/facebook_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_title"
-            android:visibility="gone"
-            tools:text="Sample text" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/eight_dp" />
-
         <Button
             android:id="@+id/connect_facebook"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/four_dp"
             android:text="@string/connect_facebook"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/disconnect_facebook"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/four_dp"
+            android:text="@string/disconnect_facebook"
             android:textColor="@android:color/white" />
 
         <Space
