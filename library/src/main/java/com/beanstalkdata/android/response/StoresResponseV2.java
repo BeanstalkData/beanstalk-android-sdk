@@ -77,60 +77,120 @@ public class StoresResponseV2 {
             return idHolder;
         }
 
+        public void setIdHolder(IdHolder idHolder) {
+            this.idHolder = idHolder;
+        }
+
         public String getCustomerId() {
             return customerId;
+        }
+
+        public void setCustomerId(String customerId) {
+            this.customerId = customerId;
         }
 
         public String getGeoEnabled() {
             return geoEnabled;
         }
 
+        public void setGeoEnabled(String geoEnabled) {
+            this.geoEnabled = geoEnabled;
+        }
+
         public String getName() {
             return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
 
         public String getPhoneNumber() {
             return phoneNumber;
         }
 
+        public void setPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+        }
+
         public String getWebsite() {
             return website;
+        }
+
+        public void setWebsite(String website) {
+            this.website = website;
         }
 
         public String getEmail() {
             return email;
         }
 
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
         public String getStoreNumber() {
             return storeNumber;
+        }
+
+        public void setStoreNumber(String storeNumber) {
+            this.storeNumber = storeNumber;
         }
 
         public Location getLocation() {
             return location;
         }
 
+        public void setLocation(Location location) {
+            this.location = location;
+        }
+
         public String getTimeZone() {
             return timeZone;
+        }
+
+        public void setTimeZone(String timeZone) {
+            this.timeZone = timeZone;
         }
 
         public boolean isPaymentLoyaltyParticipation() {
             return paymentLoyaltyParticipation;
         }
 
+        public void setPaymentLoyaltyParticipation(boolean paymentLoyaltyParticipation) {
+            this.paymentLoyaltyParticipation = paymentLoyaltyParticipation;
+        }
+
         public String getOpenHours() {
             return openHours;
+        }
+
+        public void setOpenHours(String openHours) {
+            this.openHours = openHours;
         }
 
         public boolean isDriveThrough() {
             return driveThrough;
         }
 
+        public void setDriveThrough(boolean driveThrough) {
+            this.driveThrough = driveThrough;
+        }
+
         public String getStoreType() {
             return storeType;
         }
 
+        public void setStoreType(String storeType) {
+            this.storeType = storeType;
+        }
+
         public String getSchemaVersion() {
             return schemaVersion;
+        }
+
+        public void setSchemaVersion(String schemaVersion) {
+            this.schemaVersion = schemaVersion;
         }
 
     }
@@ -142,6 +202,10 @@ public class StoresResponseV2 {
 
         public String getId() {
             return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
         }
 
     }
@@ -172,36 +236,72 @@ public class StoresResponseV2 {
             return firstAddressLine;
         }
 
+        public void setFirstAddressLine(String firstAddressLine) {
+            this.firstAddressLine = firstAddressLine;
+        }
+
         public String getSecondAddressLine() {
             return secondAddressLine;
+        }
+
+        public void setSecondAddressLine(String secondAddressLine) {
+            this.secondAddressLine = secondAddressLine;
         }
 
         public String getCity() {
             return city;
         }
 
+        public void setCity(String city) {
+            this.city = city;
+        }
+
         public String getState() {
             return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
         }
 
         public String getZip() {
             return zip;
         }
 
+        public void setZip(String zip) {
+            this.zip = zip;
+        }
+
         public String getCountry() {
             return country;
+        }
+
+        public void setCountry(String country) {
+            this.country = country;
         }
 
         public String getCategory() {
             return category;
         }
 
+        public void setCategory(String category) {
+            this.category = category;
+        }
+
         public String getType() {
             return type;
         }
 
+        public void setType(String type) {
+            this.type = type;
+        }
+
         public double[] getCoordinates() {
             return coordinates;
+        }
+
+        public void setCoordinates(double[] coordinates) {
+            this.coordinates = coordinates;
         }
 
     }
