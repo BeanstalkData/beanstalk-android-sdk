@@ -7,6 +7,7 @@ package com.beanstalkdata.android.core;
 import com.beanstalkdata.android.model.Contact;
 import com.beanstalkdata.android.model.ContactAsset;
 import com.beanstalkdata.android.model.LoyaltyUser;
+import com.beanstalkdata.android.model.TransactionEvent;
 import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
@@ -27,8 +28,8 @@ import com.beanstalkdata.android.response.RelocateResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
 import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
+import com.beanstalkdata.android.response.StoresResponseV2;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
-import com.beanstalkdata.android.model.TransactionEvent;
 
 import java.util.Map;
 
@@ -42,6 +43,8 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface BeanstalkDataApi {
+
+    //<editor-fold desc="Version 1">
 
     @GET("/contacts?type=email")
     Call<Contact[]> getContactByEmail(@Query("key") String apiKey, @Query("q") String email);
@@ -219,5 +222,17 @@ public interface BeanstalkDataApi {
     @POST("feedback/contactUs/index.php")
     @FormUrlEncoded
     Call<ContactUsResponse> contactUs(@Field("key") String apiKey, @Field("first_name") String firstName, @Field("last_name") String lastName, @Field("from_email") String fromEmail, @Field("to_email") String toEmail, @Field("phone_number") String phoneNumber, @Field("comments") String comments);
+
+    //</editor-fold>
+
+    //<editor-fold desc="Version 2">
+
+    @GET("bsdStores/locate/?version=2")
+    Call<StoresResponseV2> checkLocationV2(@Query("key") String apiKey, @Query("lat") double lat, @Query("long") double lng);
+
+    @GET("bsdStores/locate/?version=2")
+    Call<StoresResponseV2> getAllStoresLocationsV2(@Query("key") String apiKey);
+
+    //</editor-fold>
 
 }

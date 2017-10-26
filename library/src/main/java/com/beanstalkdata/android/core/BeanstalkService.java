@@ -47,6 +47,7 @@ import com.beanstalkdata.android.response.RelocateResponse;
 import com.beanstalkdata.android.response.RewardsCountResponse;
 import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
+import com.beanstalkdata.android.response.StoresResponseV2;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -1648,6 +1649,70 @@ public class BeanstalkService {
     }
 
     /**
+     * Check stores availability at specified location.
+     *
+     * @param latitude  Location latitude.
+     * @param longitude Location longitude.
+     * @param listener  Callback that will run after network request is completed.
+     */
+    public void checkLocationV2(double latitude, double longitude, final OnReturnDataListener<StoresResponseV2> listener) {
+        Call<StoresResponseV2> storesResponseCall = service.checkLocationV2(beanstalkApiKey, latitude, longitude);
+        storesResponseCall.enqueue(new Callback<StoresResponseV2>() {
+            @Override
+            public void onResponse(Call<StoresResponseV2> call, Response<StoresResponseV2> response) {
+                StoresResponseV2 body = response.body();
+                if (body != null && !body.isFailed()) {
+                    if (listener != null) {
+                        listener.onFinished(body, null);
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoresResponseV2> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                }
+            }
+        });
+    }
+
+    /**
+     * Get all available stores locations.
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getAllStoresLocationsV2(final OnReturnDataListener<StoresResponseV2> listener) {
+        Call<StoresResponseV2> storesResponseCall = service.getAllStoresLocationsV2(beanstalkApiKey);
+        storesResponseCall.enqueue(new Callback<StoresResponseV2>() {
+            @Override
+            public void onResponse(Call<StoresResponseV2> call, Response<StoresResponseV2> response) {
+                StoresResponseV2 body = response.body();
+                if (body != null && !body.isFailed()) {
+                    if (listener != null) {
+                        listener.onFinished(body, null);
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StoresResponseV2> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                }
+            }
+        });
+    }
+
+    /**
      * Check logging state.
      *
      * @return Logging is enabled or not.
@@ -1719,6 +1784,7 @@ public class BeanstalkService {
                 .create();
     }
 
+    @Deprecated
     private void checkLocation(LocationResponse.Location location, final OnReturnListener listener) {
         Call<StoresResponse> storesResponseCall = service.checkLocation(beanstalkApiKey, location.getLatitude(), location.getLongitude());
         storesResponseCall.enqueue(new Callback<StoresResponse>() {
