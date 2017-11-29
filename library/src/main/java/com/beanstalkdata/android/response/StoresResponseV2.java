@@ -6,6 +6,9 @@ package com.beanstalkdata.android.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Data model for Stores V2 response.
  */
@@ -31,277 +34,304 @@ public class StoresResponseV2 {
 
     public static class Store {
 
-        @SerializedName("_id")
-        private IdHolder idHolder;
-
-        @SerializedName("customer_id")
-        private String customerId;
-
-        @SerializedName("geo_enabled")
-        private String geoEnabled;
-
-        private String name;
-
-        @SerializedName("phone_number")
-        private String phoneNumber;
-
-        private String website;
-
-        private String email;
-
-        @SerializedName("store_number")
-        private String storeNumber;
-
-        @SerializedName("loc")
-        private Location location;
-
-        @SerializedName("time_zone")
-        private String timeZone;
-
-        @SerializedName("payment_loyalty_participation")
-        private boolean paymentLoyaltyParticipation;
-
-        @SerializedName("hours")
-        private String openHours;
-
-        @SerializedName("drive_thru")
-        private boolean driveThrough;
-
-        @SerializedName("store_type")
-        private String storeType;
-
-        @SerializedName("schema_version")
-        private String schemaVersion;
+        private Map<String, Object> params = new HashMap<>();
 
         public IdHolder getIdHolder() {
-            return idHolder;
+            Object o = params.get(Parameters.ID_HOLDER);
+            return (o instanceof IdHolder) ? (IdHolder) o : null;
         }
 
         public void setIdHolder(IdHolder idHolder) {
-            this.idHolder = idHolder;
+            params.put(Parameters.ID_HOLDER, idHolder);
         }
 
         public String getCustomerId() {
-            return customerId;
+            Object o = params.get(Parameters.CUSTOMER_ID);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setCustomerId(String customerId) {
-            this.customerId = customerId;
+            params.put(Parameters.CUSTOMER_ID, customerId);
         }
 
         public String getGeoEnabled() {
-            return geoEnabled;
+            Object o = params.get(Parameters.GEO_ENABLED);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setGeoEnabled(String geoEnabled) {
-            this.geoEnabled = geoEnabled;
+            params.put(Parameters.GEO_ENABLED, geoEnabled);
         }
 
         public String getName() {
-            return name;
+            Object o = params.get(Parameters.NAME);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setName(String name) {
-            this.name = name;
+            params.put(Parameters.NAME, name);
         }
 
         public String getPhoneNumber() {
-            return phoneNumber;
+            Object o = params.get(Parameters.PHONE_NUMBER);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
+            params.put(Parameters.PHONE_NUMBER, phoneNumber);
         }
 
         public String getWebsite() {
-            return website;
+            Object o = params.get(Parameters.WEBSITE);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setWebsite(String website) {
-            this.website = website;
+            params.put(Parameters.WEBSITE, website);
         }
 
         public String getEmail() {
-            return email;
+            Object o = params.get(Parameters.EMAIL);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setEmail(String email) {
-            this.email = email;
+            params.put(Parameters.EMAIL, email);
         }
 
         public String getStoreNumber() {
-            return storeNumber;
+            Object o = params.get(Parameters.STORE_NUMBER);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setStoreNumber(String storeNumber) {
-            this.storeNumber = storeNumber;
+            params.put(Parameters.STORE_NUMBER, storeNumber);
         }
 
         public Location getLocation() {
-            return location;
+            Object o = params.get(Parameters.LOCATION);
+            return (o instanceof Location) ? (Location) o : null;
         }
 
         public void setLocation(Location location) {
-            this.location = location;
+            params.put(Parameters.LOCATION, location);
         }
 
         public String getTimeZone() {
-            return timeZone;
+            Object o = params.get(Parameters.TIME_ZONE);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setTimeZone(String timeZone) {
-            this.timeZone = timeZone;
+            params.put(Parameters.TIME_ZONE, timeZone);
         }
 
         public boolean isPaymentLoyaltyParticipation() {
-            return paymentLoyaltyParticipation;
+            Object o = params.get(Parameters.PAYMENT_LOYALTY_PARTICIPATION);
+            return (o instanceof Boolean) ? (Boolean) o : false;
         }
 
         public void setPaymentLoyaltyParticipation(boolean paymentLoyaltyParticipation) {
-            this.paymentLoyaltyParticipation = paymentLoyaltyParticipation;
+            params.put(Parameters.PAYMENT_LOYALTY_PARTICIPATION, paymentLoyaltyParticipation);
         }
 
         public String getOpenHours() {
-            return openHours;
+            Object o = params.get(Parameters.OPEN_HOURS);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setOpenHours(String openHours) {
-            this.openHours = openHours;
+            params.put(Parameters.OPEN_HOURS, openHours);
         }
 
         public boolean isDriveThrough() {
-            return driveThrough;
+            Object o = params.get(Parameters.DRIVE_THROUGH);
+            return (o instanceof Boolean) ? (Boolean) o : false;
         }
 
         public void setDriveThrough(boolean driveThrough) {
-            this.driveThrough = driveThrough;
+            params.put(Parameters.DRIVE_THROUGH, driveThrough);
         }
 
         public String getStoreType() {
-            return storeType;
+            Object o = params.get(Parameters.STORE_TYPE);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setStoreType(String storeType) {
-            this.storeType = storeType;
+            params.put(Parameters.STORE_TYPE, storeType);
         }
 
         public String getSchemaVersion() {
-            return schemaVersion;
+            Object o = params.get(Parameters.SCHEMA_VERSION);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setSchemaVersion(String schemaVersion) {
-            this.schemaVersion = schemaVersion;
+            params.put(Parameters.SCHEMA_VERSION, schemaVersion);
+        }
+
+        public String getParam(String key) {
+            Object o = params.get(key);
+            return (o instanceof String) ? (String) o : null;
+        }
+
+        public void setParam(String key, String value) {
+            params.put(key, value);
+        }
+
+        public interface Parameters {
+            String ID_HOLDER = "_id";
+            String CUSTOMER_ID = "customer_id";
+            String GEO_ENABLED = "geo_enabled";
+            String NAME = "name";
+            String PHONE_NUMBER = "phone_number";
+            String WEBSITE = "website";
+            String EMAIL = "email";
+            String STORE_NUMBER = "store_number";
+            String LOCATION = "loc";
+            String TIME_ZONE = "time_zone";
+            String PAYMENT_LOYALTY_PARTICIPATION = "payment_loyalty_participation";
+            String OPEN_HOURS = "hours";
+            String DRIVE_THROUGH = "drive_thru";
+            String STORE_TYPE = "store_type";
+            String SCHEMA_VERSION = "schema_version";
         }
 
     }
 
     public static class IdHolder {
 
-        @SerializedName("$id")
-        private String id;
+        private Map<String, Object> params = new HashMap<>();
 
         public String getId() {
-            return id;
+            Object o = params.get(Parameters.ID);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setId(String id) {
-            this.id = id;
+            params.put(Parameters.ID, id);
+        }
+
+        public String getParam(String key) {
+            Object o = params.get(key);
+            return (o instanceof String) ? (String) o : null;
+        }
+
+        public void setParam(String key, String value) {
+            params.put(key, value);
+        }
+
+        public interface Parameters {
+            String ID = "$id";
         }
 
     }
 
     public static class Location {
 
-        @SerializedName("address_1")
-        private String firstAddressLine;
-
-        @SerializedName("address_2")
-        private String secondAddressLine;
-
-        private String city;
-
-        private String state;
-
-        private String zip;
-
-        private String country;
-
-        private String category;
-
-        private String type;
-
-        private double[] coordinates;
+        private Map<String, Object> params = new HashMap<>();
 
         public String getFirstAddressLine() {
-            return firstAddressLine;
+            Object o = params.get(Parameters.FIRST_ADDRESS_LINE);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setFirstAddressLine(String firstAddressLine) {
-            this.firstAddressLine = firstAddressLine;
+            params.put(Parameters.FIRST_ADDRESS_LINE, firstAddressLine);
         }
 
         public String getSecondAddressLine() {
-            return secondAddressLine;
+            Object o = params.get(Parameters.SECOND_ADDRESS_LINE);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setSecondAddressLine(String secondAddressLine) {
-            this.secondAddressLine = secondAddressLine;
+            params.put(Parameters.SECOND_ADDRESS_LINE, secondAddressLine);
         }
 
         public String getCity() {
-            return city;
+            Object o = params.get(Parameters.CITY);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setCity(String city) {
-            this.city = city;
+            params.put(Parameters.CITY, city);
         }
 
         public String getState() {
-            return state;
+            Object o = params.get(Parameters.STATE);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setState(String state) {
-            this.state = state;
+            params.put(Parameters.STATE, state);
         }
 
         public String getZip() {
-            return zip;
+            Object o = params.get(Parameters.ZIP);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setZip(String zip) {
-            this.zip = zip;
+            params.put(Parameters.ZIP, zip);
         }
 
         public String getCountry() {
-            return country;
+            Object o = params.get(Parameters.COUNTRY);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setCountry(String country) {
-            this.country = country;
+            params.put(Parameters.COUNTRY, country);
         }
 
         public String getCategory() {
-            return category;
+            Object o = params.get(Parameters.CATEGORY);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setCategory(String category) {
-            this.category = category;
+            params.put(Parameters.CATEGORY, category);
         }
 
         public String getType() {
-            return type;
+            Object o = params.get(Parameters.TYPE);
+            return (o instanceof String) ? (String) o : null;
         }
 
         public void setType(String type) {
-            this.type = type;
+            params.put(Parameters.TYPE, type);
         }
 
         public double[] getCoordinates() {
-            return coordinates;
+            Object o = params.get(Parameters.COORDINATES);
+            return (o instanceof double[]) ? (double[]) o : null;
         }
 
         public void setCoordinates(double[] coordinates) {
-            this.coordinates = coordinates;
+            params.put(Parameters.COORDINATES, coordinates);
+        }
+
+        public String getParam(String key) {
+            Object o = params.get(key);
+            return (o instanceof String) ? (String) o : null;
+        }
+
+        public void setParam(String key, String value) {
+            params.put(key, value);
+        }
+
+        public interface Parameters {
+            String FIRST_ADDRESS_LINE = "address_1";
+            String SECOND_ADDRESS_LINE = "address_2";
+            String CITY = "city";
+            String STATE = "state";
+            String ZIP = "zip";
+            String COUNTRY = "country";
+            String CATEGORY = "category";
+            String TYPE = "type";
+            String COORDINATES = "coordinates";
         }
 
     }

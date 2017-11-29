@@ -21,8 +21,11 @@ import com.beanstalkdata.android.model.LoyaltyUser;
 import com.beanstalkdata.android.model.PushMessage;
 import com.beanstalkdata.android.model.TransactionEvent;
 import com.beanstalkdata.android.model.deserializer.ContactDeserializer;
+import com.beanstalkdata.android.model.deserializer.IdHolderV2Deserializer;
+import com.beanstalkdata.android.model.deserializer.LocationV2Deserializer;
 import com.beanstalkdata.android.model.deserializer.MultiDateFormatDeserializer;
 import com.beanstalkdata.android.model.deserializer.PushMessagesDeserializer;
+import com.beanstalkdata.android.model.deserializer.StoreV2Deserializer;
 import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
@@ -1779,6 +1782,9 @@ public class BeanstalkService {
         return new GsonBuilder()
                 .setLenient()
                 .registerTypeAdapter(Contact.class, new ContactDeserializer())
+                .registerTypeAdapter(StoresResponseV2.Store.class, new StoreV2Deserializer())
+                .registerTypeAdapter(StoresResponseV2.IdHolder.class, new IdHolderV2Deserializer())
+                .registerTypeAdapter(StoresResponseV2.Location.class, new LocationV2Deserializer())
                 .registerTypeAdapter(PushMessagesResponse.class, new PushMessagesDeserializer())
                 .registerTypeAdapter(Date.class, new MultiDateFormatDeserializer())
                 .create();

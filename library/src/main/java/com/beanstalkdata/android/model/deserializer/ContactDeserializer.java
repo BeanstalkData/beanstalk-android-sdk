@@ -9,7 +9,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class ContactDeserializer implements JsonDeserializer<Contact> {
         for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet()) {
             String key = entry.getKey();
             JsonElement value = entry.getValue();
-            if (value instanceof JsonPrimitive) {
+            if ((value != null) && value.isJsonPrimitive()) {
                 switch (key) {
                     case Contact.Parameters.ID:
                         contact.setContactId(value.getAsString());
