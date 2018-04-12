@@ -792,8 +792,7 @@ public class BeanstalkService {
                     log("onResponse: " + data);
                     if (data == null || !data.isFailed()) {
                         if (listener != null) {
-                            listener.onFinished(data != null ?
-                                    data.getGiftCards() : new GiftCard[0], null);
+                            listener.onFinished(data != null ? data.getGiftCards() : new GiftCard[0], null);
                         }
                         return;
                     }
@@ -890,7 +889,7 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(false, null);
+                    listener.onFinished(false, Error.AUTHORIZATION_FAILED);
                 }
             }
         });
@@ -1866,8 +1865,12 @@ public class BeanstalkService {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String body = "error";
                 try {
-                    body = response.body().string();
-                } catch (IOException e) {
+                    if (response != null) {
+                        if (response.body() != null) {
+                            body = response.body().string();
+                        }
+                    }
+                } catch (Exception e) {
                     log("authenticateUser exception: " + e);
                 }
                 log("authenticateUser: " + body);
