@@ -43,13 +43,13 @@ import retrofit2.http.Query;
 
 public interface BeanstalkDataApi {
 
-    @GET("/contacts?type=email")
+    @GET("/contacts/?type=email")
     Call<Contact[]> getContactByEmail(@Query("key") String apiKey, @Query("q") String email);
 
-    @GET("/contacts?type=cell_number")
+    @GET("/contacts/?type=cell_number")
     Call<Contact[]> getContactByPhone(@Query("key") String apiKey, @Query("q") String phone);
 
-    @GET("/contacts?type=fkey")
+    @GET("/contacts/?type=fkey")
     Call<Contact[]> getContactByFkey(@Query("key") String apiKey, @Query("q") String fkey);
 
     @POST("/addContact/")
@@ -119,10 +119,10 @@ public interface BeanstalkDataApi {
     @GET("/bsdLoyalty/indentifyCustomer.php?field=CustomerID")
     Call<String> getLoyaltyInformation(@Query("key") String apiKey, @Query("value") String fKey);
 
-    @GET("/contacts")
+    @GET("/contacts/")
     Call<Contact[]> getContact(@Query("key") String apiKey, @Query("q") String contactId);
 
-    @GET("/contacts")
+    @GET("/contacts/")
     Call<ResponseBody> getContactRaw(@Query("key") String apiKey, @Query("q") String contactId);
 
     @GET("/deleteContact/")

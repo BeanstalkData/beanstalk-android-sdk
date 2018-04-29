@@ -157,34 +157,34 @@ public class ApiTests {
         }
 
         private MockResponse processGet(String path) {
-            if (path.equals(String.format("/contacts?type=email&key=%s&q=%s", APP_KEY, EMAIL1))) {
+            if (path.equals(String.format("/contacts/?type=email&key=%s&q=%s", APP_KEY, EMAIL1))) {
                 return new MockResponse()
                         .setResponseCode(200)
                         // NOTE: it should be "[]" but current API returns string with "null" text
                         .setBody("null");
             }
-            if (path.equals(String.format("/contacts?type=email&key=%s&q=%s", APP_KEY, EMAIL2))) {
+            if (path.equals(String.format("/contacts/?type=email&key=%s&q=%s", APP_KEY, EMAIL2))) {
                 Contact contact1 = new Contact();
                 contact1.setEmail(EMAIL2);
                 return new MockResponse()
                         .setResponseCode(200)
                         .setBody(new Gson().toJson(new Contact[]{contact1}));
             }
-            if (path.equals(String.format("/contacts?type=cell_number&key=%s&q=%s", APP_KEY, PHONE2))) {
+            if (path.equals(String.format("/contacts/?type=cell_number&key=%s&q=%s", APP_KEY, PHONE2))) {
                 Contact contact2 = new Contact();
                 contact2.setPhone(PHONE2);
                 return new MockResponse()
                         .setResponseCode(200)
                         .setBody(new Gson().toJson(new Contact[]{contact2}));
             }
-            if (path.equals(String.format("/contacts?type=fkey&key=%s&q=%s", APP_KEY, FKEY2))) {
+            if (path.equals(String.format("/contacts/?type=fkey&key=%s&q=%s", APP_KEY, FKEY2))) {
                 Contact contact2 = new Contact();
                 contact2.setFKey(FKEY2);
                 return new MockResponse()
                         .setResponseCode(200)
                         .setBody(new Gson().toJson(new Contact[]{contact2}));
             }
-            if (path.equals(String.format("/contacts?key=%s&q=%s", APP_KEY, ID3))) {
+            if (path.equals(String.format("/contacts/?key=%s&q=%s", APP_KEY, ID3))) {
                 Contact contact3 = new Contact();
                 contact3.setFirstName(FIRST_NAME3);
                 contact3.setLastName(LAST_NAME3);
