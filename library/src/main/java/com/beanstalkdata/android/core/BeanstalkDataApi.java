@@ -7,6 +7,7 @@ package com.beanstalkdata.android.core;
 import com.beanstalkdata.android.model.Contact;
 import com.beanstalkdata.android.model.ContactAsset;
 import com.beanstalkdata.android.model.LoyaltyUser;
+import com.beanstalkdata.android.model.TransactionEvent;
 import com.beanstalkdata.android.model.type.ImageType;
 import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
@@ -28,7 +29,6 @@ import com.beanstalkdata.android.response.RewardsCountResponse;
 import com.beanstalkdata.android.response.StoreInfoResponse;
 import com.beanstalkdata.android.response.StoresResponse;
 import com.beanstalkdata.android.response.TrackTransactionResponse;
-import com.beanstalkdata.android.model.TransactionEvent;
 
 import java.util.Map;
 
@@ -150,38 +150,38 @@ public interface BeanstalkDataApi {
     @GET("bsdStores/locate/")
     Call<StoresResponse> getAllStoresLocations(@Query("key") String apiKey);
 
-    @GET("pushNotificationEnroll")
+    @POST("pushNotificationEnroll/")
     Call<PushSuccessResponse> enrollPushNotification(@Query("key") String apiKey, @Query("contact_id") String contactId,
                                                      @Query("deviceToken") String deviceToken, @PlatformType @Query("platform") String platform);
 
-    @GET("pushNotificationModify")
+    @GET("pushNotificationModify/")
     Call<PushSuccessResponse> modifyPushNotification(@Query("key") String apiKey, @Query("contact_id") String contactId,
                                                      @Query("deviceToken") String deviceToken, @PlatformType @Query("platform") String platform);
 
-    @GET("pushNotificationDelete")
+    @GET("pushNotificationDelete/")
     Call<PushSuccessResponse> deletePushNotification(@Query("key") String apiKey, @Query("contact_id") String contactId);
 
-    @POST("pushNotification/getMessages")
+    @POST("pushNotification/getMessages/")
     @FormUrlEncoded
     Call<PushMessagesResponse> getContactMessages(@Field("key") String apiKey, @Field("contactId") String contactId, @Field("maxResults") int maxResults);
 
-    @POST("pushNotification/getMessagesByOsAndType")
+    @POST("pushNotification/getMessagesByOsAndType/")
     @FormUrlEncoded
     Call<PushMessagesResponse> getMessagesByOsAndType(@Field("key") String apiKey, @MessageContentType @Field("message_type") String messageType, @PlatformType @Field("platform") String platform);
 
-    @POST("pushNotification/getMessagesByImageType")
+    @POST("pushNotification/getMessagesByImageType/")
     @FormUrlEncoded
     Call<PushMessagesResponse> getMessagesByImageType(@Field("key") String apiKey, @Field("contactId") String contactId, @ImageType @Field("image_type") String imageType);
 
-    @POST("pushNotification/updateStatus")
+    @POST("pushNotification/updateStatus/")
     @FormUrlEncoded
     Call<PushSuccessResponse> updateMessageStatus(@Field("key") String apiKey, @Field("message_id") String messageId, @MessageType @Field("action") String messageStatus);
 
-    @POST("pushNotification/getMessageById")
+    @POST("pushNotification/getMessageById/")
     @FormUrlEncoded
     Call<PushMessageByIdResponse> getMessageById(@Field("key") String apiKey, @Field("msg_id") String messageId);
 
-    @GET("bsdTransactionEvents")
+    @GET("bsdTransactionEvents/")
     Call<TransactionEvent[]> getTransactionEvents(@Query("key") String apiKey, @Query("contact_id") String contactId, @Query("start_date") String startDate, @Query("end_date") String endDate);
 
     @POST("bsdTransactions/add/")
