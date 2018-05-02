@@ -161,7 +161,7 @@ public interface BeanstalkDataApi {
     @GET("bsdStores/locate/")
     Call<StoresResponse> getAllStoresLocations(@Query("key") String apiKey);
 
-    @GET("pushNotificationEnroll")
+    @POST("pushNotificationEnroll")
     Call<PushSuccessResponse> enrollPushNotification(@Query("key") String apiKey, @Query("contact_id") String contactId,
                                                      @Query("deviceToken") String deviceToken, @PlatformType @Query("platform") String platform);
 
