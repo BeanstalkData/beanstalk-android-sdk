@@ -72,6 +72,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.CertificatePinner;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -88,6 +90,9 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class BeanstalkService {
 
     private static final String TAG = BeanstalkService.class.getSimpleName();
+    private static final String SCHEME = "https";
+    private static final String HOST = "proc.beanstalkdata.com";
+    private static final String PUBLIC_KEY = "sha256/Hnfu+TUYgdkXIUunnIl6yIovY/WYZdOdIw/1TdZy79Y=";
 
     private final BeanstalkDataApi service;
     private final BeanstalkUserSession beanstalkUserSession;
@@ -127,13 +132,20 @@ public class BeanstalkService {
         defaultMessages = new PushMessagesResponse();
         defaultMessages.setPushMessages(new ArrayList<PushMessage>());
 
-        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(60, TimeUnit.SECONDS)
-                .connectTimeout(60, TimeUnit.SECONDS)
+        CertificatePinner certificatePinner = new CertificatePinner.Builder()
+                .add(HOST, PUBLIC_KEY)
                 .build();
 
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .certificatePinner(certificatePinner)
+                .build();
+
+        HttpUrl baseUrl = new HttpUrl.Builder().scheme(SCHEME).host(HOST).build();
+
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://proc.beanstalkdata.com")
+                .baseUrl(baseUrl)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(new Converter.Factory() {
                     @Override
