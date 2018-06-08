@@ -856,7 +856,7 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void resetPasswordV2(String email, final OnReturnDataListener<String> listener) {
-        Call<String> call = service.resetPasswordV2(beanstalkApiKey, email);
+        Call<String> call = service.resetPasswordV2(beanstalkApiKey, email, "2");
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

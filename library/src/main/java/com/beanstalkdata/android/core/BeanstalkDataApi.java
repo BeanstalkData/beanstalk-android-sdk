@@ -413,11 +413,12 @@ public interface BeanstalkDataApi {
             @Query("key") String apiKey
     );
 
-    @POST("/bsdLoyalty/ResetPassword.php?version=2")
+    @POST("/bsdLoyalty/ResetPassword.php")
     @FormUrlEncoded
     Call<String> resetPasswordV2(
             @Query("key") String apiKey,
-            @Field("user") String email
+            @Field("user") String email,
+            @Field("version") String version
     );
 
     //</editor-fold>
