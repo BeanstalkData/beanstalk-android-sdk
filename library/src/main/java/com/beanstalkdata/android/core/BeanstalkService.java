@@ -79,6 +79,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Converter;
+import retrofit2.HttpException;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -182,16 +183,26 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactsByEmail(String email, final OnReturnDataListener<Contact[]> listener) {
-        Call<Contact[]> call = service.getContactByEmail(beanstalkApiKey, email);
-
-        call.enqueue(new Callback<Contact[]>() {
+        service.getContactByEmail(beanstalkApiKey, email).enqueue(new Callback<Contact[]>() {
 
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
-                if (listener != null) {
-                    if (response != null && response.isSuccessful()) {
-                        listener.onFinished(response.body(), null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        if (listener != null) {
+                            listener.onFinished(response.body(), null);
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
                     } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.CONTACTS_FAILED);
+                        }
+                    }
+                } else {
+                    if (listener != null) {
                         listener.onFinished(null, Error.CONTACTS_FAILED);
                     }
                 }
@@ -200,7 +211,11 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.CONTACTS_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.CONTACTS_FAILED);
+                    }
                 }
             }
 
@@ -214,16 +229,26 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactsByPhone(String phone, final OnReturnDataListener<Contact[]> listener) {
-        Call<Contact[]> call = service.getContactByPhone(beanstalkApiKey, phone);
-
-        call.enqueue(new Callback<Contact[]>() {
+        service.getContactByPhone(beanstalkApiKey, phone).enqueue(new Callback<Contact[]>() {
 
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
-                if (listener != null) {
-                    if (response != null && response.isSuccessful()) {
-                        listener.onFinished(response.body(), null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        if (listener != null) {
+                            listener.onFinished(response.body(), null);
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
                     } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.CONTACTS_FAILED);
+                        }
+                    }
+                } else {
+                    if (listener != null) {
                         listener.onFinished(null, Error.CONTACTS_FAILED);
                     }
                 }
@@ -232,7 +257,11 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.CONTACTS_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.CONTACTS_FAILED);
+                    }
                 }
             }
 
@@ -246,16 +275,33 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactsByFkey(String fkey, final OnReturnDataListener<Contact[]> listener) {
-        Call<Contact[]> call = service.getContactByFkey(beanstalkApiKey, fkey);
-
-        call.enqueue(new Callback<Contact[]>() {
+        service.getContactByFkey(beanstalkApiKey, fkey).enqueue(new Callback<Contact[]>() {
 
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
-                if (listener != null) {
-                    if (response != null && response.isSuccessful() && response.body() != null) {
-                        listener.onFinished(response.body(), null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        Contact[] body = response.body();
+                        if (body != null) {
+                            if (listener != null) {
+                                listener.onFinished(body, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.CONTACTS_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
                     } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.CONTACTS_FAILED);
+                        }
+                    }
+                } else {
+                    if (listener != null) {
                         listener.onFinished(null, Error.CONTACTS_FAILED);
                     }
                 }
@@ -264,7 +310,11 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.CONTACTS_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.CONTACTS_FAILED);
+                    }
                 }
             }
 
@@ -278,21 +328,38 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void getContactByFkey(String fkey, final OnReturnDataListener<Contact> listener) {
-        Call<Contact[]> call = service.getContactByFkey(beanstalkApiKey, fkey);
-
-        call.enqueue(new Callback<Contact[]>() {
+        service.getContactByFkey(beanstalkApiKey, fkey).enqueue(new Callback<Contact[]>() {
 
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
-                if (listener != null) {
-                    if (response != null && response.isSuccessful() && response.body() != null) {
-                        Contact contact = response.body()[0];
-                        String fKey = contact.getFKey();
-                        if (fKey != null) {
-                            beanstalkUserSession.setFKey(fKey);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        Contact[] body = response.body();
+                        if (body != null) {
+                            Contact contact = body[0];
+                            String fKey = contact.getFKey();
+                            if (fKey != null) {
+                                beanstalkUserSession.setFKey(fKey);
+                            }
+                            if (listener != null) {
+                                listener.onFinished(contact, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.CONTACT_FAILED);
+                            }
                         }
-                        listener.onFinished(contact, null);
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
                     } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.CONTACT_FAILED);
+                        }
+                    }
+                } else {
+                    if (listener != null) {
                         listener.onFinished(null, Error.CONTACT_FAILED);
                     }
                 }
@@ -301,7 +368,11 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.CONTACT_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.CONTACT_FAILED);
+                    }
                 }
             }
 
@@ -319,17 +390,31 @@ public class BeanstalkService {
 
         beanstalkUserSession.release();
 
-        Call<String> call = service.logoutUser(contactId, token);
-
-        call.enqueue(new Callback<String>() {
+        service.logoutUser(contactId, token).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                String body = response.body();
-                log("response " + body);
-                if ("logged out".equalsIgnoreCase(body)
-                        || "error".equalsIgnoreCase(body)) {
-                    if (listener != null) {
-                        listener.onFinished(null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        String body = response.body();
+                        log("response " + body);
+                        if ("logged out".equalsIgnoreCase(body)
+                                || "error".equalsIgnoreCase(body)) {
+                            if (listener != null) {
+                                listener.onFinished(null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(Error.LOGOUT_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(Error.LOGOUT_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -341,7 +426,11 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.LOGOUT_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(Error.LOGOUT_FAILED);
+                    }
                 }
             }
         });
@@ -354,28 +443,44 @@ public class BeanstalkService {
      */
     public void getUserOffers(final OnReturnDataListener<Coupon[]> listener) {
         String contactId = beanstalkUserSession.getContactId();
-        Call<CouponResponse> call = service.getUserOffers(beanstalkApiKey, contactId);
-        call.enqueue(new Callback<CouponResponse>() {
+
+        service.getUserOffers(beanstalkApiKey, contactId).enqueue(new Callback<CouponResponse>() {
+
             @Override
             public void onResponse(Call<CouponResponse> call, Response<CouponResponse> response) {
-                if (response.isSuccessful()) {
-                    CouponResponse data = response.body();
-                    if (listener != null) {
-                        listener.onFinished(data != null ? data.getCoupons() : new Coupon[0], null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        CouponResponse data = response.body();
+                        if (listener != null) {
+                            listener.onFinished(data != null ? data.getCoupons() : new Coupon[0], null);
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.OFFERS_FAILED);
+                        }
                     }
-                    return;
-                }
-                if (listener != null) {
-                    listener.onFinished(null, Error.OFFERS_FAILED);
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.OFFERS_FAILED);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<CouponResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.OFFERS_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.OFFERS_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -387,26 +492,41 @@ public class BeanstalkService {
     public void getProgress(final OnReturnDataListener<Double> listener) {
         String contactId = beanstalkUserSession.getContactId();
 
-        Call<RewardsCountResponse> call = service.getProgress(beanstalkApiKey, contactId);
+        service.getProgress(beanstalkApiKey, contactId).enqueue(new Callback<RewardsCountResponse>() {
 
-        call.enqueue(new Callback<RewardsCountResponse>() {
             @Override
             public void onResponse(Call<RewardsCountResponse> call, Response<RewardsCountResponse> response) {
-                RewardsCountResponse data = response.body();
-                if (data == null) {
-                    if (listener != null) {
-                        listener.onFinished(null, Error.OFFERS_FAILED);
-                    }
-                } else {
-                    Double count = data.getCount();
-                    if (count == null) {
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        RewardsCountResponse data = response.body();
+                        if (data == null) {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.OFFERS_FAILED);
+                            }
+                        } else {
+                            Double count = data.getCount();
+                            if (count == null) {
+                                if (listener != null) {
+                                    listener.onFinished(null, Error.OFFERS_FAILED);
+                                }
+                            } else {
+                                if (listener != null) {
+                                    listener.onFinished(count, null);
+                                }
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
                         if (listener != null) {
-                            listener.onFinished(null, Error.OFFERS_FAILED);
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
                         }
                     } else {
                         if (listener != null) {
-                            listener.onFinished(count, null);
+                            listener.onFinished(null, Error.OFFERS_FAILED);
                         }
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.OFFERS_FAILED);
                     }
                 }
             }
@@ -414,9 +534,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<RewardsCountResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.OFFERS_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.OFFERS_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -427,17 +552,36 @@ public class BeanstalkService {
      */
     public void getContactAsset(final OnReturnDataListener<ContactAsset> listener) {
         String contactId = beanstalkUserSession.getContactId();
-        Call<ContactAsset> request = service.getContactAsset(beanstalkApiKey, contactId);
-        request.enqueue(new Callback<ContactAsset>() {
+
+        service.getContactAsset(beanstalkApiKey, contactId).enqueue(new Callback<ContactAsset>() {
+
             @Override
             public void onResponse(Call<ContactAsset> call, Response<ContactAsset> response) {
-                ContactAsset contactAsset = response.body();
-                if (contactAsset != null) {
-                    if (contactAsset.isSuccess()) {
-                        listener.onFinished(contactAsset, null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        ContactAsset contactAsset = response.body();
+                        if (contactAsset != null) {
+                            if (contactAsset.isSuccess()) {
+                                if (listener != null) {
+                                    listener.onFinished(contactAsset, null);
+                                }
+                            } else {
+                                if (listener != null) {
+                                    listener.onFinished(null, contactAsset.getError());
+                                }
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.CONTACT_ASSET_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
                     } else {
                         if (listener != null) {
-                            listener.onFinished(null, contactAsset.getError());
+                            listener.onFinished(null, Error.CONTACT_ASSET_FAILED);
                         }
                     }
                 } else {
@@ -450,9 +594,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<ContactAsset> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.CONTACT_ASSET_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.CONTACT_ASSET_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -465,24 +614,39 @@ public class BeanstalkService {
         String contactId = beanstalkUserSession.getContactId();
         log(" contact" + contactId);
 
-        Call<Contact[]> call = service.getContact(beanstalkApiKey, contactId);
+        service.getContact(beanstalkApiKey, contactId).enqueue(new Callback<Contact[]>() {
 
-        call.enqueue(new Callback<Contact[]>() {
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
-                Contact[] data = response.body();
-                if (data == null || data.length == 0) {
-                    if (listener != null) {
-                        listener.onFinished(null, Error.CONTACT_FAILED);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        Contact[] data = response.body();
+                        if (data == null || data.length == 0) {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.CONTACT_FAILED);
+                            }
+                        } else {
+                            Contact contact = data[0];
+                            String fKey = contact.getFKey();
+                            if (fKey != null) {
+                                beanstalkUserSession.setFKey(fKey);
+                            }
+                            if (listener != null) {
+                                listener.onFinished(contact, null);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.CONTACT_FAILED);
+                        }
                     }
                 } else {
-                    Contact contact = data[0];
-                    String fKey = contact.getFKey();
-                    if (fKey != null) {
-                        beanstalkUserSession.setFKey(fKey);
-                    }
                     if (listener != null) {
-                        listener.onFinished(contact, null);
+                        listener.onFinished(null, Error.CONTACT_FAILED);
                     }
                 }
             }
@@ -490,9 +654,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.CONTACT_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.CONTACT_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -504,16 +673,27 @@ public class BeanstalkService {
     public void deleteContact(final OnReturnListener listener) {
         String contactId = beanstalkUserSession.getContactId();
 
-        Call<ContactDeletedResponse> call = service.deleteContact(beanstalkApiKey, contactId);
-
-        call.enqueue(new Callback<ContactDeletedResponse>() {
+        service.deleteContact(beanstalkApiKey, contactId).enqueue(new Callback<ContactDeletedResponse>() {
 
             @Override
             public void onResponse(Call<ContactDeletedResponse> call, Response<ContactDeletedResponse> response) {
-                if ((response != null) && (response.body() != null) && response.body().isSuccess()) {
-                    beanstalkUserSession.release();
-                    if (listener != null) {
-                        listener.onFinished(null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        ContactDeletedResponse body = response.body();
+                        if (body != null && body.isSuccess()) {
+                            beanstalkUserSession.release();
+                            if (listener != null) {
+                                listener.onFinished(null);
+                            }
+                        } else {
+                            onFailure(call, null);
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        onFailure(call, null);
                     }
                 } else {
                     onFailure(call, null);
@@ -523,7 +703,11 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<ContactDeletedResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.DELETE_CONTACT_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(Error.DELETE_CONTACT_FAILED);
+                    }
                 }
             }
 
@@ -539,13 +723,22 @@ public class BeanstalkService {
      */
     public void relocateContact(float latitude, float longitude, final OnReturnListener listener) {
         String contactId = beanstalkUserSession.getContactId();
-        Call<RelocateResponse> request = service.relocateContact(beanstalkApiKey, contactId, latitude, longitude);
-        request.enqueue(new Callback<RelocateResponse>() {
+
+        service.relocateContact(beanstalkApiKey, contactId, latitude, longitude).enqueue(new Callback<RelocateResponse>() {
+
             @Override
             public void onResponse(Call<RelocateResponse> call, Response<RelocateResponse> response) {
-                if (response != null && response.isSuccessful()) {
-                    if (listener != null) {
-                        listener.onFinished(null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        if (listener != null) {
+                            listener.onFinished(null);
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        onFailure(call, null);
                     }
                 } else {
                     onFailure(call, null);
@@ -555,9 +748,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<RelocateResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.CONTACT_RELOCATE_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(Error.CONTACT_RELOCATE_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -594,24 +792,39 @@ public class BeanstalkService {
     public void getLoyaltyInformation(final OnReturnListener listener) {
         String fKey = beanstalkUserSession.getFKey();
 
-        Call<String> call = service.getLoyaltyInformation(beanstalkApiKey, fKey);
+        service.getLoyaltyInformation(beanstalkApiKey, fKey).enqueue(new Callback<String>() {
 
-        call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                JSONObject data = null;
-                try {
-                    data = new JSONObject(response.body());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (data == null) {
-                    if (listener != null) {
-                        listener.onFinished(Error.LOYALTY_INFO_FAILED);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        JSONObject data = null;
+                        try {
+                            data = new JSONObject(response.body());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (data == null) {
+                            if (listener != null) {
+                                listener.onFinished(Error.LOYALTY_INFO_FAILED);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(Error.LOYALTY_INFO_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
-                        listener.onFinished(null);
+                        listener.onFinished(Error.LOYALTY_INFO_FAILED);
                     }
                 }
             }
@@ -619,9 +832,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.LOYALTY_INFO_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(Error.LOYALTY_INFO_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -636,19 +854,34 @@ public class BeanstalkService {
         String token = beanstalkUserSession.getToken();
         log("inquireAboutCard() - [token, contactId, cardNumber] = [ " + token + " , " + contactId + " , " + cardNumber + " ]");
 
-        Call<CardBalanceResponse> call = service.inquireAboutCard(beanstalkApiKey, contactId, token, cardNumber);
+        service.inquireAboutCard(beanstalkApiKey, contactId, token, cardNumber).enqueue(new Callback<CardBalanceResponse>() {
 
-        call.enqueue(new Callback<CardBalanceResponse>() {
             @Override
             public void onResponse(Call<CardBalanceResponse> call, Response<CardBalanceResponse> response) {
-                CardBalanceResponse data = response.body();
-                if (data == null) {
-                    if (listener != null) {
-                        listener.onFinished(CardBalance.DEFAULT, Error.INQUIRE_CARD_FAILED);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        CardBalanceResponse data = response.body();
+                        if (data == null) {
+                            if (listener != null) {
+                                listener.onFinished(CardBalance.DEFAULT, Error.INQUIRE_CARD_FAILED);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(data.getDisplayBalance(), getErrorFromCBResponse(data));
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(CardBalance.DEFAULT, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(CardBalance.DEFAULT, Error.INQUIRE_CARD_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
-                        listener.onFinished(data.getDisplayBalance(), getErrorFromCBResponse(data));
+                        listener.onFinished(CardBalance.DEFAULT, Error.INQUIRE_CARD_FAILED);
                     }
                 }
             }
@@ -656,9 +889,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<CardBalanceResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(CardBalance.DEFAULT, Error.INQUIRE_CARD_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(CardBalance.DEFAULT, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(CardBalance.DEFAULT, Error.INQUIRE_CARD_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -673,24 +911,39 @@ public class BeanstalkService {
         String contactId = beanstalkUserSession.getContactId();
         String token = beanstalkUserSession.getToken();
 
-        Call<String> call = service.setPreferredCard(beanstalkApiKey, contactId, token, cardNumber);
+        service.setPreferredCard(beanstalkApiKey, contactId, token, cardNumber).enqueue(new Callback<String>() {
 
-        call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                JSONObject data = null;
-                try {
-                    data = new JSONObject(response.body());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                if (data == null) {
-                    if (listener != null) {
-                        listener.onFinished(Error.PREFERRED_CARD_FAILED);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        JSONObject data = null;
+                        try {
+                            data = new JSONObject(response.body());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (data == null) {
+                            if (listener != null) {
+                                listener.onFinished(Error.PREFERRED_CARD_FAILED);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(Error.PREFERRED_CARD_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
-                        listener.onFinished(null);
+                        listener.onFinished(Error.PREFERRED_CARD_FAILED);
                     }
                 }
             }
@@ -698,9 +951,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.PREFERRED_CARD_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(Error.PREFERRED_CARD_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -718,19 +976,34 @@ public class BeanstalkService {
         log("coupons : " + couponsStr);
         log("payment : " + paymentId);
 
-        Call<PaymentTokenResponse> call = service.startPayment(beanstalkApiKey, contactId, contactId, token, paymentId, couponsStr);
+        service.startPayment(beanstalkApiKey, contactId, contactId, token, paymentId, couponsStr).enqueue(new Callback<PaymentTokenResponse>() {
 
-        call.enqueue(new Callback<PaymentTokenResponse>() {
             @Override
             public void onResponse(Call<PaymentTokenResponse> call, Response<PaymentTokenResponse> response) {
-                PaymentTokenResponse data = response.body();
-                if (data == null || isPaymentTokenEmpty(data)) {
-                    if (listener != null) {
-                        listener.onFinished(null, Error.PAYMENT_FAILED);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        PaymentTokenResponse data = response.body();
+                        if (data == null || isPaymentTokenEmpty(data)) {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.PAYMENT_FAILED);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(data.getPaymentToken(), null);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.PAYMENT_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
-                        listener.onFinished(data.getPaymentToken(), null);
+                        listener.onFinished(null, Error.PAYMENT_FAILED);
                     }
                 }
             }
@@ -738,9 +1011,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<PaymentTokenResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.PAYMENT_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.PAYMENT_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -752,26 +1030,41 @@ public class BeanstalkService {
      * @param listener       Callback that will run after network request is completed.
      */
     public void registerNewGiftCard(String giftCardNumber, String giftPinNumber, final OnReturnListener listener) {
-        final String contactId = beanstalkUserSession.getContactId();
+        String contactId = beanstalkUserSession.getContactId();
         String token = beanstalkUserSession.getToken();
 
-        Call<RegisterGiftCardResponse> call = service.registerGiftCard(beanstalkApiKey, contactId, token, giftCardNumber, giftPinNumber);
+        service.registerGiftCard(beanstalkApiKey, contactId, token, giftCardNumber, giftPinNumber).enqueue(new Callback<RegisterGiftCardResponse>() {
 
-        call.enqueue(new Callback<RegisterGiftCardResponse>() {
             @Override
             public void onResponse(Call<RegisterGiftCardResponse> call, Response<RegisterGiftCardResponse> response) {
-                RegisterGiftCardResponse data = response.body();
-                if (data == null || data.isFailed()) {
-                    if (listener != null) {
-                        String error = Error.ADD_CARD_FAILED;
-                        if (data != null) {
-                            error = String.format(Error.ADD_CARD_FAILED, getErrorFromRGCResponse(data));
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        RegisterGiftCardResponse data = response.body();
+                        if (data == null || data.isFailed()) {
+                            if (listener != null) {
+                                String error = Error.ADD_CARD_FAILED;
+                                if (data != null) {
+                                    error = String.format(Error.ADD_CARD_FAILED, getErrorFromRGCResponse(data));
+                                }
+                                listener.onFinished(error);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null);
+                            }
                         }
-                        listener.onFinished(error);
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(Error.GIFT_LIST_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
-                        listener.onFinished(null);
+                        listener.onFinished(Error.GIFT_LIST_FAILED);
                     }
                 }
             }
@@ -779,9 +1072,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<RegisterGiftCardResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.GIFT_LIST_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(Error.GIFT_LIST_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -794,23 +1092,30 @@ public class BeanstalkService {
         String contactId = beanstalkUserSession.getContactId();
         String token = beanstalkUserSession.getToken();
 
-        Call<GiftCardListResponse> call = service.getGiftCardList(beanstalkApiKey, contactId, token);
+        service.getGiftCardList(beanstalkApiKey, contactId, token).enqueue(new Callback<GiftCardListResponse>() {
 
-        call.enqueue(new Callback<GiftCardListResponse>() {
             @Override
             public void onResponse(Call<GiftCardListResponse> call, Response<GiftCardListResponse> response) {
-                if (response.isSuccessful()) {
-                    GiftCardListResponse data = response.body();
-                    log("onResponse: " + data);
-                    if (data == null || !data.isFailed()) {
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        GiftCardListResponse data = response.body();
+                        log("onResponse: " + data);
                         if (listener != null) {
                             listener.onFinished(data != null ? data.getGiftCards() : new GiftCard[0], null);
                         }
-                        return;
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GIFT_LIST_FAILED);
+                        }
                     }
-                }
-                if (listener != null) {
-                    listener.onFinished(null, Error.GIFT_LIST_FAILED);
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.GIFT_LIST_FAILED);
+                    }
                 }
             }
 
@@ -818,9 +1123,14 @@ public class BeanstalkService {
             public void onFailure(Call<GiftCardListResponse> call, Throwable t) {
                 log("onFailure: " + t);
                 if (listener != null) {
-                    listener.onFinished(null, Error.GIFT_LIST_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.GIFT_LIST_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -831,21 +1141,42 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void resetPassword(String email, final OnReturnDataListener<String> listener) {
-        Call<String> call = service.resetPassword(beanstalkApiKey, email);
-        call.enqueue(new Callback<String>() {
+        service.resetPassword(beanstalkApiKey, email).enqueue(new Callback<String>() {
+
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                if (listener != null) {
-                    listener.onFinished(response.body(), null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        if (listener != null) {
+                            listener.onFinished(response.body(), null);
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.RESET_PASSWORD_FAILED);
+                        }
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.RESET_PASSWORD_FAILED);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.RESET_PASSWORD_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.RESET_PASSWORD_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -862,22 +1193,42 @@ public class BeanstalkService {
         request.put("password", password);
         request.put("key", beanstalkApiKey);
 
-        Call<String> call = service.updatePassword(request);
+        service.updatePassword(request).enqueue(new Callback<String>() {
 
-        call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                if (listener != null) {
-                    listener.onFinished(response.body(), null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        if (listener != null) {
+                            listener.onFinished(response.body(), null);
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.UPDATE_PASSWORD_FAILED);
+                        }
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.UPDATE_PASSWORD_FAILED);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.UPDATE_PASSWORD_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.UPDATE_PASSWORD_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -888,9 +1239,8 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void authenticateUser(final AuthenticateUserRequest request, final OnReturnDataListener<Boolean> listener) {
-        Call<Contact[]> contactByEmail = service.getContactByEmail(beanstalkApiKey, request.getEmail());
+        service.getContactByEmail(beanstalkApiKey, request.getEmail()).enqueue(new Callback<Contact[]>() {
 
-        contactByEmail.enqueue(new Callback<Contact[]>() {
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
                 boolean success = response.isSuccessful();
@@ -901,9 +1251,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(false, Error.AUTHORIZATION_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(false, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(false, Error.AUTHORIZATION_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -914,31 +1269,50 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void authenticateUserGoogle(final AuthenticateUserGoogleRequest request, final OnReturnDataListener<Boolean> listener) {
-        Call<ResponseBody> authRequest = service.authenticateUserGoogle(beanstalkApiKey, request.getGoogleId(), request.getGoogleToken());
-        authRequest.enqueue(new Callback<ResponseBody>() {
+        service.authenticateUserGoogle(beanstalkApiKey, request.getGoogleId(), request.getGoogleToken()).enqueue(new Callback<ResponseBody>() {
+
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String body = "error";
-                try {
-                    body = response.body().string();
-                } catch (IOException e) {
-                    log("authenticateUser exception: " + e);
-                }
-                log("authenticateUser: " + body);
-                if ("error".equalsIgnoreCase(body)) {
-                    if (listener != null) {
-                        listener.onFinished(false, Error.AUTHORIZATION_GOOGLE_FAILED);
-                    }
-                    return;
-                }
-                String[] authResponseArgs = parseAuthUserResponse(body);
-                if (authResponseArgs != null) {
-                    if (authResponseArgs.length == 2) {
-                        String contactId = authResponseArgs[0];
-                        String token = authResponseArgs[1];
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        String body = "error";
+                        try {
+                            ResponseBody responseBody = response.body();
+                            if (responseBody != null) {
+                                body = responseBody.string();
+                            }
+                        } catch (IOException e) {
+                            log("authenticateUser exception: " + e);
+                        }
+                        log("authenticateUser: " + body);
+                        if ("error".equalsIgnoreCase(body)) {
+                            if (listener != null) {
+                                listener.onFinished(false, Error.AUTHORIZATION_GOOGLE_FAILED);
+                            }
+                            return;
+                        }
+                        String[] authResponseArgs = parseAuthUserResponse(body);
+                        if (authResponseArgs != null) {
+                            if (authResponseArgs.length == 2) {
+                                String contactId = authResponseArgs[0];
+                                String token = authResponseArgs[1];
+                                beanstalkUserSession.save(contactId, token);
+                                if (listener != null) {
+                                    listener.onFinished(true, null);
+                                }
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(false, Error.AUTHORIZATION_GOOGLE_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
                         if (listener != null) {
-                            beanstalkUserSession.save(contactId, token);
-                            listener.onFinished(true, null);
+                            listener.onFinished(false, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(false, Error.AUTHORIZATION_GOOGLE_FAILED);
                         }
                     }
                 } else {
@@ -951,9 +1325,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(false, Error.AUTHORIZATION_GOOGLE_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(false, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(false, Error.AUTHORIZATION_GOOGLE_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -968,27 +1347,46 @@ public class BeanstalkService {
         authRequest.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String body = "error";
-                try {
-                    body = response.body().string();
-                } catch (IOException e) {
-                    log("authenticateUser exception: " + e);
-                }
-                log("authenticateUser: " + body);
-                if ("error".equalsIgnoreCase(body)) {
-                    if (listener != null) {
-                        listener.onFinished(false, Error.AUTHORIZATION_FACEBOOK_FAILED);
-                    }
-                    return;
-                }
-                String[] authResponseArgs = parseAuthUserResponse(body);
-                if (authResponseArgs != null) {
-                    if (authResponseArgs.length == 2) {
-                        String contactId = authResponseArgs[0];
-                        String token = authResponseArgs[1];
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        String body = "error";
+                        try {
+                            ResponseBody responseBody = response.body();
+                            if (responseBody != null) {
+                                body = responseBody.string();
+                            }
+                        } catch (IOException e) {
+                            log("authenticateUser exception: " + e);
+                        }
+                        log("authenticateUser: " + body);
+                        if ("error".equalsIgnoreCase(body)) {
+                            if (listener != null) {
+                                listener.onFinished(false, Error.AUTHORIZATION_FACEBOOK_FAILED);
+                            }
+                            return;
+                        }
+                        String[] authResponseArgs = parseAuthUserResponse(body);
+                        if (authResponseArgs != null) {
+                            if (authResponseArgs.length == 2) {
+                                String contactId = authResponseArgs[0];
+                                String token = authResponseArgs[1];
+                                beanstalkUserSession.save(contactId, token);
+                                if (listener != null) {
+                                    listener.onFinished(true, null);
+                                }
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(false, Error.AUTHORIZATION_FACEBOOK_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
                         if (listener != null) {
-                            beanstalkUserSession.save(contactId, token);
-                            listener.onFinished(true, null);
+                            listener.onFinished(false, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(false, Error.AUTHORIZATION_FACEBOOK_FAILED);
                         }
                     }
                 } else {
@@ -1001,7 +1399,11 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(false, Error.AUTHORIZATION_FACEBOOK_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(false, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(false, Error.AUTHORIZATION_FACEBOOK_FAILED);
+                    }
                 }
             }
         });
@@ -1023,29 +1425,46 @@ public class BeanstalkService {
             }
         }
 
-        Call<String> call = service.checkSession(contactId, token);
+        service.checkSession(contactId, token).enqueue(new Callback<String>() {
 
-        call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                String body = response.body();
-                boolean status = false;
-                String statusMessage = Error.SESSION_INVALID;
-
-                if ("valid".equals(body)) {
-                    status = true;
-                    statusMessage = Error.SESSION_VALID;
-                }
-
-                if (listener != null) {
-                    listener.onFinished(status, statusMessage);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        String body = response.body();
+                        if ("valid".equals(body)) {
+                            if (listener != null) {
+                                listener.onFinished(true, Error.SESSION_VALID);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(false, Error.SESSION_INVALID);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(false, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(false, Error.SESSION_INVALID);
+                        }
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(false, Error.SESSION_INVALID);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(false, Error.SESSION_INVALID);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(false, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(false, Error.SESSION_INVALID);
+                    }
                 }
             }
 
@@ -1061,26 +1480,43 @@ public class BeanstalkService {
     public void updateContact(final ContactRequest request, final OnReturnListener listener) {
         final Map<String, String> params = request.asParams();
         if (params.size() <= 1) {
-            listener.onFinished(null);
+            if (listener != null) {
+                listener.onFinished(null);
+            }
         } else {
-            Call<String[]> contact = service.updateContact(beanstalkApiKey, params);
+            service.updateContact(beanstalkApiKey, params).enqueue(new Callback<String[]>() {
 
-            contact.enqueue(new Callback<String[]>() {
                 @Override
                 public void onResponse(Call<String[]> call, Response<String[]> response) {
-                    String[] body = response.body();
-                    log("onResponse() - " + Arrays.toString(body));
-                    if (body == null) {
-                        if (listener != null) {
-                            listener.onFinished(Error.CONTACT_UPDATE_FAILED);
+                    if (response != null) {
+                        if (response.isSuccessful()) {
+                            String[] body = response.body();
+                            log("onResponse() - " + Arrays.toString(body));
+                            if (body == null) {
+                                if (listener != null) {
+                                    listener.onFinished(Error.CONTACT_UPDATE_FAILED);
+                                }
+                            } else {
+                                String fkey = params.get(ContactRequest.Parameters.F_KEY);
+                                if (fkey != null) {
+                                    beanstalkUserSession.setFKey(fkey);
+                                }
+                                if (listener != null) {
+                                    listener.onFinished(null);
+                                }
+                            }
+                        } else if (isGenericError(response.code())) {
+                            if (listener != null) {
+                                listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(Error.CONTACT_UPDATE_FAILED);
+                            }
                         }
                     } else {
-                        String fkey = params.get(ContactRequest.Parameters.F_KEY);
-                        if (fkey != null) {
-                            beanstalkUserSession.setFKey(fkey);
-                        }
                         if (listener != null) {
-                            listener.onFinished(null);
+                            listener.onFinished(Error.CONTACT_UPDATE_FAILED);
                         }
                     }
                 }
@@ -1089,9 +1525,14 @@ public class BeanstalkService {
                 public void onFailure(Call<String[]> call, Throwable t) {
                     log("onFailure()" + t.toString());
                     if (listener != null) {
-                        listener.onFinished(Error.CONTACT_UPDATE_FAILED);
+                        if (isGenericHttpException(t)) {
+                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                        } else {
+                            listener.onFinished(Error.CONTACT_UPDATE_FAILED);
+                        }
                     }
                 }
+
             });
         }
     }
@@ -1182,61 +1623,97 @@ public class BeanstalkService {
      * @param shouldFetchContact Should fetch and return contact after creating contact.
      */
     public void createContact(final ContactRequest request, final OnReturnDataListener<Contact> listener, final boolean shouldCreateUser, final boolean shouldFetchContact) {
-        Call<ResponseBody> contact = service.createContact(beanstalkApiKey, request.asParams());
+        service.createContact(beanstalkApiKey, request.asParams()).enqueue(new Callback<ResponseBody>() {
 
-        contact.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        String body = "error";
+                        try {
+                            ResponseBody responseBody = response.body();
+                            if (responseBody != null) {
+                                body = responseBody.string();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        log("createContact() " + body);
+                        if ("error".equalsIgnoreCase(body)) {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.SIGN_IN_FAILED);
+                            }
+                            return;
+                        }
 
-                String body = "error";
-                try {
-                    if (response != null && response.body() != null) {
-                        body = response.body().string();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                log("createContact() " + body);
-                if ("error".equalsIgnoreCase(body)) {
-                    if (listener != null) {
-                        listener.onFinished(null, Error.SIGN_IN_FAILED);
-                    }
-                    return;
-                }
+                        String contactId = parseCreateContactResponse(body);
+                        if (contactId == null) {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.SIGN_IN_FAILED);
+                            }
+                        } else {
+                            log("contact id : " + contactId);
+                            beanstalkUserSession.save(contactId, null);
+                            if (shouldCreateUser) {
+                                service.createUser(request.getEmail(), request.getPassword(), beanstalkApiKey, contactId).enqueue(new Callback<String>() {
 
-                String contactId = parseCreateContactResponse(body);
-                if (contactId == null) {
-                    if (listener != null) {
-                        listener.onFinished(null, Error.SIGN_IN_FAILED);
+                                    @Override
+                                    public void onResponse(Call<String> call, Response<String> response) {
+                                        if (response != null) {
+                                            if (response.isSuccessful()) {
+                                                String body = response.body();
+                                                log("addContactWithEmail() - create user " + body);
+                                                if ("Success".equalsIgnoreCase(body)) {
+                                                    fetchContact(listener, shouldFetchContact);
+                                                } else {
+                                                    if (listener != null) {
+                                                        listener.onFinished(null, Error.SIGN_IN_FAILED);
+                                                    }
+                                                }
+                                            } else if (isGenericError(response.code())) {
+                                                if (listener != null) {
+                                                    listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                                                }
+                                            } else {
+                                                if (listener != null) {
+                                                    listener.onFinished(null, Error.SIGN_IN_FAILED);
+                                                }
+                                            }
+                                        } else {
+                                            if (listener != null) {
+                                                listener.onFinished(null, Error.SIGN_IN_FAILED);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<String> call, Throwable t) {
+                                        if (listener != null) {
+                                            if (isGenericHttpException(t)) {
+                                                listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                                            } else {
+                                                listener.onFinished(null, Error.SIGN_IN_FAILED);
+                                            }
+                                        }
+                                    }
+
+                                });
+                            } else {
+                                fetchContact(listener, shouldFetchContact);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.SIGN_IN_FAILED);
+                        }
                     }
                 } else {
-                    log("contact id : " + contactId);
-                    beanstalkUserSession.save(contactId, null);
-                    if (shouldCreateUser) {
-                        Call<String> user = service.createUser(request.getEmail(), request.getPassword(), beanstalkApiKey, contactId);
-                        user.enqueue(new Callback<String>() {
-                            @Override
-                            public void onResponse(Call<String> call, Response<String> response) {
-                                String body = response.body();
-                                log("addContactWithEmail() - create user " + body);
-                                if ("Success".equalsIgnoreCase(body)) {
-                                    fetchContact(listener, shouldFetchContact);
-                                } else {
-                                    if (listener != null) {
-                                        listener.onFinished(null, Error.SIGN_IN_FAILED);
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<String> call, Throwable t) {
-                                if (listener != null) {
-                                    listener.onFinished(null, Error.SIGN_IN_FAILED);
-                                }
-                            }
-                        });
-                    } else {
-                        fetchContact(listener, shouldFetchContact);
+                    if (listener != null) {
+                        listener.onFinished(null, Error.SIGN_IN_FAILED);
                     }
                 }
             }
@@ -1244,9 +1721,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.SIGN_IN_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.SIGN_IN_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -1258,15 +1740,30 @@ public class BeanstalkService {
      * @param listener   Callback that will run after network request is completed.
      */
     public void paperCardRegistration(String cardNumber, String cardPin, final OnReturnListener listener) {
-        String contactId = beanstalkUserSession.getContactId();
-        Call<String> call = service.paperCardRegistration(beanstalkApiKey, "addNewCard", cardNumber, cardPin, contactId);
-        call.enqueue(new Callback<String>() {
+        service.paperCardRegistration(beanstalkApiKey, "addNewCard", cardNumber, cardPin, beanstalkUserSession.getContactId()).enqueue(new Callback<String>() {
+
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                String body = response.body();
-                if ("card added".equals(body)) {
-                    if (listener != null) {
-                        listener.onFinished(null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        String body = response.body();
+                        if ("card added".equals(body)) {
+                            if (listener != null) {
+                                listener.onFinished(null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(Error.REGISTER_CARD_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(Error.REGISTER_CARD_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -1278,9 +1775,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.REGISTER_CARD_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(Error.REGISTER_CARD_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -1292,14 +1794,30 @@ public class BeanstalkService {
      */
     @Deprecated
     public void checkStores(String zip, final OnReturnDataListener<LocationResponse> listener) {
-        Call<LocationResponse> locationByZipCode = service.getLocationByZipCode(googleMapsApiKey, zip);
-        locationByZipCode.enqueue(new Callback<LocationResponse>() {
+        service.getLocationByZipCode(googleMapsApiKey, zip).enqueue(new Callback<LocationResponse>() {
+
             @Override
             public void onResponse(Call<LocationResponse> call, Response<LocationResponse> response) {
-                LocationResponse body = response.body();
-                if (body != null && !body.isFailed()) {
-                    if (listener != null) {
-                        listener.onFinished(body, null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        LocationResponse body = response.body();
+                        if (body != null && !body.isFailed()) {
+                            if (listener != null) {
+                                listener.onFinished(body, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.SIGN_UP_ZIP_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.SIGN_UP_ZIP_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -1311,9 +1829,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<LocationResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.SIGN_UP_ZIP_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.SIGN_UP_ZIP_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -1324,14 +1847,30 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void checkLocation(LocationResponse.Location location, final OnReturnDataListener<StoresResponse> listener) {
-        Call<StoresResponse> storesResponseCall = service.checkLocation(beanstalkApiKey, location.getLatitude(), location.getLongitude());
-        storesResponseCall.enqueue(new Callback<StoresResponse>() {
+        service.checkLocation(beanstalkApiKey, location.getLatitude(), location.getLongitude()).enqueue(new Callback<StoresResponse>() {
+
             @Override
             public void onResponse(Call<StoresResponse> call, Response<StoresResponse> response) {
-                StoresResponse body = response.body();
-                if (body != null && !body.isFailed()) {
-                    if (listener != null) {
-                        listener.onFinished(body, null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        StoresResponse body = response.body();
+                        if (body != null && !body.isFailed()) {
+                            if (listener != null) {
+                                listener.onFinished(body, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -1343,9 +1882,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<StoresResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -1355,14 +1899,30 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void getAllStoresLocations(final OnReturnDataListener<StoresResponse> listener) {
-        Call<StoresResponse> storesResponseCall = service.getAllStoresLocations(beanstalkApiKey);
-        storesResponseCall.enqueue(new Callback<StoresResponse>() {
+        service.getAllStoresLocations(beanstalkApiKey).enqueue(new Callback<StoresResponse>() {
+
             @Override
             public void onResponse(Call<StoresResponse> call, Response<StoresResponse> response) {
-                StoresResponse body = response.body();
-                if (body != null && !body.isFailed()) {
-                    if (listener != null) {
-                        listener.onFinished(body, null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        StoresResponse body = response.body();
+                        if (body != null && !body.isFailed()) {
+                            if (listener != null) {
+                                listener.onFinished(body, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -1374,9 +1934,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<StoresResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.SIGN_UP_LOCATION_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -1387,14 +1952,30 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void getStoreInfo(String storeId, final OnReturnDataListener<StoreInfoResponse> listener) {
-        Call<StoreInfoResponse> storeInfoResponseCall = service.getStoreInfo(beanstalkApiKey, storeId);
-        storeInfoResponseCall.enqueue(new Callback<StoreInfoResponse>() {
+        service.getStoreInfo(beanstalkApiKey, storeId).enqueue(new Callback<StoreInfoResponse>() {
+
             @Override
             public void onResponse(Call<StoreInfoResponse> call, Response<StoreInfoResponse> response) {
-                StoreInfoResponse body = response.body();
-                if (body != null && !body.isFailed()) {
-                    if (listener != null) {
-                        listener.onFinished(body, null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        StoreInfoResponse body = response.body();
+                        if (body != null && !body.isFailed()) {
+                            if (listener != null) {
+                                listener.onFinished(body, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.STORE_INFO_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.STORE_INFO_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -1406,9 +1987,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<StoreInfoResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.STORE_INFO_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.STORE_INFO_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -1418,14 +2004,30 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void getAllStores(final OnReturnDataListener<LocationsResponse> listener) {
-        Call<LocationsResponse> locationsResponseCall = service.getLocations(beanstalkApiKey);
-        locationsResponseCall.enqueue(new Callback<LocationsResponse>() {
+        service.getLocations(beanstalkApiKey).enqueue(new Callback<LocationsResponse>() {
+
             @Override
             public void onResponse(Call<LocationsResponse> call, Response<LocationsResponse> response) {
-                LocationsResponse body = response.body();
-                if (body != null && !body.isFailed()) {
-                    if (listener != null) {
-                        listener.onFinished(body, null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        LocationsResponse body = response.body();
+                        if (body != null && !body.isFailed()) {
+                            if (listener != null) {
+                                listener.onFinished(body, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.STORE_INFO_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.STORE_INFO_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -1437,9 +2039,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<LocationsResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -1597,29 +2204,49 @@ public class BeanstalkService {
      * @param listener   Callback that will run after network request is completed.
      */
     public void maintainLoyaltyCards(String cardNumber, final OnReturnDataListener<String> listener) {
-        Call<String> request = service.maintainLoyaltyCards(beanstalkApiKey, beanstalkUserSession.getContactId(), cardNumber);
-        request.enqueue(new Callback<String>() {
+        service.maintainLoyaltyCards(beanstalkApiKey, beanstalkUserSession.getContactId(), cardNumber).enqueue(new Callback<String>() {
+
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                String body = response.body();
-                if ("card added".equals(body)) {
-                    if (listener != null) {
-                        listener.onFinished(body, null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        String body = response.body();
+                        if ("card added".equals(body)) {
+                            if (listener != null) {
+                                listener.onFinished(body, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.LOYALTY_PROGRAM_ERROR);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.LOYALTY_PROGRAM_ERROR);
+                        }
                     }
                 } else {
                     if (listener != null) {
                         listener.onFinished(null, Error.LOYALTY_PROGRAM_ERROR);
                     }
                 }
-
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.LOYALTY_PROGRAM_ERROR);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.LOYALTY_PROGRAM_ERROR);
+                    }
                 }
             }
+
         });
     }
 
@@ -1635,16 +2262,26 @@ public class BeanstalkService {
      * @param listener    Callback that will run after network request is completed.
      */
     public void contactUs(String firstName, String lastName, String fromEmail, String toEmail, String phoneNumber, String comments, final OnReturnListener listener) {
-        Call<ContactUsResponse> request = service.contactUs(beanstalkApiKey, firstName, lastName, fromEmail, toEmail, phoneNumber, comments);
-        request.enqueue(new Callback<ContactUsResponse>() {
+        service.contactUs(beanstalkApiKey, firstName, lastName, fromEmail, toEmail, phoneNumber, comments).enqueue(new Callback<ContactUsResponse>() {
 
             @Override
             public void onResponse(Call<ContactUsResponse> call, Response<ContactUsResponse> response) {
-                ContactUsResponse body = response.body();
-                if (body != null) {
-                    if (listener != null) {
-                        String error = body.getError();
-                        listener.onFinished((error != null) ? error : null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        ContactUsResponse body = response.body();
+                        if (body != null) {
+                            if (listener != null) {
+                                listener.onFinished(body.getError());
+                            }
+                        } else {
+                            onFailure(call, null);
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        onFailure(call, null);
                     }
                 } else {
                     onFailure(call, null);
@@ -1654,7 +2291,11 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<ContactUsResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.CONTACT_US_ERROR);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(Error.CONTACT_US_ERROR);
+                    }
                 }
             }
 
@@ -1670,14 +2311,30 @@ public class BeanstalkService {
      * @param listener  Callback that will run after network request is completed.
      */
     public void checkLocationV2(double latitude, double longitude, final OnReturnDataListener<StoresResponseV2> listener) {
-        Call<StoresResponseV2> storesResponseCall = service.checkLocationV2(beanstalkApiKey, latitude, longitude);
-        storesResponseCall.enqueue(new Callback<StoresResponseV2>() {
+        service.checkLocationV2(beanstalkApiKey, latitude, longitude).enqueue(new Callback<StoresResponseV2>() {
+
             @Override
             public void onResponse(Call<StoresResponseV2> call, Response<StoresResponseV2> response) {
-                StoresResponseV2 body = response.body();
-                if (body != null && !body.isFailed()) {
-                    if (listener != null) {
-                        listener.onFinished(body, null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        StoresResponseV2 body = response.body();
+                        if (body != null && !body.isFailed()) {
+                            if (listener != null) {
+                                listener.onFinished(body, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -1689,9 +2346,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<StoresResponseV2> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -1701,14 +2363,30 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void getAllStoresLocationsV2(final OnReturnDataListener<StoresResponseV2> listener) {
-        Call<StoresResponseV2> storesResponseCall = service.getAllStoresLocationsV2(beanstalkApiKey);
-        storesResponseCall.enqueue(new Callback<StoresResponseV2>() {
+        service.getAllStoresLocationsV2(beanstalkApiKey).enqueue(new Callback<StoresResponseV2>() {
+
             @Override
             public void onResponse(Call<StoresResponseV2> call, Response<StoresResponseV2> response) {
-                StoresResponseV2 body = response.body();
-                if (body != null && !body.isFailed()) {
-                    if (listener != null) {
-                        listener.onFinished(body, null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        StoresResponseV2 body = response.body();
+                        if (body != null && !body.isFailed()) {
+                            if (listener != null) {
+                                listener.onFinished(body, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -1720,9 +2398,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<StoresResponseV2> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.STORES_LOCATIONS_FAILED);
+                    }
                 }
             }
+
         });
     }
 
@@ -1805,12 +2488,29 @@ public class BeanstalkService {
     private void checkLocation(LocationResponse.Location location, final OnReturnListener listener) {
         Call<StoresResponse> storesResponseCall = service.checkLocation(beanstalkApiKey, location.getLatitude(), location.getLongitude());
         storesResponseCall.enqueue(new Callback<StoresResponse>() {
+
             @Override
             public void onResponse(Call<StoresResponse> call, Response<StoresResponse> response) {
-                StoresResponse body = response.body();
-                if (body != null && !body.isFailed()) {
-                    if (listener != null) {
-                        listener.onFinished(null);
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        StoresResponse body = response.body();
+                        if (body != null && !body.isFailed()) {
+                            if (listener != null) {
+                                listener.onFinished(null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(Error.SIGN_UP_ZIP_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(Error.SIGN_UP_ZIP_FAILED);
+                        }
                     }
                 } else {
                     if (listener != null) {
@@ -1822,17 +2522,20 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<StoresResponse> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(Error.SIGN_UP_ZIP_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(Error.SIGN_UP_ZIP_FAILED);
+                    }
                 }
             }
+
         });
     }
 
     private void checkUserByEmail(final ContactRequest request, final OnReturnListener listener) {
         log("checkUserByEmail() - " + request.getEmail());
-        final Call<Contact[]> contactByEmail = service.getContactByEmail(beanstalkApiKey, request.getEmail());
-
-        contactByEmail.enqueue(new Callback<Contact[]>() {
+        service.getContactByEmail(beanstalkApiKey, request.getEmail()).enqueue(new Callback<Contact[]>() {
 
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
@@ -1856,6 +2559,10 @@ public class BeanstalkService {
                     } else {
                         checkUserByPhone(request, listener);
                     }
+                } else if (isGenericError(response.code())) {
+                    if (listener != null) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    }
                 } else {
                     if (listener != null) {
                         listener.onFinished(Error.SIGN_IN_FAILED);
@@ -1867,39 +2574,55 @@ public class BeanstalkService {
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 checkUserByPhone(request, listener);
             }
+
         });
     }
 
     private void authUser(AuthenticateUserRequest request, final OnReturnDataListener<Boolean> listener) {
-        Call<ResponseBody> authenticateUser = service.authenticateUser(request.getEmail(), request.getPassword(), beanstalkApiKey, request.getTime());
-        authenticateUser.enqueue(new Callback<ResponseBody>() {
+        service.authenticateUser(request.getEmail(), request.getPassword(), beanstalkApiKey, request.getTime()).enqueue(new Callback<ResponseBody>() {
+
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String body = "error";
-                try {
-                    if (response != null) {
-                        if (response.body() != null) {
-                            body = response.body().string();
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        String body = "error";
+                        try {
+                            ResponseBody responseBody = response.body();
+                            if (responseBody != null) {
+                                body = responseBody.string();
+                            }
+                        } catch (Exception e) {
+                            log("authenticateUser exception: " + e);
                         }
-                    }
-                } catch (Exception e) {
-                    log("authenticateUser exception: " + e);
-                }
-                log("authenticateUser: " + body);
-                if ("error".equalsIgnoreCase(body)) {
-                    if (listener != null) {
-                        listener.onFinished(false, Error.AUTHORIZATION_FAILED);
-                    }
-                    return;
-                }
-                String[] authResponseArgs = parseAuthUserResponse(body);
-                if (authResponseArgs != null) {
-                    if (authResponseArgs.length == 2) {
-                        String contactId = authResponseArgs[0];
-                        String token = authResponseArgs[1];
+                        log("authenticateUser: " + body);
+                        if ("error".equalsIgnoreCase(body)) {
+                            if (listener != null) {
+                                listener.onFinished(false, Error.AUTHORIZATION_FAILED);
+                            }
+                            return;
+                        }
+                        String[] authResponseArgs = parseAuthUserResponse(body);
+                        if (authResponseArgs != null) {
+                            if (authResponseArgs.length == 2) {
+                                String contactId = authResponseArgs[0];
+                                String token = authResponseArgs[1];
+                                beanstalkUserSession.save(contactId, token);
+                                if (listener != null) {
+                                    listener.onFinished(true, null);
+                                }
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(false, Error.AUTHORIZATION_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
                         if (listener != null) {
-                            beanstalkUserSession.save(contactId, token);
-                            listener.onFinished(true, null);
+                            listener.onFinished(false, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(false, Error.AUTHORIZATION_FAILED);
                         }
                     }
                 } else {
@@ -1912,22 +2635,27 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(false, Error.AUTHORIZATION_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(false, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(false, Error.AUTHORIZATION_FAILED);
+                    }
                 }
             }
+
         });
     }
 
     private void checkUserByPhone(final ContactRequest request, final OnReturnListener listener) {
-        Call<Contact[]> contactByPhone = service.getContactByPhone(beanstalkApiKey, request.getPhone());
-        contactByPhone.enqueue(new Callback<Contact[]>() {
+        service.getContactByPhone(beanstalkApiKey, request.getPhone()).enqueue(new Callback<Contact[]>() {
+
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
                 boolean success = response.isSuccessful();
                 log("checkUserByPhone() - response status " + success);
                 if (success) {
                     Contact[] contacts = response.body();
-                    if (contacts != null && contacts.length > 0 && contacts[0] != null) {
+                    if ((contacts != null) && (contacts.length > 0) && (contacts[0] != null)) {
                         Contact contact = contacts[0];
                         log("checkUserByPhone() - contact found " + contact);
                         String prospect = contact.getProspect();
@@ -1946,6 +2674,10 @@ public class BeanstalkService {
                             listener.onFinished(null);
                         }
                     }
+                } else if (isGenericError(response.code())) {
+                    if (listener != null) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    }
                 } else {
                     if (listener != null) {
                         listener.onFinished(Error.SIGN_IN_FAILED);
@@ -1956,9 +2688,14 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<Contact[]> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null);
+                    }
                 }
             }
+
         });
     }
 
@@ -1970,10 +2707,16 @@ public class BeanstalkService {
 
             @Override
             public void onResponse(Call<LoyaltyUser> call, Response<LoyaltyUser> response) {
-                if (listener != null) {
-                    if (response.isSuccessful()) {
+                if (response.isSuccessful()) {
+                    if (listener != null) {
                         listener.onFinished(response.body(), null);
-                    } else {
+                    }
+                } else if (isGenericError(response.code())) {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    }
+                } else {
+                    if (listener != null) {
                         listener.onFinished(null, Error.SIGN_IN_FAILED);
                     }
                 }
@@ -1982,7 +2725,11 @@ public class BeanstalkService {
             @Override
             public void onFailure(Call<LoyaltyUser> call, Throwable t) {
                 if (listener != null) {
-                    listener.onFinished(null, Error.SIGN_IN_FAILED);
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.SIGN_IN_FAILED);
+                    }
                 }
             }
 
@@ -1992,12 +2739,14 @@ public class BeanstalkService {
     private void fetchContact(final OnReturnDataListener<Contact> listener, final boolean shouldFetchContact) {
         if (shouldFetchContact) {
             getContact(new OnReturnDataListener<Contact>() {
+
                 @Override
                 public void onFinished(Contact contact, String error) {
                     if (listener != null) {
                         listener.onFinished((error == null) ? contact : emptyContact(), null);
                     }
                 }
+
             });
         } else {
             if (listener != null) {
@@ -2022,6 +2771,22 @@ public class BeanstalkService {
         }
     }
 
+    private boolean isGenericHttpException(Throwable throwable) {
+        return throwable instanceof HttpException && isGenericError(((HttpException) throwable).code());
+    }
+
+    private boolean isGenericError(int errorCode) {
+        return isClientError(errorCode) || isServerError(errorCode);
+    }
+
+    private boolean isClientError(int errorCode) {
+        return (errorCode >= 400) && (errorCode < 500);
+    }
+
+    private boolean isServerError(int errorCode) {
+        return (errorCode >= 500) && (errorCode < 600);
+    }
+
     private static class PushSuccessResponseCallback extends SimpleCallback<PushSuccessResponse> {
 
         private PushSuccessResponseCallback(String error, OnReturnDataListener<PushSuccessResponse> listener, PushSuccessResponse defaultBody) {
@@ -2031,7 +2796,7 @@ public class BeanstalkService {
         @Override
         protected PushSuccessResponse getResponseBody(Response<PushSuccessResponse> response) {
             PushSuccessResponse pushSuccessResponse = response.body();
-            if (response.isSuccessful() && pushSuccessResponse == null) {
+            if (pushSuccessResponse == null) {
                 pushSuccessResponse = new PushSuccessResponse();
                 pushSuccessResponse.setSuccess(true);
             }
@@ -2055,13 +2820,21 @@ public class BeanstalkService {
         @Override
         public void onResponse(Call<T> call, Response<T> response) {
             if (response != null) {
-                T responseBody = getResponseBody(response);
-                if (responseBody == null) {
-                    responseBody = defaultBody;
-                }
-                if (responseBody != null) {
+                if (response.isSuccessful()) {
+                    T responseBody = getResponseBody(response);
+                    if (responseBody == null) {
+                        responseBody = defaultBody;
+                    }
+                    if (responseBody != null) {
+                        if (listener != null) {
+                            listener.onFinished(responseBody, null);
+                        }
+                    } else {
+                        onFailure(call, null);
+                    }
+                } else if (isGenericError(response.code())) {
                     if (listener != null) {
-                        listener.onFinished(responseBody, null);
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
                     }
                 } else {
                     onFailure(call, null);
@@ -2074,14 +2847,34 @@ public class BeanstalkService {
         @Override
         public void onFailure(Call<T> call, Throwable t) {
             if (listener != null) {
-                listener.onFinished(null, error);
+                if (isGenericHttpException(t)) {
+                    listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                } else {
+                    listener.onFinished(null, error);
+                }
             }
         }
 
         protected T getResponseBody(Response<T> response) {
-            T responseBody = response.body();
-            return response.isSuccessful() && (responseBody != null) ? responseBody : null;
+            return response.body();
         }
+
+        private boolean isGenericHttpException(Throwable throwable) {
+            return throwable instanceof HttpException && isGenericError(((HttpException) throwable).code());
+        }
+
+        private boolean isGenericError(int errorCode) {
+            return isClientError(errorCode) || isServerError(errorCode);
+        }
+
+        private boolean isClientError(int errorCode) {
+            return (errorCode >= 400) && (errorCode < 500);
+        }
+
+        private boolean isServerError(int errorCode) {
+            return (errorCode >= 500) && (errorCode < 600);
+        }
+
 
     }
 

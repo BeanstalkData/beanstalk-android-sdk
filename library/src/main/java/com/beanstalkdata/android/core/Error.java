@@ -46,5 +46,6 @@ interface Error {
     String CONTACT_RELOCATE_FAILED = "Unable to relocate a contact";
     String LOYALTY_PROGRAM_ERROR = "Failed to associate loyalty program with a customer";
     String CONTACT_US_ERROR = "Unable to deliver message";
+    String GENERIC_HTTP_ERROR = "Generic HTTP error";
 
 }
