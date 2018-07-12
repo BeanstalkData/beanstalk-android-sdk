@@ -1181,6 +1181,31 @@ public class BeanstalkService {
     }
 
     /**
+     * Sends message with new password to specified email.
+     *
+     * @param email    Email address to which letter should be sent.
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void resetPasswordV2(String email, final OnReturnDataListener<String> listener) {
+        Call<String> call = service.resetPasswordV2(beanstalkApiKey, email, "2");
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (listener != null) {
+                    listener.onFinished(response.body(), null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                if (listener != null) {
+                    listener.onFinished(null, Error.RESET_PASSWORD_FAILED);
+                }
+            }
+        });
+    }
+
+    /**
      * Update authenticated user password.
      *
      * @param password New password.

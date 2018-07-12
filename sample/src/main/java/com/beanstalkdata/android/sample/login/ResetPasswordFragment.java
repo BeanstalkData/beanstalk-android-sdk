@@ -53,7 +53,7 @@ public class ResetPasswordFragment extends BaseFragment implements View.OnClickL
                 String resetEmail = InputUtils.getInputValue(emailInput);
                 if (InputUtils.validEmail(resetEmail)) {
                     activityContract.showProgress();
-                    getService().resetPassword(resetEmail, new OnReturnDataListener<String>() {
+                    getService().resetPasswordV2(resetEmail, new OnReturnDataListener<String>() {
                         @Override
                         public void onFinished(String data, String error) {
                             if (activityContract != null) {
