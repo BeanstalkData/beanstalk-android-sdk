@@ -2444,6 +2444,59 @@ public class BeanstalkService {
     }
 
     /**
+     * Get stores  by number.
+     *
+     * @param listener Callback that will run after network request is completed.
+     */
+    public void getStoresByNumberV2(String storeNumber, final OnReturnDataListener<StoresResponseV2> listener) {
+        service.getStoresByNumberV2(beanstalkApiKey, storeNumber).enqueue(new Callback<StoresResponseV2>() {
+
+            @Override
+            public void onResponse(Call<StoresResponseV2> call, Response<StoresResponseV2> response) {
+                if (response != null) {
+                    if (response.isSuccessful()) {
+                        StoresResponseV2 body = response.body();
+                        if (body != null && !body.isFailed()) {
+                            if (listener != null) {
+                                listener.onFinished(body, null);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFinished(null, Error.STORES_BY_NUMBER_FAILED);
+                            }
+                        }
+                    } else if (isGenericError(response.code())) {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFinished(null, Error.STORES_BY_NUMBER_FAILED);
+                        }
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFinished(null, Error.STORES_BY_NUMBER_FAILED);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<StoresResponseV2> call, Throwable t) {
+                if (listener != null) {
+                    if (isGenericHttpException(t)) {
+                        listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
+                    } else {
+                        listener.onFinished(null, Error.STORES_BY_NUMBER_FAILED);
+                    }
+                }
+            }
+
+        });
+    }
+
+    /**
      * Check logging state.
      *
      * @return Logging is enabled or not.

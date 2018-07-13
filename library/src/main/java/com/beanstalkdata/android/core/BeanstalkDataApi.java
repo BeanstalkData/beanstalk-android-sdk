@@ -413,6 +413,12 @@ public interface BeanstalkDataApi {
             @Query("key") String apiKey
     );
 
+    @GET("bsdStores/locate/?version=2")
+    Call<StoresResponseV2> getStoresByNumberV2(
+            @Query("key") String apiKey,
+            @Query("storeNumber") String storeNumber
+    );
+
     @POST("/bsdLoyalty/ResetPassword.php")
     @FormUrlEncoded
     Call<String> resetPasswordV2(
