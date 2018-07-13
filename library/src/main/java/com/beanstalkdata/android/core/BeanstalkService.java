@@ -86,7 +86,16 @@ public class BeanstalkService {
     private static final String TAG = BeanstalkService.class.getSimpleName();
     private static final String SCHEME = "https";
     private static final String HOST = "proc.beanstalkdata.com";
-    private static final String PUBLIC_KEY = "sha256/Hnfu+TUYgdkXIUunnIl6yIovY/WYZdOdIw/1TdZy79Y=";
+    private static final String[] PUBLIC_KEYS = new String[]{
+            //Valid till 8/14/2018
+            "sha256/Hnfu+TUYgdkXIUunnIl6yIovY/WYZdOdIw/1TdZy79Y=",
+            "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws=",
+            "sha256/WoiWRyIOVNa9ihaBciRSC7XHjliYS9VwUGOIud4PB18=",
+            //Valid till 6/4/2020
+            "sha256/hfQGfeSgC9vFGxodqB2DVcnNcqFOjgJKEsbwaV7K1G0=",
+            "sha256/du6FkDdMcVQ3u8prumAo6t3i3G27uMP2EOhR8R0at/U=",
+            "sha256/980Ionqp3wkYtN9SZVgMzuWQzJta1nfxNPwTem1X0uc="
+    };
 
     private final BeanstalkDataApi service;
     private final BeanstalkUserSession beanstalkUserSession;
@@ -127,7 +136,7 @@ public class BeanstalkService {
         defaultMessages.setPushMessages(new ArrayList<PushMessage>());
 
         CertificatePinner certificatePinner = new CertificatePinner.Builder()
-                .add(HOST, PUBLIC_KEY)
+                .add(HOST, PUBLIC_KEYS)
                 .build();
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
