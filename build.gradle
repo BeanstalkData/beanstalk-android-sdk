@@ -10,7 +10,7 @@ buildscript {
                 googlePlayServices: "11.0.2",
                 firebaseMessaging : "9.6.1",
                 retrofit          : "2.4.0",
-                okhttp            : "3.3.1",
+                okhttp            : "3.11.0",
                 picasso           : "2.5.2",
                 facebookSdk       : "4.19.0",
                 junit             : "4.12",

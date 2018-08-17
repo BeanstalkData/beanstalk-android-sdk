@@ -64,7 +64,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +75,7 @@ import okhttp3.CertificatePinner;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Converter;
@@ -90,7 +90,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 public class BeanstalkService {
 
-    private static final String TAG = BeanstalkService.class.getSimpleName();
     private static final String SCHEME = "https";
     private static final String HOST = "proc.beanstalkdata.com";
     private static final String[] PUBLIC_KEYS = new String[]{
@@ -109,11 +108,9 @@ public class BeanstalkService {
     private final String beanstalkApiKey;
     private final String googleMapsApiKey;
     private final SimpleDateFormat transactionDateFormat;
-
+    private final HttpLogger httpLogger;
     // Workaround for empty response for push notification messages
     private final PushMessagesResponse defaultMessages;
-
-    private boolean isLoggingEnabled;
 
     /**
      * Constructor to use when creating service instance with default Beanstalk user session.
@@ -123,52 +120,73 @@ public class BeanstalkService {
      * @param googleMapsApiKey API key for Google Maps.
      */
     public BeanstalkService(@NonNull Context context, @NonNull String beanstalkApiKey, @NonNull String googleMapsApiKey) {
-        this(new DefaultBeanstalkUserSession(context), beanstalkApiKey, googleMapsApiKey);
+        this(new DefaultBeanstalkUserSession(context), beanstalkApiKey, googleMapsApiKey, true, false);
+    }
+
+    /**
+     * Constructor to use when creating service instance with default Beanstalk user session.
+     *
+     * @param context             Context that will be used for Default Beanstalk User Session.
+     * @param beanstalkApiKey     API key for Beanstalk Data.
+     * @param googleMapsApiKey    API key for Google Maps.
+     * @param isSslPinningEnabled Enable SSL pinning or not.
+     * @param isLoggingEnabled    Enable logging or not.
+     */
+    public BeanstalkService(@NonNull Context context, @NonNull String beanstalkApiKey, @NonNull String googleMapsApiKey, boolean isSslPinningEnabled, boolean isLoggingEnabled) {
+        this(new DefaultBeanstalkUserSession(context), beanstalkApiKey, googleMapsApiKey, isSslPinningEnabled, isLoggingEnabled);
     }
 
     /**
      * Base constructor to use when creating service instance.
      *
-     * @param beanstalkApiKey  API key for Beanstalk Data.
-     * @param googleMapsApiKey API key for Google Maps.
+     * @param beanstalkUserSession User session implementation.
+     * @param beanstalkApiKey      API key for Beanstalk Data.
+     * @param googleMapsApiKey     API key for Google Maps.
      */
     public BeanstalkService(@NonNull BeanstalkUserSession beanstalkUserSession, @NonNull String beanstalkApiKey, @NonNull String googleMapsApiKey) {
+        this(beanstalkUserSession, beanstalkApiKey, googleMapsApiKey, true, false);
+    }
+
+    /**
+     * Base constructor to use when creating service instance.
+     *
+     * @param beanstalkUserSession User session implementation.
+     * @param beanstalkApiKey      API key for Beanstalk Data.
+     * @param googleMapsApiKey     API key for Google Maps.
+     * @param isSslPinningEnabled  Enable SSL pinning or not.
+     * @param isLoggingEnabled     Enable logging or not.
+     */
+    public BeanstalkService(@NonNull BeanstalkUserSession beanstalkUserSession, @NonNull String beanstalkApiKey, @NonNull String googleMapsApiKey, boolean isSslPinningEnabled, boolean isLoggingEnabled) {
         this.beanstalkUserSession = beanstalkUserSession;
         this.beanstalkApiKey = beanstalkApiKey;
         this.googleMapsApiKey = googleMapsApiKey;
-
-        transactionDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        this.httpLogger = new HttpLogger(isLoggingEnabled);
+        this.transactionDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
         defaultMessages = new PushMessagesResponse();
         defaultMessages.setPushMessages(new ArrayList<PushMessage>());
 
-        CertificatePinner certificatePinner = new CertificatePinner.Builder()
-                .add(HOST, PUBLIC_KEYS)
-                .build();
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        OkHttpClient.Builder okHttpClientBuidler = new OkHttpClient.Builder()
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
-                .certificatePinner(certificatePinner)
-                .build();
+                .addInterceptor(new HttpLoggingInterceptor(httpLogger).setLevel(HttpLoggingInterceptor.Level.BODY));
+
+        if (isSslPinningEnabled) {
+            CertificatePinner certificatePinner = new CertificatePinner.Builder()
+                    .add(HOST, PUBLIC_KEYS)
+                    .build();
+
+            okHttpClientBuidler.certificatePinner(certificatePinner);
+        }
+
+        OkHttpClient okHttpClient = okHttpClientBuidler.build();
 
         HttpUrl baseUrl = new HttpUrl.Builder().scheme(SCHEME).host(HOST).build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(new Converter.Factory() {
-                    @Override
-                    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
-                        final Converter<ResponseBody, ?> delegate = retrofit.nextResponseBodyConverter(this, type, annotations);
-                        return new Converter<ResponseBody, Object>() {
-                            @Override
-                            public Object convert(ResponseBody body) throws IOException {
-                                return (body.contentLength() == 0) ? null : delegate.convert(body);
-                            }
-                        };
-                    }
-                })
+                .addConverterFactory(new EmptyBodyConverterFactory())
                 .addConverterFactory(GsonConverterFactory.create(getGson()))
                 .client(okHttpClient)
                 .build();
@@ -405,7 +423,6 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         String body = response.body();
-                        log("response " + body);
                         if ("logged out".equalsIgnoreCase(body)
                                 || "error".equalsIgnoreCase(body)) {
                             if (listener != null) {
@@ -621,7 +638,6 @@ public class BeanstalkService {
      */
     public void getContact(final OnReturnDataListener<Contact> listener) {
         String contactId = beanstalkUserSession.getContactId();
-        log(" contact" + contactId);
 
         service.getContact(beanstalkApiKey, contactId).enqueue(new Callback<Contact[]>() {
 
@@ -630,7 +646,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         Contact[] data = response.body();
-                        if (data == null || data.length == 0) {
+                        if ((data == null) || (data.length == 0)) {
                             if (listener != null) {
                                 listener.onFinished(null, Error.CONTACT_FAILED);
                             }
@@ -689,7 +705,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         ContactDeletedResponse body = response.body();
-                        if (body != null && body.isSuccess()) {
+                        if ((body != null) && body.isSuccess()) {
                             beanstalkUserSession.release();
                             if (listener != null) {
                                 listener.onFinished(null);
@@ -861,7 +877,6 @@ public class BeanstalkService {
     public void inquireAboutCard(String cardNumber, final OnReturnDataListener<String> listener) {
         String contactId = beanstalkUserSession.getContactId();
         String token = beanstalkUserSession.getToken();
-        log("inquireAboutCard() - [token, contactId, cardNumber] = [ " + token + " , " + contactId + " , " + cardNumber + " ]");
 
         service.inquireAboutCard(beanstalkApiKey, contactId, token, cardNumber).enqueue(new Callback<CardBalanceResponse>() {
 
@@ -982,8 +997,6 @@ public class BeanstalkService {
         String contactId = beanstalkUserSession.getContactId();
         String token = beanstalkUserSession.getToken();
         String couponsStr = getCouponsString(coupons);
-        log("coupons : " + couponsStr);
-        log("payment : " + paymentId);
 
         service.startPayment(beanstalkApiKey, contactId, contactId, token, paymentId, couponsStr).enqueue(new Callback<PaymentTokenResponse>() {
 
@@ -992,7 +1005,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         PaymentTokenResponse data = response.body();
-                        if (data == null || isPaymentTokenEmpty(data)) {
+                        if ((data == null) || isPaymentTokenEmpty(data)) {
                             if (listener != null) {
                                 listener.onFinished(null, Error.PAYMENT_FAILED);
                             }
@@ -1049,7 +1062,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         RegisterGiftCardResponse data = response.body();
-                        if (data == null || data.isFailed()) {
+                        if ((data == null) || data.isFailed()) {
                             if (listener != null) {
                                 String error = Error.ADD_CARD_FAILED;
                                 if (data != null) {
@@ -1108,9 +1121,8 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         GiftCardListResponse data = response.body();
-                        log("onResponse: " + data);
                         if (listener != null) {
-                            listener.onFinished(data != null ? data.getGiftCards() : new GiftCard[0], null);
+                            listener.onFinished((data != null) ? data.getGiftCards() : new GiftCard[0], null);
                         }
                     } else if (isGenericError(response.code())) {
                         if (listener != null) {
@@ -1130,7 +1142,6 @@ public class BeanstalkService {
 
             @Override
             public void onFailure(Call<GiftCardListResponse> call, Throwable t) {
-                log("onFailure: " + t);
                 if (listener != null) {
                     if (isGenericHttpException(t)) {
                         listener.onFinished(null, Error.GENERIC_HTTP_ERROR);
@@ -1196,8 +1207,8 @@ public class BeanstalkService {
      * @param listener Callback that will run after network request is completed.
      */
     public void resetPasswordV2(String email, final OnReturnDataListener<String> listener) {
-        Call<String> call = service.resetPasswordV2(beanstalkApiKey, email, "2");
-        call.enqueue(new Callback<String>() {
+        service.resetPasswordV2(beanstalkApiKey, email, "2").enqueue(new Callback<String>() {
+
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (listener != null) {
@@ -1211,6 +1222,7 @@ public class BeanstalkService {
                     listener.onFinished(null, Error.RESET_PASSWORD_FAILED);
                 }
             }
+
         });
     }
 
@@ -1277,8 +1289,6 @@ public class BeanstalkService {
 
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
-                boolean success = response.isSuccessful();
-                log("checkUserByEmail() - response status " + success);
                 authUser(request, listener);
             }
 
@@ -1315,10 +1325,9 @@ public class BeanstalkService {
                             if (responseBody != null) {
                                 body = responseBody.string();
                             }
-                        } catch (IOException e) {
-                            log("authenticateUser exception: " + e);
+                        } catch (IOException ignored) {
+
                         }
-                        log("authenticateUser: " + body);
                         if ("error".equalsIgnoreCase(body)) {
                             if (listener != null) {
                                 listener.onFinished(false, Error.AUTHORIZATION_GOOGLE_FAILED);
@@ -1389,10 +1398,9 @@ public class BeanstalkService {
                             if (responseBody != null) {
                                 body = responseBody.string();
                             }
-                        } catch (IOException e) {
-                            log("authenticateUser exception: " + e);
+                        } catch (IOException ignored) {
+
                         }
-                        log("authenticateUser: " + body);
                         if ("error".equalsIgnoreCase(body)) {
                             if (listener != null) {
                                 listener.onFinished(false, Error.AUTHORIZATION_FACEBOOK_FAILED);
@@ -1525,7 +1533,6 @@ public class BeanstalkService {
                     if (response != null) {
                         if (response.isSuccessful()) {
                             String[] body = response.body();
-                            log("onResponse() - " + Arrays.toString(body));
                             if (body == null) {
                                 if (listener != null) {
                                     listener.onFinished(Error.CONTACT_UPDATE_FAILED);
@@ -1557,7 +1564,6 @@ public class BeanstalkService {
 
                 @Override
                 public void onFailure(Call<String[]> call, Throwable t) {
-                    log("onFailure()" + t.toString());
                     if (listener != null) {
                         if (isGenericHttpException(t)) {
                             listener.onFinished(Error.GENERIC_HTTP_ERROR);
@@ -1672,7 +1678,6 @@ public class BeanstalkService {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        log("createContact() " + body);
                         if ("error".equalsIgnoreCase(body)) {
                             if (listener != null) {
                                 listener.onFinished(null, Error.SIGN_IN_FAILED);
@@ -1686,7 +1691,6 @@ public class BeanstalkService {
                                 listener.onFinished(null, Error.SIGN_IN_FAILED);
                             }
                         } else {
-                            log("contact id : " + contactId);
                             beanstalkUserSession.save(contactId, null);
                             if (shouldCreateUser) {
                                 service.createUser(request.getEmail(), request.getPassword(), beanstalkApiKey, contactId).enqueue(new Callback<String>() {
@@ -1696,7 +1700,6 @@ public class BeanstalkService {
                                         if (response != null) {
                                             if (response.isSuccessful()) {
                                                 String body = response.body();
-                                                log("addContactWithEmail() - create user " + body);
                                                 if ("Success".equalsIgnoreCase(body)) {
                                                     fetchContact(listener, shouldFetchContact);
                                                 } else {
@@ -1888,7 +1891,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         StoresResponse body = response.body();
-                        if (body != null && !body.isFailed()) {
+                        if ((body != null) && !body.isFailed()) {
                             if (listener != null) {
                                 listener.onFinished(body, null);
                             }
@@ -1940,7 +1943,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         StoresResponse body = response.body();
-                        if (body != null && !body.isFailed()) {
+                        if ((body != null) && !body.isFailed()) {
                             if (listener != null) {
                                 listener.onFinished(body, null);
                             }
@@ -1993,7 +1996,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         StoreInfoResponse body = response.body();
-                        if (body != null && !body.isFailed()) {
+                        if ((body != null) && !body.isFailed()) {
                             if (listener != null) {
                                 listener.onFinished(body, null);
                             }
@@ -2045,7 +2048,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         LocationsResponse body = response.body();
-                        if (body != null && !body.isFailed()) {
+                        if ((body != null) && !body.isFailed()) {
                             if (listener != null) {
                                 listener.onFinished(body, null);
                             }
@@ -2352,7 +2355,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         StoresResponseV2 body = response.body();
-                        if (body != null && !body.isFailed()) {
+                        if ((body != null) && !body.isFailed()) {
                             if (listener != null) {
                                 listener.onFinished(body, null);
                             }
@@ -2404,7 +2407,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         StoresResponseV2 body = response.body();
-                        if (body != null && !body.isFailed()) {
+                        if ((body != null) && !body.isFailed()) {
                             if (listener != null) {
                                 listener.onFinished(body, null);
                             }
@@ -2456,7 +2459,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         StoresResponseV2 body = response.body();
-                        if (body != null && !body.isFailed()) {
+                        if ((body != null) && !body.isFailed()) {
                             if (listener != null) {
                                 listener.onFinished(body, null);
                             }
@@ -2502,16 +2505,16 @@ public class BeanstalkService {
      * @return Logging is enabled or not.
      */
     public boolean isLoggingEnabled() {
-        return isLoggingEnabled;
+        return httpLogger.isLoggingEnabled();
     }
 
     /**
      * Set logging enabled state.
      *
-     * @param enable Logging state.
+     * @param isLoggingEnabled Logging state.
      */
-    public void enableLogging(boolean enable) {
-        this.isLoggingEnabled = enable;
+    public void enableLogging(boolean isLoggingEnabled) {
+        httpLogger.setLoggingEnabled(isLoggingEnabled);
     }
 
     String getErrorFromCBResponse(CardBalanceResponse data) {
@@ -2539,8 +2542,8 @@ public class BeanstalkService {
                 strings[1] = jsonArray.optString(1);
                 return strings;
             }
-        } catch (JSONException e) {
-            log("authenticateUser exception:" + e);
+        } catch (JSONException ignored) {
+
         }
         return null;
     }
@@ -2581,7 +2584,7 @@ public class BeanstalkService {
                 if (response != null) {
                     if (response.isSuccessful()) {
                         StoresResponse body = response.body();
-                        if (body != null && !body.isFailed()) {
+                        if ((body != null) && !body.isFailed()) {
                             if (listener != null) {
                                 listener.onFinished(null);
                             }
@@ -2621,21 +2624,16 @@ public class BeanstalkService {
     }
 
     private void checkUserByEmail(final ContactRequest request, final OnReturnListener listener) {
-        log("checkUserByEmail() - " + request.getEmail());
         service.getContactByEmail(beanstalkApiKey, request.getEmail()).enqueue(new Callback<Contact[]>() {
 
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
                 boolean success = response.isSuccessful();
-                log("checkUserByEmail() - response status " + success);
                 if (success) {
                     Contact[] contacts = response.body();
-                    log("checkUserByEmail() - contacts found " + Arrays.toString(contacts));
-                    if (contacts != null && contacts.length > 0 && contacts[0] != null) {
+                    if ((contacts != null) && (contacts.length > 0) && (contacts[0] != null)) {
                         Contact contact = contacts[0];
-                        log("checkUserByEmail() - contact found " + contact);
                         String prospect = contact.getProspect();
-                        log("checkUserByEmail() - prospect found " + prospect);
                         if ("eclub".equals(prospect)) {
                             checkUserByPhone(request, listener);
                         } else {
@@ -2678,10 +2676,9 @@ public class BeanstalkService {
                             if (responseBody != null) {
                                 body = responseBody.string();
                             }
-                        } catch (Exception e) {
-                            log("authenticateUser exception: " + e);
+                        } catch (Exception ignored) {
+
                         }
-                        log("authenticateUser: " + body);
                         if ("error".equalsIgnoreCase(body)) {
                             if (listener != null) {
                                 listener.onFinished(false, Error.AUTHORIZATION_FAILED);
@@ -2739,14 +2736,11 @@ public class BeanstalkService {
             @Override
             public void onResponse(Call<Contact[]> call, Response<Contact[]> response) {
                 boolean success = response.isSuccessful();
-                log("checkUserByPhone() - response status " + success);
                 if (success) {
                     Contact[] contacts = response.body();
                     if ((contacts != null) && (contacts.length > 0) && (contacts[0] != null)) {
                         Contact contact = contacts[0];
-                        log("checkUserByPhone() - contact found " + contact);
                         String prospect = contact.getProspect();
-                        log("checkUserByPhone() - prospect found " + prospect);
                         if ("eclub".equals(prospect)) {
                             if (listener != null) {
                                 listener.onFinished(null);
@@ -2852,12 +2846,6 @@ public class BeanstalkService {
         return (date > 0) ? transactionDateFormat.format(new Date(date)) : null;
     }
 
-    private void log(String msg) {
-        if (isLoggingEnabled()) {
-            Log.d(TAG, msg);
-        }
-    }
-
     private boolean isGenericHttpException(Throwable throwable) {
         return throwable instanceof HttpException && isGenericError(((HttpException) throwable).code());
     }
@@ -2872,6 +2860,57 @@ public class BeanstalkService {
 
     private boolean isServerError(int errorCode) {
         return (errorCode >= 500) && (errorCode < 600);
+    }
+
+    private static class HttpLogger implements HttpLoggingInterceptor.Logger {
+
+        private static final String TAG = "OkHttp";
+
+        private boolean isLoggingEnabled;
+
+        HttpLogger(boolean isLoggingEnabled) {
+            this.isLoggingEnabled = isLoggingEnabled;
+        }
+
+        @Override
+        public void log(String message) {
+            if (isLoggingEnabled) {
+                Log.d(TAG, message);
+            }
+        }
+
+        boolean isLoggingEnabled() {
+            return isLoggingEnabled;
+        }
+
+        void setLoggingEnabled(boolean loggingEnabled) {
+            isLoggingEnabled = loggingEnabled;
+        }
+
+    }
+
+    private static class EmptyBodyConverterFactory extends Converter.Factory {
+
+        @Override
+        public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+            return new EmptyBodyConverter(retrofit.nextResponseBodyConverter(this, type, annotations));
+        }
+
+    }
+
+    private static class EmptyBodyConverter implements Converter<ResponseBody, Object> {
+
+        private final Converter<ResponseBody, ?> delegate;
+
+        private EmptyBodyConverter(Converter<ResponseBody, ?> delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Object convert(ResponseBody body) throws IOException {
+            return (body.contentLength() == 0) ? null : delegate.convert(body);
+        }
+
     }
 
     private static class PushSuccessResponseCallback extends SimpleCallback<PushSuccessResponse> {
@@ -2961,7 +3000,6 @@ public class BeanstalkService {
         private boolean isServerError(int errorCode) {
             return (errorCode >= 500) && (errorCode < 600);
         }
-
 
     }
 
