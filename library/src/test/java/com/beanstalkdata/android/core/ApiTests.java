@@ -6,8 +6,6 @@ import com.beanstalkdata.android.model.ContactAsset;
 import com.beanstalkdata.android.model.Coupon;
 import com.beanstalkdata.android.model.PushMessage;
 import com.beanstalkdata.android.model.deserializer.PushMessagesDeserializer;
-import com.beanstalkdata.android.model.type.ImageType;
-import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
 import com.beanstalkdata.android.model.type.PlatformType;
 import com.beanstalkdata.android.request.AuthenticateUserRequest;
@@ -32,10 +30,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
-import org.junit.BeforeClass;
 import org.junit.AfterClass;
-import org.junit.Test;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -49,10 +47,10 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
-import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.Dispatcher;
-import okhttp3.mockwebserver.RecordedRequest;
 import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -148,10 +146,8 @@ public class ApiTests {
     private static final String MSG_REQ4_1 = String.format("key=%s&contactId=%s&maxResults=%s", APP_KEY, ID4_1, MAX_MESSAGES4);
     private static final String MSG_REQ4_2 = String.format("key=%s&contactId=%s&maxResults=%s", APP_KEY, ID4_2, MAX_MESSAGES4);
 
-    private static MockWebServer server;
-    private static BeanstalkDataApi service;
-
     private static final Dispatcher dispatcher = new Dispatcher() {
+
         @Override
         public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
             String body = request.getBody().readUtf8();
@@ -521,6 +517,9 @@ public class ApiTests {
                     "}";
         }
     };
+
+    private static MockWebServer server;
+    private static BeanstalkDataApi service;
 
     private static Gson getGson() {
         return new GsonBuilder()
@@ -929,16 +928,6 @@ public class ApiTests {
     }
 
     @Test
-    public void getLoyaltyInformation() throws Exception {
-        Call<String> call = service.getLoyaltyInformation(BuildConfig.APP_KEY, FKEY3);
-        Response<String> response = call.execute();
-        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
-
-        String body = response.body();
-        assertNotNull(body);
-    }
-
-    @Test
     public void getUserOffers() throws Exception {
         // TODO: Re-check this coupons
         Call<CouponResponse> call = service.getUserOffers(BuildConfig.APP_KEY, ID3);
@@ -1022,31 +1011,6 @@ public class ApiTests {
         List<PushMessage> messages = response.body().getPushMessages();
         assertNotNull(messages);
         assertEquals(0, messages.size());
-    }
-
-    @Test
-    public void getPushMessagesByOsAndType() throws Exception {
-        Call<PushMessagesResponse> call = service.getMessagesByOsAndType(BuildConfig.APP_KEY, MessageContentType.HTML, PlatformType.ANDROID);
-        Response<PushMessagesResponse> response = call.execute();
-        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
-
-        List<PushMessage> messages = response.body().getPushMessages();
-        assertNotNull(messages);
-        assertEquals(1, messages.size());
-
-        PushMessage message = messages.get(0);
-        assertEquals(PlatformType.ANDROID, message.getOs());
-    }
-
-    @Test
-    public void getPushMessagesByImageType() throws Exception {
-        Call<PushMessagesResponse> call = service.getMessagesByImageType(BuildConfig.APP_KEY, MessageContentType.HTML, ImageType.LARGE);
-        Response<PushMessagesResponse> response = call.execute();
-        assertEquals(response.code(), HttpURLConnection.HTTP_OK);
-
-        List<PushMessage> messages = response.body().getPushMessages();
-        assertNotNull(messages);
-        assertEquals(1, messages.size());
     }
 
     @Test

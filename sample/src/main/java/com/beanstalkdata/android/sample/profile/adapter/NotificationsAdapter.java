@@ -4,12 +4,10 @@
 
 package com.beanstalkdata.android.sample.profile.adapter;
 
-import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
 import com.beanstalkdata.android.model.PushMessage;
-import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.sample.R;
 import com.beanstalkdata.android.sample.base.BaseRecyclerViewAdapter;
 import com.beanstalkdata.android.sample.base.BaseViewHolder;
@@ -30,7 +28,6 @@ public class NotificationsAdapter extends BaseRecyclerViewAdapter<PushMessage, N
     static class MessageHolder extends BaseViewHolder<PushMessage> {
 
         private TextView title;
-        private TextView text;
         private TextView os;
 
         public MessageHolder(View itemView, OnItemClickListener<PushMessage> listener) {
@@ -40,7 +37,6 @@ public class NotificationsAdapter extends BaseRecyclerViewAdapter<PushMessage, N
         @Override
         protected void initViews() {
             title = (TextView) itemView.findViewById(R.id.notification_title);
-            text = (TextView) itemView.findViewById(R.id.notification_text);
             os = (TextView) itemView.findViewById(R.id.notification_os);
         }
 
@@ -51,19 +47,7 @@ public class NotificationsAdapter extends BaseRecyclerViewAdapter<PushMessage, N
             }
 
             title.setText(item.getTitle());
-            text.setText(getItemText());
             os.setText(item.getOs());
-        }
-
-        private CharSequence getItemText() {
-            switch (item.getMessageType()) {
-                case MessageContentType.STANDARD:
-                    return item.getMessageBody();
-                case MessageContentType.HTML:
-                    return Html.fromHtml(item.getMessageBody());
-                default:
-                    return null;
-            }
         }
 
     }

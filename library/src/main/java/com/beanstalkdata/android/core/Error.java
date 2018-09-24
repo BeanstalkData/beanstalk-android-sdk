@@ -8,7 +8,6 @@ interface Error {
 
     String REGISTER_CARD_FAILED = "Unable to register card.";
     String SIGN_IN_FAILED = "Unable to sign up user, please try again later.";
-    String REGISTRATION_FAILED = "Unable to complete registration";
     String CONTACT_UPDATE_FAILED = "Unable to update contact";
     String AUTHORIZATION_FAILED = "Unable to login";
     String AUTHORIZATION_GOOGLE_FAILED = "Unable to login using Google";
@@ -20,7 +19,6 @@ interface Error {
     String PAYMENT_FAILED = "Failed to start payment";
     String OFFERS_FAILED = "Unable to get offers";
     String DELETE_CONTACT_FAILED = "Unable to delete contact";
-    String LOYALTY_INFO_FAILED = "Unable to get loyalty Info";
     String INQUIRE_CARD_FAILED = "Unable to inquire about card";
     String PREFERRED_CARD_FAILED = "Unable to set preferred card";
     String GIFT_LIST_FAILED = "Error Retrieving Cards Information";

@@ -26,8 +26,6 @@ import com.beanstalkdata.android.model.deserializer.LocationV2Deserializer;
 import com.beanstalkdata.android.model.deserializer.MultiDateFormatDeserializer;
 import com.beanstalkdata.android.model.deserializer.PushMessagesDeserializer;
 import com.beanstalkdata.android.model.deserializer.StoreV2Deserializer;
-import com.beanstalkdata.android.model.type.ImageType;
-import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
 import com.beanstalkdata.android.model.type.PlatformType;
 import com.beanstalkdata.android.request.AuthenticateUserFacebookRequest;
@@ -806,66 +804,6 @@ public class BeanstalkService {
      */
     public void stopLocationTracking() {
         beanstalkUserSession.stopContactRelocation();
-    }
-
-    /**
-     * Get loyalty information for authenticated user.
-     *
-     * @param listener Callback that will run after network request is completed.
-     */
-    @Deprecated
-    public void getLoyaltyInformation(final OnReturnListener listener) {
-        String fKey = beanstalkUserSession.getFKey();
-
-        service.getLoyaltyInformation(beanstalkApiKey, fKey).enqueue(new Callback<String>() {
-
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response != null) {
-                    if (response.isSuccessful()) {
-                        JSONObject data = null;
-                        try {
-                            data = new JSONObject(response.body());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        if (data == null) {
-                            if (listener != null) {
-                                listener.onFinished(Error.LOYALTY_INFO_FAILED);
-                            }
-                        } else {
-                            if (listener != null) {
-                                listener.onFinished(null);
-                            }
-                        }
-                    } else if (isGenericError(response.code())) {
-                        if (listener != null) {
-                            listener.onFinished(Error.GENERIC_HTTP_ERROR);
-                        }
-                    } else {
-                        if (listener != null) {
-                            listener.onFinished(Error.LOYALTY_INFO_FAILED);
-                        }
-                    }
-                } else {
-                    if (listener != null) {
-                        listener.onFinished(Error.LOYALTY_INFO_FAILED);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                if (listener != null) {
-                    if (isGenericHttpException(t)) {
-                        listener.onFinished(Error.GENERIC_HTTP_ERROR);
-                    } else {
-                        listener.onFinished(Error.LOYALTY_INFO_FAILED);
-                    }
-                }
-            }
-
-        });
     }
 
     /**
@@ -2127,28 +2065,6 @@ public class BeanstalkService {
      */
     public void getContactMessages(int maxResults, OnReturnDataListener<PushMessagesResponse> listener) {
         service.getContactMessages(beanstalkApiKey, beanstalkUserSession.getContactId(), maxResults)
-                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener, defaultMessages));
-    }
-
-    /**
-     * Returns messages of specified message type for authenticated user.
-     *
-     * @param messageContentType Required message content type ({@link MessageContentType}).
-     * @param listener           Callback that will run after network request is completed.
-     */
-    public void getMessagesByOsAndType(@MessageContentType String messageContentType, OnReturnDataListener<PushMessagesResponse> listener) {
-        service.getMessagesByOsAndType(beanstalkApiKey, messageContentType, PlatformType.ANDROID)
-                .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener, defaultMessages));
-    }
-
-    /**
-     * Returns messages of specified message type for authenticated user.
-     *
-     * @param imageType Required message content type ({@link ImageType}).
-     * @param listener  Callback that will run after network request is completed.
-     */
-    public void getMessagesByImageType(@ImageType String imageType, OnReturnDataListener<PushMessagesResponse> listener) {
-        service.getMessagesByImageType(beanstalkApiKey, beanstalkUserSession.getContactId(), imageType)
                 .enqueue(new SimpleCallback<>(Error.GET_MESSAGES_FAILED, listener, defaultMessages));
     }
 

@@ -27,12 +27,4 @@
         android:textSize="@dimen/text_size_title"
         tools:text="Title" />
 
-    <TextView
-        android:id="@+id/notification_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/notification_title"
-        android:textSize="@dimen/text_size_body"
-        tools:text="Content or body" />
-
 </RelativeLayout>

@@ -27,7 +27,7 @@ public class MultiDateFormatDeserializer implements JsonDeserializer<Date> {
         for (String format : DATE_FORMATS) {
             try {
                 return new SimpleDateFormat(format, Locale.US).parse(element.getAsString());
-            } catch (ParseException e) {
+            } catch (ParseException ignored) {
 
             }
         }

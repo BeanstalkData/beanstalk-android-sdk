@@ -31,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -117,19 +116,6 @@ public class ServiceTests {
             @Override
             public void onFinished(@Nullable Contact data, String error) {
                 System.out.println("Successfully call of OnReturnDataListener from BeanstalkService by getContact");
-                signal.countDown();
-            }
-        });
-        signal.await(TEST_TIMEOUT, TimeUnit.SECONDS);
-    }
-
-    @Test
-    public void getLoyaltyInformation() throws InterruptedException {
-        final CountDownLatch signal = new CountDownLatch(1);
-        beanstalkService.getLoyaltyInformation(new OnReturnListener() {
-            @Override
-            public void onFinished(String error) {
-                System.out.println("Successfully call of OnReturnListener from BeanstalkService by getLoyaltyInformation");
                 signal.countDown();
             }
         });

@@ -8,8 +8,6 @@ import com.beanstalkdata.android.model.Contact;
 import com.beanstalkdata.android.model.ContactAsset;
 import com.beanstalkdata.android.model.LoyaltyUser;
 import com.beanstalkdata.android.model.TransactionEvent;
-import com.beanstalkdata.android.model.type.ImageType;
-import com.beanstalkdata.android.model.type.MessageContentType;
 import com.beanstalkdata.android.model.type.MessageType;
 import com.beanstalkdata.android.model.type.PlatformType;
 import com.beanstalkdata.android.response.CardBalanceResponse;
@@ -201,12 +199,6 @@ public interface BeanstalkDataApi {
             @Field("cardNumber") String cardNumber
     );
 
-    @GET("/bsdLoyalty/indentifyCustomer.php?field=CustomerID")
-    Call<String> getLoyaltyInformation(
-            @Query("key") String apiKey,
-            @Query("value") String fKey
-    );
-
     @GET("/contacts")
     Call<Contact[]> getContact(
             @Query("key") String apiKey,
@@ -295,22 +287,6 @@ public interface BeanstalkDataApi {
             @Field("key") String apiKey,
             @Field("contactId") String contactId,
             @Field("maxResults") int maxResults
-    );
-
-    @POST("pushNotification/getMessagesByOsAndType")
-    @FormUrlEncoded
-    Call<PushMessagesResponse> getMessagesByOsAndType(
-            @Field("key") String apiKey,
-            @MessageContentType @Field("message_type") String messageType,
-            @PlatformType @Field("platform") String platform
-    );
-
-    @POST("pushNotification/getMessagesByImageType")
-    @FormUrlEncoded
-    Call<PushMessagesResponse> getMessagesByImageType(
-            @Field("key") String apiKey,
-            @Field("contactId") String contactId,
-            @ImageType @Field("image_type") String imageType
     );
 
     @POST("pushNotification/updateStatus")
