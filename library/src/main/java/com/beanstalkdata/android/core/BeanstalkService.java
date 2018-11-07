@@ -2697,10 +2697,15 @@ public class BeanstalkService {
     }
 
     private void createLoyaltyAccount(final ContactRequest request, final OnReturnDataListener<LoyaltyUser> listener) {
-        request.setParam(ContactRequest.Parameters.LOYALTY_PASSWORD, request.getPassword());
-        request.setParam(ContactRequest.Parameters.LOYALTY_PHONE, request.clearParam(ContactRequest.Parameters.PHONE));
+        String password = request.getPassword();
+        String phone = request.getPhone();
 
-        service.createLoyaltyAccount(beanstalkApiKey, request.asParams()).enqueue(new Callback<LoyaltyUser>() {
+        Map<String, String> params = new HashMap<>(request.asParams());
+        params.remove(ContactRequest.Parameters.PHONE);
+        params.put(ContactRequest.Parameters.LOYALTY_PASSWORD, password);
+        params.put(ContactRequest.Parameters.LOYALTY_PHONE, phone);
+
+        service.createLoyaltyAccount(beanstalkApiKey, params).enqueue(new Callback<LoyaltyUser>() {
 
             @Override
             public void onResponse(Call<LoyaltyUser> call, Response<LoyaltyUser> response) {
